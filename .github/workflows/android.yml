@@ -12,10 +12,12 @@ on:
 
 jobs:
   assembleDebug:
-    runs-on: ubuntu-latest
+    # Pinned rather than ubuntu-latest: the latest label is moving to Ubuntu 26,
+    # and the Android SDK layout the steps below assume is the one on 24.04.
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out the sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         # The submodules are fetched explicitly below: moonlight-common-c needs
         # its own enet/nanors, while libvncserver's noVNC and doxygen submodules
         # are not part of an Android build and are left alone.
@@ -31,24 +33,70 @@ jobs:
           test -f extern/libvncserver/src/libvncclient/rfbclient.c
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '17'
 
       - name: Set up the Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
+
+      - name: Report what the runner provides
+        # The job log needs an authenticated download, while annotations are
+        # readable through the REST API, so the few facts worth checking are
+        # published as annotations instead of buried in the log.
+        shell: bash
+        run: |
+          echo "::notice::ANDROID_HOME=$ANDROID_HOME"
+          echo "::notice::sdkmanager=$(command -v sdkmanager || echo missing)"
+          echo "::notice::java=$(java -version 2>&1 | head -n 1)"
 
       - name: Install the NDK, CMake and platform this project pins
-        # build-tools is left to AGP, which picks and downloads the revision it
-        # wants; the NDK and CMake versions are pinned by the build files, so
-        # those have to be present under exactly these names.
+        shell: bash
         run: |
-          sdkmanager --install "platforms;android-37" \
-            "cmake;3.22.1" "ndk;28.2.13676358"
+          # setup-android puts sdkmanager on PATH; the image also ships one under
+          # cmdline-tools/latest, which is used when that PATH entry is absent.
+          SDKM=$(command -v sdkmanager || echo "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager")
+          echo "::notice::sdkmanager=$SDKM"
+          # The platform is published as android-<major>.<minor>: API 37 is
+          # "platforms;android-37.0", and build-tools 36.0.0 is the revision
+          # this project has actually been built with. AGP still downloads
+          # whatever else it prefers, since the licenses are accepted here.
+          yes | "$SDKM" --licenses >/dev/null 2>&1 || true
+          "$SDKM" --install "platforms;android-37.0" "build-tools;36.0.0" \
+            "cmake;3.22.1" "ndk;28.2.13676358" | tail -n 3
+          echo "::notice::platforms $(ls "$ANDROID_HOME/platforms" | tr '\n' ' ')"
+          echo "::notice::ndk $(ls "$ANDROID_HOME/ndk" | tr '\n' ' ')"
+          echo "::notice::cmake $(ls "$ANDROID_HOME/cmake" | tr '\n' ' ')"
 
       - name: Build the debug APK
-        run: ./gradlew --no-daemon --stacktrace :app:assembleDebug
+        shell: bash
+        run: |
+          ./gradlew --no-daemon --stacktrace :app:assembleDebug 2>&1 \
+            | tee "$RUNNER_TEMP/build.log"
+
+      - name: Report the build failure
+        # Gradle writes a wall of text; only the lines that name the failing
+        # task or the exception are turned into annotations, and the message is
+        # flattened because annotations cannot span lines.
+        if: failure()
+        shell: bash
+        run: |
+          if [ ! -f "$RUNNER_TEMP/build.log" ]; then
+            echo '::error::the gradle log is missing, gradle did not get to run'
+            exit 0
+          fi
+          grep -E "FAILED|^\* What went wrong|^Caused by:|e: |error:|Execution failed" \
+            "$RUNNER_TEMP/build.log" | tail -n 10 > "$RUNNER_TEMP/picked" || true
+          if [ ! -s "$RUNNER_TEMP/picked" ]; then
+            tail -n 10 "$RUNNER_TEMP/build.log" > "$RUNNER_TEMP/picked"
+          fi
+          while IFS= read -r line; do
+            msg=$(printf '%s' "$line" | tr -d '\r' | cut -c1-180 | sed 's/%/%25/g')
+            if [ -n "$msg" ]; then
+              echo "::error::$msg"
+            fi
+          done < "$RUNNER_TEMP/picked"
 
       - name: Check what the APK carries
         run: |
@@ -60,7 +108,7 @@ jobs:
           unzip -l "$apk" | grep -c 'AndroidManifest.xml'
 
       - name: Upload the APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: app-debug
           path: app/build/outputs/apk/debug/*.apk
