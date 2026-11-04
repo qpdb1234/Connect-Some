@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The marks of the mini window's bottom bar, in the style of Mi-Freeform's `bar_corners_bg`:
+    a soft grey capsule. The same shape serves the wide drag handle in the middle and the two
+    resize dots at the ends - only its size differs, which the layout decides.
+
+    A neutral translucent grey rather than the card's own color: the marks must read on the
+    white card in light theme and on the dark one in night theme alike.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/colorMiniHandle" />
+    <corners android:radius="8dp" />
+</shape>

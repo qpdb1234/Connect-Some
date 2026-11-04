@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  App icon: what the app actually is - one remote picture, a pointer we send back
+  into it, and the three protocols that can feed that picture.
+
+  The monitor is one path with the screen as a second subpath filled evenOdd, so the
+  screen is a real hole rather than white paint: as a themed (single colour) icon the
+  frame still reads as a display instead of a solid block. The three capsules below are
+  GameStream, VNC and ADB, in the accent gold, the mini window blue and a dark gray.
+  The background is transparent on purpose, which rules out an adaptive icon: the
+  framework paints its layers onto opaque black. The launcher therefore uses the
+  rasterised copies in mipmap-*, both generated from the same geometry by
+  _icon_connect_gen_e1.ps1 - edit that script, never these files.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- monitor frame, with the screen punched out -->
+    <path
+        android:fillColor="#1A1A1A"
+        android:fillType="evenOdd"
+        android:pathData="M24.624,11.664 L83.376,11.664 A13.824,13.824 0 0 1 97.2,25.488 L97.2,60.048 A13.824,13.824 0 0 1 83.376,73.872 L24.624,73.872 A13.824,13.824 0 0 1 10.8,60.048 L10.8,25.488 A13.824,13.824 0 0 1 24.624,11.664 Z M29.808,22.032 L78.192,22.032 A8.64,8.64 0 0 1 86.832,30.672 L86.832,54.864 A8.64,8.64 0 0 1 78.192,63.504 L29.808,63.504 A8.64,8.64 0 0 1 21.168,54.864 L21.168,30.672 A8.64,8.64 0 0 1 29.808,22.032 Z" />
+    <!-- the pointer sent back to the remote machine -->
+    <path
+        android:fillColor="#1A1A1A"
+        android:pathData="M46.224,31.104 L46.224,51.3216 L51.6672,46.656 L55.1664,54.432 L58.7952,52.7472 L55.296,45.2304 L62.5536,45.2304 Z" />
+    <!-- the three protocols behind the one picture -->
+    <path
+        android:fillColor="#EECE6D"
+        android:pathData="M18.576,84.24 L30.672,84.24 A6.048,6.048 0 0 1 36.72,90.288 L36.72,90.288 A6.048,6.048 0 0 1 30.672,96.336 L18.576,96.336 A6.048,6.048 0 0 1 12.528,90.288 L12.528,90.288 A6.048,6.048 0 0 1 18.576,84.24 Z" />
+    <path
+        android:fillColor="#579CF9"
+        android:pathData="M47.952,84.24 L60.048,84.24 A6.048,6.048 0 0 1 66.096,90.288 L66.096,90.288 A6.048,6.048 0 0 1 60.048,96.336 L47.952,96.336 A6.048,6.048 0 0 1 41.904,90.288 L41.904,90.288 A6.048,6.048 0 0 1 47.952,84.24 Z" />
+    <path
+        android:fillColor="#616161"
+        android:pathData="M77.328,84.24 L89.424,84.24 A6.048,6.048 0 0 1 95.472,90.288 L95.472,90.288 A6.048,6.048 0 0 1 89.424,96.336 L77.328,96.336 A6.048,6.048 0 0 1 71.28,90.288 L71.28,90.288 A6.048,6.048 0 0 1 77.328,84.24 Z" />
+</vector>

@@ -1,0 +1,10 @@
+prefix=D:/Download/MoonlightAVNC-source/MoonlightAVNC/extern/jpeg-prebuilt/armeabi-v7a
+exec_prefix=D:/Download/MoonlightAVNC-source/MoonlightAVNC/extern/jpeg-prebuilt/armeabi-v7a
+libdir=D:/Download/MoonlightAVNC-source/MoonlightAVNC/extern/jpeg-prebuilt/armeabi-v7a/lib
+includedir=D:/Download/MoonlightAVNC-source/MoonlightAVNC/extern/jpeg-prebuilt/armeabi-v7a/include
+
+Name: libjpeg
+Description: A SIMD-accelerated JPEG codec that provides the libjpeg API
+Version: 3.1.4
+Libs: -L${libdir} -ljpeg
+Cflags: -I${includedir}

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Translation of values/strings_vnc.xml.
+  Only the entries that other translatable text refers to by name are provided
+  here; the rest falls back to the English default.
+-->
+<resources>
+
+    <!-- Label of the Scan button on the discovery tab. -->
+    <string name="action_scan">Skenovat</string>
+
+    <string name="desc_mini_window_btn">Mini okno</string>
+    <string name="desc_mini_keys">Ovládací klávesy na dálku</string>
+    <string name="desc_mini_fullscreen">Zpět na celou obrazovku</string>
+    <string name="desc_mini_close">Zavřít mini okno</string>
+    <string name="desc_mini_back">Zpět</string>
+    <string name="desc_mini_home">Domů</string>
+    <string name="desc_mini_overview">Nedávné aplikace</string>
+    <string name="desc_mini_keyboard">Klávesnice</string>
+    <string name="desc_mini_resize">Změnit velikost mini okna</string>
+    <string name="msg_mini_reconnect">Mini okno znovu naváže spojení</string>
+    <string name="msg_mini_no_permission">Pro mini okno povolte překrytí ostatních aplikací</string>
+
+    <!-- Gesture chip labels -->
+    <string name="gesture_single_tap">Jedno klepnutí</string>
+    <string name="gesture_double_tap">Dvojité klepnutí</string>
+    <string name="gesture_long_press">Dlouhé stisknutí</string>
+    <string name="gesture_swipe">Přejetí</string>
+    <string name="gesture_2finger_tap">Klepnutí 2 prsty</string>
+    <string name="gesture_2finger_swipe">Přejetí 2 prsty</string>
+    <string name="gesture_other">Jiné</string>
+
+    <string name="action_restore_default_color">Obnovit výchozí barvu</string>
+
+    <string name="title_backup_password_protection">Ochrana heslem zálohy</string>
+    <string name="msg_backup_password_toggle_auth">Pro změnu tohoto nastavení zadejte PIN, gesto, heslo nebo otisk prstu zamykací obrazovky</string>
+    <string name="desc_vk_close">Zavřít virtuální klávesy</string>
+</resources>

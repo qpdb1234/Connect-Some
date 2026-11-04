@@ -1,0 +1,92 @@
+<!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="@string/pref_servers">
+
+
+    <SwitchPreference
+        app:defaultValue="true"
+        app:key="clipboard_sync"
+        app:summary="@string/pref_clipboard_sync_summary"
+        app:title="@string/pref_clipboard_sync" />
+
+    <!-- GameStream only: the protocol has no clipboard message, so this is the one
+         way a copy can reach the PC without being typed out as keystrokes. -->
+    <SwitchPreference
+        app:defaultValue="true"
+        app:key="gamestream_clipboard_via_vnc"
+        app:dependency="clipboard_sync"
+        app:summary="@string/pref_clipboard_gamestream_vnc_summary"
+        app:title="@string/pref_clipboard_gamestream_vnc" />
+
+    <!-- RFB only, either directly or through the bridge above: turns off the encoding
+         guess in ClipboardTextCodec.decode. -->
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="clipboard_strict_latin1"
+        app:dependency="clipboard_sync"
+        app:summary="@string/pref_clipboard_strict_latin1_summary"
+        app:title="@string/pref_clipboard_strict_latin1" />
+
+    <!-- ADB only: 5000 bytes is where a long copy currently vanishes without a sound.
+         The number goes to the encoder process as `clipMax`, so the device trims to the
+         same ceiling this app does. Its default must match CLIPBOARD_LIMIT_DEFAULT. -->
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="clipboard_custom_limit"
+        app:dependency="clipboard_sync"
+        app:summary="@string/pref_clipboard_limit_summary"
+        app:title="@string/pref_clipboard_limit" />
+
+    <com.limelight.ui.prefs.NumericEditTextPreference
+        app:defaultValue="5000"
+        app:dependency="clipboard_custom_limit"
+        app:dialogMessage="@string/pref_clipboard_limit_dialog"
+        app:key="clipboard_max_bytes"
+        app:title="@string/pref_clipboard_limit_value"
+        app:useSimpleSummaryProvider="true" />
+
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="lock_saved_server"
+        app:summary="@string/pref_saved_server_lock_summary"
+        app:title="@string/pref_saved_server_lock" />
+
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="auto_reconnect"
+        app:summary="@string/pref_auto_reconnect_summary"
+        app:title="@string/pref_auto_reconnect" />
+
+    <Preference
+        app:key="forget_known_hosts"
+        app:summary="@string/pref_forget_known_hosts_summary"
+        app:title="@string/pref_forget_known_hosts" />
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_search"
+        app:title="@string/pref_discovery">
+
+        <!-- The old autorun switch is gone: a scan is started from the home screen. -->
+        <SwitchPreference
+            app:defaultValue="true"
+            app:key="rediscovery_indicator"
+            app:summary="@string/pref_rediscovery_indicator_summary"
+            app:title="@string/pref_rediscovery_indicator" />
+    </PreferenceCategory>
+
+    <!-- Puts just this screen's options back to what the app ships with, after a confirm.
+         Saved servers live in the database, not here, so they are untouched. See
+         PrefsActivity.PrefFragment and pref_reset_category_defaults. -->
+    <Preference
+        app:icon="@drawable/ic_refresh"
+        app:key="reset_category_defaults"
+        app:title="@string/pref_reset_category_defaults" />
+
+</PreferenceScreen>

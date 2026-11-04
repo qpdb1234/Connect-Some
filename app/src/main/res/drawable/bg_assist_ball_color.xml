@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2026  Connect Some.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<!--
+  The color row in the assist ball flyout: a rounded swatch whose fill is set at runtime
+  with GradientDrawable.setColor, so the stroke and corners survive the recolor (a plain
+  background tint would replace them too). The border keeps a white or near-white
+  selection distinguishable from the panel behind it.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/colorAssistBall" />
+    <corners android:radius="6dp" />
+    <stroke
+        android:width="1dp"
+        android:color="#33000000" />
+</shape>

@@ -1,0 +1,1284 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.limelight.model.ServerProfile" />
+        <variable
+            name="viewModel"
+            type="com.limelight.viewmodel.VncViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start">
+
+        <LinearLayout
+            android:id="@+id/primary_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:animateLayoutChanges="true"
+            tools:ignore="UselessParent"> <!--Its not useless-->
+
+            <!--
+                The button column wrapped in a scroller. In portrait it is shorter than the
+                screen and the ScrollView simply centers it as before; in landscape the column
+                of buttons can outgrow the available height, and rather than have its bottom
+                rows clipped off screen, the ScrollView bounds itself to the parent and lets
+                the column scroll. The panels beside it are placed by where their opener sits
+                on screen, not by where it sits inside this column (see Toolbar.offsetFor), so
+                scrolling the column cannot push a panel out over the top.
+            -->
+            <ScrollView
+                android:id="@+id/toolbar_column_scroll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/toolbar_column"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_round_rect"
+                android:orientation="vertical">
+
+                <!--
+                    The column is split by what a row does. The rows at the top change how the
+                    session looks or what it shows: the picture's display mode, the color of the
+                    bands around it, the pointer marker, the floating ball, the keyboard's own
+                    appearance, the zoom, the performance readout, and the two input knobs that
+                    decide how a swipe reaches the remote pointer. The rows under them are features
+                    reached for while working: raising the keyboard, the row of keys over the
+                    stream, the mini window, file transfer, silence, the device shortcuts. Below
+                    both groups sit the rows that never move: the drawer's own settings, the
+                    edge-width row and, last of all, the exit.
+
+                    Keep this sequence in step with Toolbar.setupToolbarItems(): that list is what
+                    actually fills these slots at startup (Toolbar.applyColumnOrder moves the rows
+                    into it) and what the panel's "restore defaults" returns to, so a row shuffled
+                    here alone changes nothing you can see. Three rows near the bottom are
+                    deliberately absent from that list: the panel's own opener, the edge-width row
+                    and the exit cannot be switched off or moved - a drawer whose every button had
+                    been ticked off would leave no way back in. The opener and the exit are in
+                    addition picked up and re-attached at the end on every order change, so no
+                    stored order can put anything below them; their place in this file only says
+                    which slots the reorderable rows are counted against.
+                -->
+
+                <!--
+                    The look-and-show rows. Most of them are doors to a panel rather than actions
+                    on the stream, and they are adjusted once and then forgotten; a row that only
+                    opens a panel costs little when a thumb lands on it by mistake, which the
+                    action rows underneath cannot promise.
+                -->
+                <ToggleButton
+                    android:id="@+id/view_modes_toggle"
+                    style="@style/ToolbarFlyoutToggle"
+                    android:contentDescription="@string/desc_view_modes_toggle"
+                    android:drawableStart="@drawable/ic_visibility" />
+
+                <!--
+                    Color of the letterbox bands left around the picture (top/bottom for a
+                    landscape stream on an upright phone, and vice versa). A single tap opens
+                    the palette; the picked color is a persisted, viewer-wide fill painted onto
+                    the container behind the video, applied live. Direct-scan path only - the
+                    GL presenter fills the frame itself - but it stays available everywhere
+                    because the choice is global rather than per-session.
+                -->
+                <ImageButton
+                    android:id="@+id/letterbox_color_btn"
+                    style="@style/ImageButton.Bounded"
+                    android:contentDescription="@string/desc_letterbox_color_btn"
+                    android:src="@drawable/ic_palette" />
+
+                <!--
+                    Opens the local pointer marker's panel: the switch that draws a mark on the
+                    picture at the place the computer's pointer actually is, the mark's shape and
+                    its size. Only an opener, like the ball and the keyboard around it - the panel
+                    holds the real switch, so a stray tap on this row cannot make a mark appear
+                    the user was trying to get rid of.
+                    The system arrow of an attached mouse is not this button's business; that
+                    one stays under Settings -> Input.
+                -->
+                <ToggleButton
+                    android:id="@+id/local_cursor_toggle"
+                    style="@style/ToolbarFlyoutToggle"
+                    android:contentDescription="@string/desc_local_cursor_toggle"
+                    android:drawableStart="@drawable/ic_mouse" />
+
+                <!--
+                    Opens the assist ball settings. This toggle is only an opener - the
+                    persisted on/off switch sits inside its flyout, which keeps it out of
+                    the way of the 'uncheck everything when the drawer closes' pass.
+                -->
+                <ToggleButton
+                    android:id="@+id/assist_ball_toggle"
+                    style="@style/ToolbarFlyoutToggle"
+                    android:contentDescription="@string/desc_assist_ball_toggle"
+                    android:drawableStart="@drawable/ic_assist_ball" />
+
+                <!--
+                    Opens the full keyboard settings, an opener only like the ball above it: the
+                    keyboard's own on/off lives inside its flyout, and a QWERTY board that
+                    popped up on a stray tap of this row would eat the touches underneath
+                    it. See ui/vnc/FullKeyboard.kt.
+                -->
+                <ToggleButton
+                    android:id="@+id/full_keyboard_toggle"
+                    style="@style/ToolbarFlyoutToggle"
+                    android:contentDescription="@string/desc_full_keyboard_toggle"
+                    android:drawableStart="@drawable/ic_keyboard_full" />
+
+                <!-- NB: its flyout (zoom_options_group) is aligned with layout_gravity="bottom".
+                     Any button below this one only pushes that flyout further down the column,
+                     which Toolbar corrects when the flyout opens (see alignWithToggle). -->
+                <ToggleButton
+                    android:id="@+id/zoom_options_toggle"
+                    style="@style/ToolbarFlyoutToggle"
+                    android:contentDescription="@string/desc_zoom_options_btn"
+                    android:drawableStart="@drawable/ic_zoom_options" />
+
+                <!--Toggle the live latency / FPS / dropped-frame overlay. Direct on/off (no flyout). -->
+                <ToggleButton
+                    android:id="@+id/stats_toggle"
+                    style="@style/ImageButton.Toggle"
+                    android:checked="@{viewModel.statsOverlayEnabled}"
+                    android:contentDescription="@string/desc_stats_toggle"
+                    android:drawableStart="@drawable/ic_stats"
+                    android:padding="12dp" />
+
+                <ToggleButton
+                    android:id="@+id/gesture_style_toggle"
+                    style="@style/ToolbarFlyoutToggle"
+                    android:contentDescription="@string/pref_gesture_style"
+                    android:drawableStart="@drawable/ic_gesture"
+                    app:isEnabled="@{viewModel.activeViewMode != ServerProfile.VIEW_MODE_NO_VIDEO}" />
+
+                <!--
+                    Opens the panel that sets how far a swipe drags the remote pointer - the
+                    sensitivity the input settings screen has always offered, moved up to where it
+                    can be retuned mid-session. Next to the gesture style above it, because both
+                    decide how a touch on this screen reaches the pointer on that one.
+                -->
+                <ToggleButton
+                    android:id="@+id/mouse_speed_toggle"
+                    style="@style/ToolbarFlyoutToggle"
+                    android:contentDescription="@string/desc_mouse_speed_toggle"
+                    android:drawableStart="@drawable/ic_mouse_speed" />
+
+                <!--
+                    The feature rows: what a session is actually interrupted for. Raising the IME
+                    and the key row, putting the picture into a window of its own, sending a file,
+                    silencing the remote audio and the shortcuts for a driven device - used during
+                    the session rather than tuned once at its start.
+                -->
+                <ImageButton
+                    android:id="@+id/keyboard_btn"
+                    style="@style/ImageButton.Bounded"
+                    android:contentDescription="@string/desc_keyboard_btn"
+                    android:src="@drawable/ic_keyboard" />
+
+                <!--
+                    Raises the row of keys over the stream. A tick rather than a plain button:
+                    the bar has a state, and a button that only ever pushed it up - with the
+                    bar's own close key gone - left no way to put it back down from here.
+                    The tick follows the bar wherever it moves (see Toolbar.initialize).
+                -->
+                <ToggleButton
+                    android:id="@+id/virtual_keys_btn"
+                    style="@style/ImageButton.Toggle"
+                    android:contentDescription="@string/desc_virtual_keys_btn"
+                    android:drawableStart="@drawable/ic_keyboard_mini"
+                    android:padding="12dp" />
+
+                <!--
+                    Move the picture into a floating window that stays on top of other
+                    apps. No flyout and no state to reflect: it is a one-way action, and
+                    the window itself carries everything the user needs afterwards. On the
+                    two decoding protocols it costs one reconnect, which is explained in
+                    the toast rather than hidden here (see MiniWindow).
+                -->
+                <ImageButton
+                    android:id="@+id/mini_window_btn"
+                    style="@style/ImageButton.Bounded"
+                    android:contentDescription="@string/desc_mini_window_btn"
+                    android:src="@drawable/ic_mini_window" />
+
+                <!--
+                    Opens the LocalSend panel: the receive switch and the list of nearby
+                    devices live inside its flyout, so a stray tap on this row cannot send
+                    anything anywhere. See com/limelight/localsend.
+                -->
+                <ToggleButton
+                    android:id="@+id/localsend_toggle"
+                    style="@style/ToolbarFlyoutToggle"
+                    android:contentDescription="@string/desc_localsend_toggle"
+                    android:drawableStart="@drawable/ic_localsend" />
+
+                <!--
+                    Silence the remote audio on this phone. Direct on/off like the perf overlay
+                    row above, and deliberately without a slider: the host's volume is not
+                    reachable over any of the protocols, so there is nothing to slide. The
+                    choice is persisted (AppPreferences.Viewer.audioMuted), so a silent host
+                    stays silenced across sessions. VNC has no audio to silence, which is why
+                    Toolbar shows or hides this button (see VncClient.supportsAudio).
+                -->
+                <ToggleButton
+                    android:id="@+id/audio_toggle"
+                    style="@style/ImageButton.Toggle"
+                    android:checked="@{viewModel.audioMuted}"
+                    android:contentDescription="@string/desc_audio_toggle"
+                    android:drawableStart="@drawable/ic_audio"
+                    android:padding="12dp" />
+
+                <!--
+                    Shortcuts for a directly driven Android device. Its visibility cannot
+                    be a layout expression: the protocol is a property of the live client,
+                    which appears long after this layout is bound (see Toolbar.onStateChange).
+                -->
+                <ToggleButton
+                    android:id="@+id/android_actions_toggle"
+                    style="@style/ToolbarFlyoutToggle"
+                    android:contentDescription="@string/title_android_actions"
+                    android:drawableStart="@drawable/ic_android_device" />
+
+                <!-- The drawer's own rows, below both groups: what is in sight, how wide the
+                     swipe edge is, and the session exit. The panel's opener and the exit are
+                     in the panel's reorderable list (always shown, never tickable off); only
+                     the edge-width opener stays out of the list, kept at the bottom of the
+                     column by Toolbar.applyColumnOrder. -->
+
+                <!--
+                    Opens the panel that decides which of the buttons above are in sight at
+                    all. It is in that panel's list - and can be dragged through it - but its
+                    tick stays checked and dimmed: a drawer whose every button had been
+                    ticked off would leave no way back in. (Toolbar.applyColumnOrder moves
+                    the listed rows around; only the edge-width opener below keeps no slot.)
+                -->
+                <ToggleButton
+                    android:id="@+id/toolbar_items_toggle"
+                    style="@style/ToolbarFlyoutToggle"
+                    android:contentDescription="@string/desc_toolbar_items_toggle"
+                    android:drawableStart="@drawable/ic_settings" />
+
+                <!--
+                    Opens the panel that sets how wide a strip along this edge a swipe has to
+                    start in to open the drawer. Like the marker and ball rows it is only an
+                    opener; the slider lives in its flyout. It is the one row the panel does
+                    not list at all, so Toolbar.applyColumnOrder appends it after the listed
+                    rows, at the very bottom of the column. The same value is offered under
+                    Settings -> Input.
+                -->
+                <ToggleButton
+                    android:id="@+id/drawer_edge_toggle"
+                    style="@style/ToolbarFlyoutToggle"
+                    android:contentDescription="@string/desc_drawer_edge_toggle"
+                    android:drawableStart="@drawable/ic_toolbar" />
+
+                <!--
+                    Ends the session, the way the system Back button would. It is in the
+                    panel's list and can be dragged anywhere among the rows - but its tick
+                    stays checked and dimmed, because an exit that could be hidden would
+                    leave no way out of a session.
+                -->
+                <ImageButton
+                    android:id="@+id/exit_btn"
+                    style="@style/ImageButton.Bounded"
+                    android:contentDescription="@string/desc_exit_btn"
+                    android:src="@drawable/ic_exit" />
+            </LinearLayout>
+            </ScrollView>
+
+            <LinearLayout
+                android:id="@+id/zoom_options_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:background="@drawable/bg_round_rect">
+
+                <!-- Reset zoom: tap restores the saved default zoom; a hold says the button's
+                     name like every other icon here (see installTooltips), rather than the old
+                     long-press snap to 100%.
+                     Kept first in the group so the flyout reads reset / lock / save, as AVNC does. -->
+                <ImageButton
+                    android:id="@+id/zoom_reset_btn"
+                    style="@style/ImageButton.Bounded"
+                    android:contentDescription="@string/desc_reset_zoom_btn"
+                    android:src="@drawable/ic_zoom_reset" />
+
+                <ToggleButton
+                    android:id="@+id/zoom_lock_btn"
+                    style="@style/ImageButton.Toggle"
+                    android:checked="@{viewModel.profileLive.fZoomLocked}"
+                    android:contentDescription="@string/desc_lock_zoom_btn"
+                    android:drawableStart="@drawable/ic_lock"
+                    android:padding="12dp" />
+
+                <ImageButton
+                    android:id="@+id/zoom_save_btn"
+                    style="@style/ImageButton.Bounded"
+                    android:alpha="@{viewModel.profileLive.saved ? 1f : .25f}"
+                    android:contentDescription="@string/desc_save_zoom_btn"
+                    android:enabled="@{viewModel.profileLive.saved}"
+                    android:src="@drawable/ic_save" />
+
+            </LinearLayout>
+
+            <!--
+                Flyout with one tick per toolbar button, plus the buttons that commit or
+                discard the edit. The rows are filled from code (see Toolbar.setupToolbarItems):
+                the buttons and their preference keys belong in one place next to their click
+                handlers, rather than being written twice - here and there - and drifting apart.
+                The edit is buffered: a tick or a drag only changes an in-memory draft, and
+                nothing reaches the preferences (or the column) until OK is pressed. Closing
+                without OK reverts. Order is changed by holding a row's handle and dragging it
+                (ItemTouchHelper), no longer by the old up/down arrows. Like the ball's and the
+                keyboard's panels this one scrolls, because in landscape the drawer can be
+                shorter than this column of controls; the list inside keeps its own fixed height
+                so the two scrolls never end up fighting over the same drag.
+            -->
+            <ScrollView
+                android:id="@+id/toolbar_items_group"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:background="@drawable/bg_round_rect"
+                android:paddingHorizontal="@dimen/padding_small"
+                android:paddingVertical="@dimen/padding_small"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:layout_marginBottom="@dimen/margin_small"
+                        android:text="@string/title_toolbar_items"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:layout_marginBottom="@dimen/margin_small"
+                        android:text="@string/tip_toolbar_items_order"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/toolbar_items_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
+                        android:scrollbars="vertical" />
+
+                    <!--
+                        Two rows so the three actions fit the panel's 220dp width in every
+                        language: 'Restore defaults' on its own line (it is the longest and the
+                        least used), then Cancel / OK right-aligned like a dialog's buttons.
+                    -->
+                    <Button
+                        android:id="@+id/toolbar_items_reset"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:text="@string/action_restore_defaults" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/toolbar_items_cancel"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@android:string/cancel" />
+
+                        <Button
+                            android:id="@+id/toolbar_items_apply"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:text="@android:string/ok" />
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+
+            <!--
+                Flyout with the local pointer marker: the on/off, which of the two shapes is
+                drawn and how big. Scrollable and as wide as the ball's panel, for the same
+                landscape-height reason.
+
+                The shape and the size are only live while the marker itself is on, so Toolbar
+                enables and disables those two together (see setupLocalCursorControls).
+            -->
+            <!--
+                Flyout with the drawer's edge trigger width: the strip, measured from the edge the
+                toolbar sits on, within which a sideways swipe opens the drawer. One slider plus
+                the reset every panel of this drawer offers. It edits the same stored key as the
+                "Toolbar swipe edge width" row of the toolbar section under Settings -> Viewer, so
+                the two are never out of step. Scrollable like the panels around it for
+                landscape, where the drawer can be shorter.
+            -->
+            <ScrollView
+                android:id="@+id/drawer_edge_group"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:background="@drawable/bg_round_rect"
+                android:paddingHorizontal="@dimen/padding_small"
+                android:paddingVertical="@dimen/padding_small"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:layout_marginBottom="@dimen/margin_small"
+                        android:text="@string/pref_drawer_edge_width_summary"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/drawer_edge_width_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:labelFor="@id/drawer_edge_width"
+                        android:text="@string/pref_drawer_edge_width"
+                        android:textColor="?android:textColorSecondary"
+                        tools:text="Trigger width 20 dp" />
+
+                    <!-- The stored value is the width in dp itself, so the bar needs no mapping. -->
+                    <SeekBar
+                        android:id="@+id/drawer_edge_width"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/action_btn_size"
+                        android:max="120"
+                        android:min="12"
+                        android:minHeight="@dimen/action_btn_size" />
+
+                    <!-- Back to what a fresh install uses: the default 20 dp strip. The width
+                         applies the moment it is stored, so this has nothing else to commit.
+                         Mirrors the other panels' reset. -->
+                    <Button
+                        android:id="@+id/drawer_edge_reset"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:text="@string/action_restore_defaults" />
+                </LinearLayout>
+            </ScrollView>
+
+            <ScrollView
+                android:id="@+id/local_cursor_group"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:background="@drawable/bg_round_rect"
+                android:paddingHorizontal="@dimen/padding_small"
+                android:paddingVertical="@dimen/padding_small"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/cursor_marker_enable"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/action_btn_size"
+                        android:text="@string/pref_local_cursor_marker_show" />
+
+                    <!--
+                        Says where the mark lands, because the honest answer is that the two
+                        protocols do not know the same thing (see InputView.onDraw).
+                    -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:layout_marginBottom="@dimen/margin_small"
+                        android:text="@string/pref_local_cursor_marker_show_summary"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:text="@string/pref_cursor_marker_shape"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <RadioGroup
+                        android:id="@+id/cursor_marker_shape_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <RadioButton
+                            android:id="@+id/cursor_marker_shape_arrow"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/pref_cursor_marker_shape_arrow" />
+
+                        <RadioButton
+                            android:id="@+id/cursor_marker_shape_dot"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/pref_cursor_marker_shape_dot" />
+                    </RadioGroup>
+
+                    <TextView
+                        android:id="@+id/cursor_marker_size_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:labelFor="@id/cursor_marker_size"
+                        android:text="@string/pref_cursor_marker_size"
+                        android:textColor="?android:textColorSecondary"
+                        tools:text="Marker size 60%" />
+
+                    <!-- The stored value is the percentage itself, so the bar needs no mapping. -->
+                    <SeekBar
+                        android:id="@+id/cursor_marker_size"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/action_btn_size"
+                        android:max="200"
+                        android:min="1"
+                        android:minHeight="@dimen/action_btn_size" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:text="@string/pref_cursor_marker_color"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <!-- Tappable swatch: opens the marker palette. Its fill is set from code, so
+                         the drawable here only fixes the shape and a border that keeps a near
+                         white selection visible on the dark panel. -->
+                    <View
+                        android:id="@+id/cursor_marker_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/action_btn_size"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:background="@drawable/bg_assist_ball_color"
+                        android:clickable="true"
+                        android:contentDescription="@string/pref_cursor_marker_color"
+                        android:focusable="true" />
+
+                    <!-- Puts the look of the mark back to what a fresh install draws: the default
+                         dot shape, default size, default color. Whether the marker is shown at
+                         all is the switch above and stays where the user left it. Mirrors the
+                         other panels' reset, and asks for confirmation before it resets. -->
+                    <Button
+                        android:id="@+id/cursor_marker_reset"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:text="@string/action_restore_defaults" />
+                </LinearLayout>
+            </ScrollView>
+
+            <!--
+                Flyout with the swipe sensitivity: how far the remote pointer (and whatever else
+                a swipe is bound to) travels for a given finger movement. One slider plus the
+                reset every panel of this drawer offers. It edits the same stored key as the
+                "Swipe sensitivity" row of Settings -> Input, so the two are never out of step;
+                the range here is the wider one (see AppPreferences.SWIPE_SENSITIVITY_MIN/MAX).
+                Scrollable like the panels around it, for landscape.
+            -->
+            <ScrollView
+                android:id="@+id/mouse_speed_group"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:background="@drawable/bg_round_rect"
+                android:paddingHorizontal="@dimen/padding_small"
+                android:paddingVertical="@dimen/padding_small"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:layout_marginBottom="@dimen/margin_small"
+                        android:text="@string/pref_mouse_speed_summary"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <TextView
+                        android:id="@+id/mouse_speed_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:labelFor="@id/mouse_speed"
+                        android:text="@string/pref_swipe_sensitivity"
+                        android:textColor="?android:textColorSecondary"
+                        tools:text="Sensitivity 100%" />
+
+                    <!-- The stored value is the percentage in tenths, so the bar is scaled in code. -->
+                    <SeekBar
+                        android:id="@+id/mouse_speed"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/action_btn_size"
+                        android:max="40"
+                        android:min="1"
+                        android:minHeight="@dimen/action_btn_size" />
+
+                    <!-- Back to what a fresh install uses: 100%, the pointer travelling exactly as
+                         far as the finger. Mirrors the other panels' reset. -->
+                    <Button
+                        android:id="@+id/mouse_speed_reset"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:text="@string/action_restore_defaults" />
+                </LinearLayout>
+            </ScrollView>
+
+            <!--
+                Flyout with the assist ball settings. Scrollable because in landscape the
+                available height can be smaller than this column of controls.
+            -->
+            <ScrollView
+                android:id="@+id/assist_ball_group"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:background="@drawable/bg_round_rect"
+                android:paddingHorizontal="@dimen/padding_small"
+                android:paddingVertical="@dimen/padding_small"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/assist_ball_enable"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/action_btn_size"
+                        android:text="@string/label_assist_ball_enable" />
+
+                    <TextView
+                        android:id="@+id/assist_ball_opacity_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:labelFor="@id/assist_ball_opacity"
+                        android:textColor="?android:textColorSecondary"
+                        tools:text="Transparency 30%" />
+
+                    <SeekBar
+                        android:id="@+id/assist_ball_opacity"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/action_btn_size"
+                        android:max="100"
+                        android:minHeight="@dimen/action_btn_size" />
+
+                    <TextView
+                        android:id="@+id/assist_ball_size_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:labelFor="@id/assist_ball_size"
+                        android:textColor="?android:textColorSecondary"
+                        tools:text="Size 48 dp" />
+
+                    <SeekBar
+                        android:id="@+id/assist_ball_size"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/action_btn_size"
+                        android:max="100"
+                        android:minHeight="@dimen/action_btn_size" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:text="@string/label_assist_ball_color"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <!-- Tappable swatch: opens the palette. Its fill is set from code, so
+                         the drawable here only fixes the shape and a border that keeps a
+                         near-white selection visible on the dark panel. -->
+                    <View
+                        android:id="@+id/assist_ball_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/action_btn_size"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:background="@drawable/bg_assist_ball_color"
+                        android:clickable="true"
+                        android:contentDescription="@string/label_assist_ball_color"
+                        android:focusable="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:text="@string/label_assist_ball_action"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <RadioGroup
+                        android:id="@+id/assist_ball_action_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <RadioButton
+                            android:id="@+id/assist_ball_action_toolbar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/action_assist_ball_toolbar" />
+
+                        <RadioButton
+                            android:id="@+id/assist_ball_action_keyboard"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/action_assist_ball_keyboard" />
+                    </RadioGroup>
+
+                    <!--
+                        Everything above takes effect the moment it is moved, so this has nothing
+                        to commit: it puts the knobs back to their untouched values. It leaves the
+                        enable switch alone, exactly as the full keyboard's restore does - hiding
+                        the ball from under the fingers of whoever just asked to restore its
+                        settings is not what the button reads as.
+                    -->
+                    <Button
+                        android:id="@+id/assist_ball_reset"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:text="@string/action_restore_defaults" />
+                </LinearLayout>
+            </ScrollView>
+
+            <!--
+                Flyout with the full keyboard's three knobs: raise it, fade it, pin it.
+                Same scrollable column as the ball's, for the same landscape-height reason.
+            -->
+            <ScrollView
+                android:id="@+id/full_keyboard_group"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:background="@drawable/bg_round_rect"
+                android:paddingHorizontal="@dimen/padding_small"
+                android:paddingVertical="@dimen/padding_small"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/full_keyboard_enable"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/action_btn_size"
+                        android:text="@string/label_full_keyboard_enable" />
+
+                    <TextView
+                        android:id="@+id/full_keyboard_opacity_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:labelFor="@id/full_keyboard_opacity"
+                        android:textColor="?android:textColorSecondary"
+                        tools:text="Transparency 30%" />
+
+                    <SeekBar
+                        android:id="@+id/full_keyboard_opacity"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/action_btn_size"
+                        android:max="100"
+                        android:minHeight="@dimen/action_btn_size" />
+
+                    <TextView
+                        android:id="@+id/full_keyboard_scale_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:labelFor="@id/full_keyboard_scale"
+                        android:textColor="?android:textColorSecondary"
+                        tools:text="Size 100%" />
+
+                    <SeekBar
+                        android:id="@+id/full_keyboard_scale"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/action_btn_size"
+                        android:max="150"
+                        android:minHeight="@dimen/action_btn_size" />
+
+                    <CheckBox
+                        android:id="@+id/full_keyboard_drag_lock"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/action_btn_size"
+                        android:text="@string/label_full_keyboard_drag_lock" />
+
+                    <!--
+                        Everything above takes effect the moment it is moved, so this row has
+                        nothing to commit: it only puts the knobs back to their untouched values.
+                        The panel needs no OK either - tapping the toolbar's keyboard row again
+                        puts it away, which is how the marker, ball and edge-width panels work
+                        too. "Restore defaults" is too long to share a row with anything.
+                    -->
+                    <Button
+                        android:id="@+id/full_keyboard_reset"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:text="@string/action_restore_defaults" />
+                </LinearLayout>
+            </ScrollView>
+
+            <!--
+                Flyout with LocalSend: everything the standalone screen does, because a stream
+                that is already running is exactly when a file is wanted on the other machine.
+                A switch for receiving, the two ways to send, the outbox with one removal per
+                file and one for the whole batch, the four reach-the-device actions (search
+                again, add by address, hand the outbox out as a download link, stop sharing),
+                and both device lists - discovered and pinned.
+
+                The rows are filled from code because peers and files come and go (see
+                Toolbar.setupLocalSendControls), and they are the same rows the standalone
+                screen draws (see LsWidgets) so that the two cannot drift apart. The panel
+                scrolls like its siblings: it is measured against the screen, so a long outbox
+                stays reachable in landscape instead of running off the bottom.
+            -->
+            <ScrollView
+                android:id="@+id/localsend_group"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:background="@drawable/bg_round_rect"
+                android:paddingHorizontal="@dimen/padding_small"
+                android:paddingVertical="@dimen/padding_small"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/localsend_receive"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/action_btn_size"
+                        android:text="@string/label_localsend_receive" />
+
+                    <TextView
+                        android:id="@+id/localsend_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:text="@string/label_localsend_searching"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <Button
+                        android:id="@+id/localsend_add_files_btn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/action_localsend_add_files" />
+
+                    <Button
+                        android:id="@+id/localsend_send_text_btn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/action_localsend_send_text" />
+
+                    <!-- How much the outbox holds right now; the rows below send exactly that. -->
+                    <TextView
+                        android:id="@+id/localsend_staged_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:textColor="?android:textColorSecondary"
+                        android:visibility="gone" />
+
+                    <!-- One row per held file, each with its own removal. Filled from code. -->
+                    <LinearLayout
+                        android:id="@+id/localsend_staged_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+                    <Button
+                        android:id="@+id/localsend_remove_all_btn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/action_localsend_remove_all"
+                        android:visibility="gone" />
+
+                    <!--
+                        The four ways to reach a machine, in the order the standalone screen
+                        gives them: widen what discovery sees, name one that never announced
+                        itself, hand the outbox to a browser instead, and take that back down.
+                    -->
+                    <Button
+                        android:id="@+id/localsend_rescan_btn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/action_localsend_rescan" />
+
+                    <!--
+                        Problem-7 #4: opens LocalSend's draggable overlay. Kept in the drawer
+                        next to rescan because the streamer's most common "send this while I
+                        keep using another app" flow starts here, not on the standalone page.
+
+                        The button style floors every label at 88dp, and this label is two
+                        characters - the frame came out as wide as 重新搜索's and read as padding
+                        rather than as a border around the word. The floor goes away so the
+                        outline closes in on the text it names.
+                    -->
+                    <Button
+                        android:id="@+id/localsend_float_btn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="0dp"
+                        android:text="@string/action_localsend_float" />
+
+                    <Button
+                        android:id="@+id/localsend_add_ip_btn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_localsend_add_by_ip" />
+
+                    <Button
+                        android:id="@+id/localsend_share_link_btn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/action_localsend_share_link" />
+
+                    <!--
+                        The live links under the button that made them. The header is the collapse
+                        switch, filled from code (see Toolbar.setupLocalSendControls); the container
+                        holds one row per link.
+                    -->
+                    <TextView
+                        android:id="@+id/localsend_shares_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:textColor="?android:textColorSecondary"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/localsend_shares_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+                    <Button
+                        android:id="@+id/localsend_stop_shares_btn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/action_localsend_stop_shares"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/localsend_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+                    <TextView
+                        android:id="@+id/localsend_favorites_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:text="@string/title_localsend_favorites"
+                        android:textColor="?android:textColorSecondary"
+                        android:visibility="gone" />
+
+                    <!-- Clears every pinned device at once, behind a confirm. Lives beside the
+                         heading and shares its visibility, so it exists only while there is a
+                         list to empty. -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/localsend_clear_favorites_btn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:text="@string/action_clear_favorites"
+                        android:visibility="gone" />
+
+                    <!-- Pinned devices, dragged to reorder. Nested scroll off: the panel is a
+                         ScrollView, so a row's handle - not a stray vertical drag - starts it. -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/localsend_favorites_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:scrollbars="none" />
+
+                    <ProgressBar
+                        android:id="@+id/localsend_progress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:max="100"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/localsend_progress_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:textColor="?android:textColorSecondary"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </ScrollView>
+
+            <!--
+                Flyout with the shortcuts of a directly driven Android device. Shown only
+                while the live client is one (see Toolbar.onStateChange), which is also why
+                none of these widgets are data bound: they are pure one-way requests.
+
+                The three navigation keys are the only keys this protocol can offer
+                reliably - every other key press is a momentary tap. Screen power and night
+                mode are asked as a toggle: the device never reports back what it did, so
+                the panel keeps its own idea of the current state.
+            -->
+            <ScrollView
+                android:id="@+id/android_actions_group"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:background="@drawable/bg_round_rect"
+                android:paddingHorizontal="@dimen/padding_small"
+                android:paddingVertical="@dimen/padding_small"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:text="@string/title_android_actions"
+                        android:textColor="?android:textColorSecondary" />
+
+                    <Button
+                        android:id="@+id/android_back_btn"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start|center_vertical"
+                        android:text="@string/action_android_back" />
+
+                    <Button
+                        android:id="@+id/android_home_btn"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start|center_vertical"
+                        android:text="@string/action_android_home" />
+
+                    <Button
+                        android:id="@+id/android_recents_btn"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start|center_vertical"
+                        android:text="@string/action_android_recents" />
+
+                    <Button
+                        android:id="@+id/android_rotate_btn"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start|center_vertical"
+                        android:text="@string/action_android_rotate" />
+
+                    <Button
+                        android:id="@+id/android_screen_btn"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start|center_vertical"
+                        android:text="@string/action_android_screen" />
+
+                    <Button
+                        android:id="@+id/android_night_btn"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start|center_vertical"
+                        android:text="@string/action_android_night" />
+
+                    <Button
+                        android:id="@+id/android_power_btn"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start|center_vertical"
+                        android:text="@string/action_android_power" />
+
+                    <!--
+                      Leaving the encoder process running is what makes the next connection
+                      instant; killing it is what saves the device's battery. Per app rather
+                      than per server, because it is a habit and not a property of a device.
+                    -->
+                    <CheckBox
+                        android:id="@+id/android_keep_server"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:minHeight="@dimen/action_btn_size"
+                        android:text="@string/pref_android_keep_server_on_disconnect" />
+                </LinearLayout>
+            </ScrollView>
+
+            <!--
+                Flyout with the three gesture styles. Wrapped in a scroll view for the same
+                landscape-height reason as its siblings: three rows of text are shorter than
+                the panels above, but not shorter than what a landscape drawer leaves.
+                The RadioGroup keeps the id the code binds its radios to; the frame belongs
+                to the scroll view.
+            -->
+            <ScrollView
+                android:id="@+id/gesture_style_scroll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:background="@drawable/bg_round_rect"
+                android:paddingStart="@dimen/padding_small"
+                android:paddingEnd="@dimen/padding_normal"
+                android:scrollbars="none">
+
+                <RadioGroup
+                    android:id="@+id/gesture_style_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/gesture_style_auto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pref_gesture_style_auto" />
+
+                    <RadioButton
+                        android:id="@+id/gesture_style_touchscreen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pref_gesture_style_touchscreen" />
+
+                    <RadioButton
+                        android:id="@+id/gesture_style_touchpad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pref_gesture_style_touchpad" />
+                </RadioGroup>
+            </ScrollView>
+
+
+            <!--
+                Flyout with the three view modes. Like every other panel here it is placed
+                against the bottom of the column and then pushed up to its opener by
+                Toolbar.alignWithToggle: which row sits where depends on the buttons the
+                user switched off, so the XML cannot say it.
+            -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/view_mode_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:background="@drawable/bg_round_rect"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/view_mode_normal"
+                    style="@style/Button.IconOnly"
+                    android:contentDescription="@string/desc_view_mode_normal"
+                    app:icon="@drawable/ic_video_mouse" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/view_mode_no_input"
+                    style="@style/Button.IconOnly"
+                    android:contentDescription="@string/desc_view_mode_no_input"
+                    app:icon="@drawable/ic_input_off" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/view_mode_no_video"
+                    style="@style/Button.IconOnly"
+                    android:contentDescription="@string/desc_view_mode_no_video"
+                    app:icon="@drawable/ic_video_off" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        </LinearLayout>
+
+    </FrameLayout>
+</layout>

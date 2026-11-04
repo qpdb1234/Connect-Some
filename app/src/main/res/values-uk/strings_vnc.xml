@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Translation of values/strings_vnc.xml.
+  Only the entries that other translatable text refers to by name are provided
+  here; the rest falls back to the English default.
+-->
+<resources>
+
+    <!-- Label of the Scan button on the discovery tab. -->
+    <string name="action_scan">Сканизувати</string>
+
+    <string name="desc_mini_window_btn">Міні-вікно</string>
+    <string name="desc_mini_keys">Клавіші дистанційного керування</string>
+    <string name="desc_mini_fullscreen">Повернутися в повноекранний режим</string>
+    <string name="desc_mini_close">Закрити міні-вікно</string>
+    <string name="desc_mini_back">Назад</string>
+    <string name="desc_mini_home">Головна</string>
+    <string name="desc_mini_overview">Нещодавні застосунки</string>
+    <string name="desc_mini_keyboard">Клавіатура</string>
+    <string name="desc_mini_resize">Змінити розмір міні-вікна</string>
+    <string name="msg_mini_reconnect">Міні-вікно перепідключає потік</string>
+    <string name="msg_mini_no_permission">Дозвольте поверх інших застосунків, щоб використовувати міні-вікно</string>
+
+    <!-- Gesture chip labels -->
+    <string name="gesture_single_tap">Одинарний дотик</string>
+    <string name="gesture_double_tap">Подвійний дотик</string>
+    <string name="gesture_long_press">Довге натискання</string>
+    <string name="gesture_swipe">Змахнути</string>
+    <string name="gesture_2finger_tap">Дотик 2 пальцями</string>
+    <string name="gesture_2finger_swipe">Змахнути 2 пальцями</string>
+    <string name="gesture_other">Інше</string>
+
+    <string name="action_restore_default_color">Відновити типовий колір</string>
+<string name="title_backup_password_protection">Захист паролем резервної копії</string>
+    <string name="msg_backup_password_toggle_auth">Введіть PIN-код, графічний ключ, пароль або відбиток пальця екрана блокування, щоб змінити цей параметр</string>
+    <string name="desc_vk_close">Закрити віртуальні клавіші</string>
+</resources>

@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The LocalSend floating window, styled after the remote-control mini window: a rounded card
+    ([com.limelight.localsend.LsFloatingWindow]) added through WindowManager so it survives the
+    app going to the background and can sit over any other app.
+
+    It now carries the mini window's whole chrome, adapted to a content card rather than a stream
+    picture:
+      - a top bar whose three icon slots are window controls (fold to an edge tab, enlarge/restore,
+        close) rather than the mini window's remote-control actions, because LocalSend has no
+        remote screen to drive;
+      - the full LocalSend feature set in the body - the receive switch, every action the
+        standalone page offers (add files, send text, create a link, search, add by IP, stop
+        sharing) and the four live lists the page renders (discovered devices, favorites with a
+        clear-all, the outbox, and the manageable download links);
+      - a bottom bar of dot / handle / dot, where the handle drags the card and a double tap runs
+        the enlarge/restore action, and the two end dots resize it;
+      - two invisible corner zones on the card's exact bottom corners that resize it the way the
+        mini window's do.
+
+    The card is a *box*: [LsFloatingWindow] sizes the window itself through WindowManager.LayoutParams
+    (width, height and position remembered across shows), and the body's ScrollView takes whatever
+    the chrome leaves, so shrinking the box scrolls the lists rather than clipping them.
+
+    This is inflated with the application context, not an Activity, so only plain framework widgets
+    are used - a MaterialButton would fail to inflate without an AppCompat theme. The actions that
+    genuinely need a window - picking files, typing a message, the link dialog, a device's option
+    menu, confirming the favorites wipe - hop through the transparent LsFloatPickerActivity rather
+    than trying to run here.
+
+    Nothing here talks to LocalSend's protocol directly - the flows on [LsManager] are what both
+    this card and the standalone page render, so opening the float does not start a second peer
+    table or a second receiver.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_mini_card"
+    android:elevation="8dp">
+
+    <LinearLayout
+        android:id="@+id/ls_float_canvas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- The top bar: the three window controls, spread evenly across the width exactly as the
+             mini window's three slots are. No title - the card is identified by its own chrome. -->
+        <LinearLayout
+            android:id="@+id/ls_float_top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="6dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/ls_float_collapse"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_selectable"
+                android:contentDescription="@string/desc_ls_float_collapse"
+                android:focusable="false"
+                android:padding="4dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_mini_collapse"
+                android:tint="@color/colorMiniOnCard" />
+
+            <ImageButton
+                android:id="@+id/ls_float_expand"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_selectable"
+                android:contentDescription="@string/desc_ls_float_expand"
+                android:focusable="false"
+                android:padding="4dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_mini_fullscreen"
+                android:tint="@color/colorMiniOnCard" />
+
+            <ImageButton
+                android:id="@+id/ls_float_close"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_selectable"
+                android:contentDescription="@string/desc_ls_float_close"
+                android:focusable="false"
+                android:padding="4dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_ls_float_close"
+                android:tint="@color/colorMiniOnCard" />
+        </LinearLayout>
+
+        <Switch
+            android:id="@+id/ls_float_receive_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:text="@string/label_localsend_home_enable"
+            android:textColor="@color/colorMiniOnCard"
+            android:textSize="12sp" />
+
+        <!-- Action buttons: two rows of three plain text buttons (no Material widgets under the
+             application context). Mirrors the standalone page's action set. -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginTop="2dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/ls_float_add_files"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="2dp"
+                android:autoSizeMaxTextSize="12sp"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:background="@drawable/bg_ls_float_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="6dp"
+                android:text="@string/action_localsend_add_files"
+                android:textColor="@color/colorMiniOnCard" />
+
+            <TextView
+                android:id="@+id/ls_float_send_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="2dp"
+                android:autoSizeMaxTextSize="12sp"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:background="@drawable/bg_ls_float_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="6dp"
+                android:text="@string/action_localsend_send_text"
+                android:textColor="@color/colorMiniOnCard" />
+
+            <TextView
+                android:id="@+id/ls_float_share_link"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="2dp"
+                android:autoSizeMaxTextSize="12sp"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:background="@drawable/bg_ls_float_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="6dp"
+                android:text="@string/ls_float_action_create_link"
+                android:textColor="@color/colorMiniOnCard" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/ls_float_rescan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="2dp"
+                android:autoSizeMaxTextSize="12sp"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:background="@drawable/bg_ls_float_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="6dp"
+                android:text="@string/action_localsend_rescan"
+                android:textColor="@color/colorMiniOnCard" />
+
+            <TextView
+                android:id="@+id/ls_float_add_ip"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="2dp"
+                android:autoSizeMaxTextSize="12sp"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:background="@drawable/bg_ls_float_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="6dp"
+                android:text="@string/ls_float_action_add_ip"
+                android:textColor="@color/colorMiniOnCard" />
+
+            <TextView
+                android:id="@+id/ls_float_stop_shares"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="2dp"
+                android:autoSizeMaxTextSize="12sp"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:background="@drawable/bg_ls_float_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="6dp"
+                android:text="@string/action_localsend_stop_shares"
+                android:textColor="@color/colorMiniOnCard"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+        <!-- Search status line: the scanning percentage while a walk is running. -->
+        <TextView
+            android:id="@+id/ls_float_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/colorMiniOnCard"
+            android:textSize="11sp"
+            android:visibility="gone" />
+
+        <!-- The four live lists. The ScrollView is the box's flex region: it grows with the card
+             and scrolls once the chrome plus the lists no longer fit. -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="2dp"
+            android:scrollbars="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="8dp">
+
+                <TextView
+                    android:id="@+id/ls_float_devices_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_localsend_discovered"
+                    android:textColor="@color/colorMiniOnCard"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/ls_float_peers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <!-- Favorites: a header with a clear-all on its right, then the pinned rows. Both
+                     hide themselves with an empty list. -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/ls_float_favorites_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/title_localsend_favorites"
+                        android:textColor="@color/colorMiniOnCard"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/ls_float_clear_favorites"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_ls_float_button"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="4dp"
+                        android:text="@string/action_clear_favorites"
+                        android:textColor="@color/colorMiniOnCard"
+                        android:textSize="11sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ls_float_favorites"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/ls_float_staged_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="@color/colorMiniOnCard"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/ls_float_staged"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/ls_float_remove_all"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="2dp"
+                    android:layout_marginTop="4dp"
+                    android:autoSizeMaxTextSize="12sp"
+                    android:autoSizeMinTextSize="8sp"
+                    android:autoSizeStepGranularity="1sp"
+                    android:autoSizeTextType="uniform"
+                    android:background="@drawable/bg_ls_float_button"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:paddingHorizontal="4dp"
+                    android:paddingVertical="5dp"
+                    android:text="@string/action_localsend_remove_all"
+                    android:textColor="@color/colorMiniOnCard"
+                    android:visibility="gone" />
+
+                <!-- The live download links, under the button that made them. The header carries
+                     the collapse arrow and the count and toggles the list. -->
+                <TextView
+                    android:id="@+id/ls_float_shares_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_selectable"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:textColor="@color/colorMiniOnCard"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/ls_float_shares"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+        </ScrollView>
+
+        <ProgressBar
+            android:id="@+id/ls_float_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="4dp"
+            android:max="100"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/ls_float_progress_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:gravity="center"
+            android:textColor="@color/colorMiniOnCard"
+            android:textSize="11sp"
+            android:visibility="gone" />
+
+        <!-- The bottom bar: the two end dots resize the card (drag them), the handle moves it and
+             answers a double tap with the enlarge/restore action. Same three-segment shape as the
+             mini window's bar. -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="8dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/ls_float_resize_left"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/desc_ls_float_resize">
+
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_mini_handle_bar"
+                    android:focusable="false" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/ls_float_drag_handle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/desc_ls_float_drag">
+
+                <View
+                    android:layout_width="48dp"
+                    android:layout_height="4dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_mini_handle_bar"
+                    android:focusable="false" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/ls_float_resize_right"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/desc_ls_float_resize">
+
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_mini_handle_bar"
+                    android:focusable="false" />
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- The corner resize zones: invisible hot zones on the card's exact bottom-left and
+         bottom-right corners that pull it wider as well as taller. Negative margins undo the
+         elevation-shadow inset so the touch target lines up with the corner the user aims for. -->
+    <View
+        android:id="@+id/ls_float_corner_left"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="-6dp"
+        android:layout_marginBottom="-6dp"
+        android:focusable="false" />
+
+    <View
+        android:id="@+id/ls_float_corner_right"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="-6dp"
+        android:layout_marginBottom="-6dp"
+        android:focusable="false" />
+
+</FrameLayout>

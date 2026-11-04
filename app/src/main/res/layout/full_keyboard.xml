@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2026  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+        The full QWERTY keyboard: a draggable overlay raised from its own panel in the
+        toolbar drawer. Only the frame lives here - the keys are laid out in code (see
+        ui/vnc/FullKeyboard.kt) because they are a fixed grid rather than the user-editable
+        set the virtual-key bar carries.
+
+        The whole thing is positioned by raw x/y at runtime, exactly like the assist ball,
+        which is why the ViewStub that hosts it sits with top|start gravity.
+    -->
+    <LinearLayout
+        android:id="@+id/fk_root"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorFullKbBg"
+        android:contentDescription="@string/desc_full_keyboard"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_small"
+        tools:ignore="HardcodedText">
+
+        <!--
+            Grip bar. Dragging the keyboard starts here and only here: a key that could
+            also be dragged would move the board every time someone mistook a tap for a
+            hold, and the board eating that tap would feel like a dead key. When drag is
+            locked this stops responding to touch entirely, so the affordance says as much
+            (FullKeyboard dims and disables it).
+        -->
+        <TextView
+            android:id="@+id/fk_drag_handle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/desc_full_keyboard_drag"
+            android:gravity="center"
+            android:minHeight="28dp"
+            android:text="@string/label_full_keyboard_grip"
+            android:background="@color/colorFullKbBg"
+            android:textColor="@color/colorFullKbText"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!--
+            Keys are generated into this container. It is deliberately NOT wrapped in a
+            horizontal scroller: a scroller measures itself AT_MOST the screen width, which
+            pins the board to the screen and turns spanX to 0, so a sideways drag on the grip
+            would be a no-op. Left as a plain wrap_content block whose width FullKeyboard sets
+            to the widest row's natural footprint, the board can be wider than the screen and
+            is panned sideways by dragging it - the same gesture as the vertical drag.
+        -->
+        <LinearLayout
+            android:id="@+id/fk_keys_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </LinearLayout>
+</layout>

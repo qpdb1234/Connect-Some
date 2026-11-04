@@ -1,0 +1,405 @@
+<!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<resources>
+    <string name="app_name" translatable="false">Connect Some</string>
+
+    <string name="title_add_server_profile">Add server</string>
+    <string name="title_edit_server_profile">Edit server</string>
+    <string name="title_duplicate">Duplicate</string>
+    <string name="title_edit">Edit</string>
+    <string name="title_delete">Delete</string>
+    <string name="title_clear">Clear</string>
+    <string name="title_copy_host">Copy server address</string>
+    <string name="title_copy_name">Copy name</string>
+    <string name="title_cancel">Cancel</string>
+    <string name="title_save">Save</string>
+    <string name="title_undo">Undo</string>
+    <string name="title_select_servers">Select</string>
+    <string name="msg_selected_count">%1$d selected</string>
+    <string name="msg_copied_value_to_clipboard">Copied to clipboard: %1$s</string>
+    <string name="desc_local_cursor_toggle">Mark where the remote pointer is</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_vnc_login">VNC login</string>
+    <string name="title_ssh_login">SSH login</string>
+    <string name="title_unlock_private_key">Unlock private key</string>
+    <string name="title_forget">Forget</string>
+    <string name="title_remember">Remember</string>
+    <string name="title_export">Export</string>
+    <string name="title_export_file">Export to file</string>
+    <string name="title_export_qr">Display QR code</string>
+    <string name="title_import">Import</string>
+    <string name="title_import_file">Import file</string>
+    <string name="title_import_qr">Scan QR code</string>
+    <string name="title_view_only_mode">View-only</string>
+    <string name="title_connect_on_app_start">Auto-connect when app starts</string>
+    <string name="title_enable_wol">Wake-on-LAN</string>
+    <string name="title_hide_remote_cursor">Hide remote pointer</string>
+    <string name="title_button_up_delay">Send delayed click events</string>
+    <string name="title_resize_remote_desktop">Resize remote session to local window</string>
+    <string name="title_image_quality">Image quality</string>
+    <string name="title_orientation">Orientation</string>
+    <string name="title_image_quality_raw">Raw</string>
+    <string name="title_vnc_security">Security</string>
+    <string name="title_use_ssh_tunnel">Use SSH tunnel</string>
+    <string name="title_unknown_ssh_host">Unknown SSH host</string>
+    <string name="title_ssh_host_key_changed">SSH host key changed</string>
+    <string name="title_continue">Continue</string>
+    <string name="title_export_settings">Export settings</string>
+    <string name="title_export_profiles">Export servers</string>
+    <string name="title_export_pref_appearance">Appearance &amp; interface settings</string>
+    <string name="title_export_pref_input">Input, gesture &amp; key settings</string>
+    <string name="title_export_pref_viewer">Viewer, toolbar &amp; streaming settings</string>
+    <string name="title_export_pref_server">Server connection &amp; clipboard settings</string>
+    <string name="title_export_pref_other">Other settings</string>
+    <string name="title_export_passwords_and_keys">Export passwords and keys</string>
+    <string name="title_export_pairing_identity">Export GameStream pairing certificate and key</string>
+    <string name="title_delete_servers_before_import">Delete current servers before import</string>
+    <string name="title_import_pairing_identity">Restore GameStream pairing certificate and key</string>
+    <string name="title_password">Password</string>
+    <string name="title_use_repeater">Use repeater</string>
+    <string name="title_private_key">Private key</string>
+    <string name="title_change">Change</string>
+    <string name="title_about">About</string>
+    <string name="title_unlock_dialog">Unlock to continue</string>
+    <string name="title_automatic">Automatic</string>
+    <string name="title_none">None</string>
+    <string name="title_load_defaults">Load defaults</string>
+
+
+    <string name="hint_server_name">Name (e.g. Work PC)</string>
+    <string name="hint_host">IP address or hostname</string>
+    <string name="hint_repeater_host">Repeater IP address or hostname</string>
+    <string name="hint_port">Port</string>
+    <string name="hint_server_id">Server ID</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_wol_mac">MAC address</string>
+    <string name="hint_wol_address">Broadcast address (optional)</string>
+    <string name="hint_ssh_host">SSH host</string>
+    <string name="hint_ssh_port">SSH port</string>
+    <string name="hint_key_password">Key password</string>
+
+
+    <!-- The About page: an intro paragraph, then one titled section per aspect of the app.
+         about_section_titles and about_section_bodies in arrays.xml pair these up in order,
+         and every bullet below has been checked against the code that implements it. -->
+    <string name="msg_about_app">Connect Some is a free, open-source client for working with another machine from this phone. One app speaks three protocols: NVIDIA GameStream (NVStream, the protocol Moonlight implements), VNC (RFB) remote desktop, and ADB/scrcpy for Android devices. Whether the other end is a Windows PC, a Mac, a Linux box, a single-board computer or another phone, it is driven through the same gestures, the same keyboard, the same overlays and the same picture controls.</string>
+    <string name="title_about_protocols">Three protocols, one client</string>
+    <string name="msg_about_protocols">• VNC (RFB) connects to any standard VNC server. The authentication is chosen per server - automatic, none, VNC password, AnonTLS, VeNCrypt or Apple screen sharing - and an UltraVNC repeater can be put in front of it.\n• GameStream (NVStream) is the Moonlight client, for a PC running Sunshine. Type in the PIN the host shows and the pairing is done; after that the desktop, or any single app on that PC, can be launched into the stream.\n• ADB (scrcpy) mirrors and drives another Android device over wireless debugging or a USB-OTG cable. Nothing has to be installed on that device: a helper is copied to a temporary path and run from there, and it can be left running after you disconnect.\n• All three share one set of gestures, keyboard, virtual keys, zoom rules, overlays and settings, instead of three apps with three different habits.\n• Each saved server keeps its own picture and input settings, so a game stream and an office VNC session never have to agree on one compromise.</string>
+    <string name="title_about_discovery">Finding a machine and reaching it</string>
+    <string name="msg_about_discovery">• A scan says which stage it is in - listening for announcements, walking the subnet, checking remote-desktop ports, looking up names, waiting for the late replies - and counts the machines it has found while it still runs.\n• Announcements identify VNC, Apple screen sharing, Sunshine and LocalSend peers; a network that swallows multicast is covered by the manual subnet scan, and any machine can still be added by typing its address.\n• A VPN that answers every probe is recognised: the scan then lists only the machines confirmed on the real local network, and explains why the list looks short.\n• One machine answering on several ports of the same protocol is folded into a single card that names those ports.\n• A card carries the name, the address, the model, and the MAC address the scan learned; it can be copied, saved, or saved with the Wake-on-LAN fields already filled in.\n• Wake-on-LAN has its own button on every card. The MAC address can be looked up by the app, and the broadcast address can be derived from the target IPv4 address.\n• Search matches only the fields you switch on: name, address, protocol, port, MAC, broadcast address and port, username.\n• A saved server can demand the device credential before it connects, reconnect on its own after a dropped link, be merged with the duplicates a scan produced, and be opened from a home-screen shortcut.\n• A vnc://, moonlight:// or android:// link may arrive from a browser or a QR code, but only after a dialog has shown where it points - a stray link should not open a remote session by itself.\n• A server whose certificate is new or has changed is put in front of you instead of being accepted or refused in silence.</string>
+    <string name="title_about_picture">Picture, sound and speed</string>
+    <string name="msg_about_picture">• Resolution, frame rate and bitrate are set per server for GameStream and ADB. RFB instead has a quality step from 0 to 9 and a switch that insists on raw, uncompressed updates, because the protocol itself has no bitrate and no frame rate to expose.\n• Per server you can also let the remote desktop resize itself to the stream, connect as soon as an app starts, delay a mouse-button release, and pick the orientation and the gesture style.\n• Zoom has a lower and an upper limit, an optional default for each screen orientation, a lock, a reset, and one button that saves the current zoom as the default. The area behind the picture takes any color you choose.\n• Three view modes: normal, input disabled, and picture only with every input ignored - the last one for watching a machine without touching it.\n• Picture-in-picture keeps the stream going in a corner while you use other apps.\n• Remote audio plays on this phone and can be muted here without affecting the other machine; the VNC bell can be turned into a short beep on this phone.\n• A switchable overlay reports frame rate and latency for as long as the session lasts.\n• Decoding can pause while the app is in the background to save battery, and on GameStream and ADB the frames can go straight to the display surface instead of making the round trip through the GL renderer, which saves a few milliseconds.</string>
+    <string name="title_about_input">Getting the input across</string>
+    <string name="msg_about_input">• Two gesture models, chosen app-wide or per server: touchscreen, where a touch acts where it lands, and touchpad, where the finger drives a pointer. One-, two- and three-finger taps, double tap, long press, a swipe in each of those, double-tap-and-swipe and long-press-and-swipe can each be bound to an action of their own - the four kinds of click, a press, moving the pointer, panning the local frame, scrolling or dragging the remote content, a back press, opening the keyboard.\n• A real mouse can be passed through to the server untouched, or captured so that its relative motion moves the remote pointer while the local cursor hides. The mouse back button can be remapped, and the swipe sensitivity says how far one swipe drags the pointer.\n• The local pointer marker draws an arrow or a dot, at any size and in any color, exactly where your finger lands - so a session driven by touch is not a guess.\n• The virtual-key row can sit at the top or at the bottom, be one to three rows deep, and be filled key by key from a picker laid out like a real keyboard: modifiers, navigation, punctuation, letters, numbers, function keys, numpad, media keys, and the actions that end the session or open the menu. It can also appear whenever the phone keyboard opens.\n• A full QWERTY keyboard covers the picture for typing with touch alone, with adjustable size and transparency, a position lock, and a handle that lets it be pushed partly off screen while staying reachable.\n• Key mappings bend a phone keyboard towards a desktop: right Alt to Super, the language-switch key to Super, Back to Escape.\n• Text can be sent while it is typed or once the word is confirmed - the difference between an editor that keeps up and a field that swallows half of a composition.\n• The clipboard is shared in both directions, with a strict Latin-1 mode that reads the classic VNC field exactly as the protocol defines it, and with a size limit you can raise for ADB, whose 5000-byte packet drops a longer copy without a word.</string>
+    <string name="title_about_overlay">What floats over the screen</string>
+    <string name="msg_about_overlay">• An assist ball hovers over the stream at any size, color and transparency, and opens the toolbar or the keyboard when tapped.\n• A drawer slides in from an edge, and the width of the band that catches that swipe is yours to set, so it opens when you mean it and not by accident. Which buttons it carries, and in what order, is edited by dragging; every panel inside it can be restored to its defaults on its own.\n• The mini window floats the stream above any other app: drag it, resize it from the two dots on its bottom bar or from either bottom corner, collapse it against the edge, rotate the remote screen, reach the phone keys and the power menu, or blank the remote display and leave the sound running.\n• Every button of the mini window is assignable - three slots on the top bar and a double tap on the bottom - and the Back / Home / Recents row is switched per protocol, because only a device driven over ADB can receive those keys.\n• Opening a mini window starts a fresh stream, so it is another way of looking at the machine rather than a way of keeping a session alive. Its first size follows the phone itself instead of the picture, so a stream that had no side bars in full screen has none inside the card either.\n• Messages that pop up inside the stream have an adjustable transparency and go away at the first touch, so they cannot sit on a button you want.</string>
+    <string name="title_about_localsend">LocalSend: files and download links</string>
+    <string name="msg_about_localsend">• Files, or a message typed on the spot, go to any nearby device that speaks the LocalSend protocol, so the other end can be a computer, another phone or a tablet running any LocalSend app.\n• Switching it on also makes this phone discoverable and willing to accept. An offer coming in is asked about before anything is written away, and the message says which folder a received file landed in.\n• Picked files wait in a queue, because the machine they belong to is often not switched on yet. Tapping a device sends the queue to it, and the same batch can go on to the next device afterwards.\n• Devices can be pinned as favorites, renamed, put in order by dragging, and used even while discovery has not confirmed them; one that never announces itself can be added by IP address.\n• A batch can be handed out as a download link instead, which any device on the same network opens in a browser. Live links stay listed rather than vanishing with the dialog that made them, and each can be copied, shared, given another file, stripped of one, or revoked.\n• That link is served by this phone on the local network. It is not a link for the internet, and it is refused when there is no Wi-Fi or hotspot address to serve it from.\n• The search for peers says how far it has got, as a percentage with a done/total count, and can be stopped halfway.</string>
+    <string name="title_about_data">Data and backup</string>
+    <string name="msg_about_data">• Export and import write one file that you keep, and every part of it is a switch of its own: servers, settings, LocalSend favorites, the addresses and MAC addresses a scan learned, known SSH hosts and trusted certificates, passwords and keys, and the GameStream pairing certificate.\n• Backup protection can require the device credential for anything that holds secrets - including for throwing that switch itself, so a reset cannot quietly turn into a way around it. Restoring every setting leaves the saved servers alone and leaves that switch alone.\n• Log capture can be off, kept for this launch, or kept across launches; the log can be read, exported or cleared. Two debugging screens record every touch event and every key translation, so an input problem can be pinned to this app or to the other machine with the log in hand.</string>
+    <string name="title_about_look">Look and language</string>
+    <string name="msg_about_look">• The theme follows the system or is forced light or dark, and the interface color is picked on a color wheel or typed as a code; both variants are derived from that one color.\n• The language of the app is chosen inside it, independently of the system language, and applies immediately. Besides English there are 22 translations, and a sentence one of them has not covered falls back to English instead of showing nothing.\n• The badge on a card names the protocol behind it, and those three names can be replaced by a preset or by a word of your own.\n• Saved servers can be listed in name order instead of the order in which they were added.</string>
+    <string name="title_about_limits">Limits worth knowing</string>
+    <string name="msg_about_limits">• SSH tunneling is not implemented. An entry that asks to be reached through a tunnel is refused rather than connected without one, because that would put the password on an unencrypted link; the editor says so and switches the entry back to a direct connection.\n• VNC quality is the 0 to 9 scale, since the protocol has no bitrate and no frame rate to expose, and direct-scan rendering does nothing on VNC.\n• The ADB protocol has no key release: every key arrives as a short press, so a held key, auto-repeat and a chord of modifiers are out of reach. A character with no key code is written to the other device clipboard instead.\n• One device serves one ADB client at a time, so a computer running adb or scrcpy against the same phone takes the connection away from this app.\n• The windows that float above other apps - the mini window, the LocalSend floating window, the assist ball - need the draw-over-other-apps permission, which Android only lets you grant by hand on a system screen.\n• VNC and the ADB wireless pairing live in optional native components. A build made without one says so on the screen where it would have been used instead of failing quietly, and the cable keeps working.\n• GameStream needs a host that still speaks it, which in practice means a computer running Sunshine, since NVIDIA ended GameStream support on newer hardware.\n• This app runs on Android 8.0 and newer.</string>
+    <string name="title_about_origin">Where this came from</string>
+    <string name="msg_about_origin">• Connect Some merges several existing open-source projects instead of writing any of the protocols again: AVNC by Gaurav Ujjwal supplies the VNC (RFB) client, the server-profile model and most of the settings screens; Moonlight by the moonlight-stream team supplies the GameStream client, its decoder path and its controller model; Easycontrol_For_Car by Eiyooooo supplies the ADB transport and the helper it runs on the other device; and Ning by csicar and Duorem supply parts of the scan - active mDNS probing, the MAC-vendor table and the NetBIOS lookup.\n• Written for this app on top of them: LocalSend with its favorites and its download links, the mini window in the style of Mi-Freeform\'s freeform windows, the assist ball and the drawer, the rest of the network scan, the pointer marker and the server behind the links.\n• Like the projects it is built from, it is released under the GNU General Public License, version 3 or later. The libraries it stands on - LibVNCClient, moonlight-common-c with its enet, libjpeg-turbo, jMDNS, Bouncy Castle, libadb-android, OkHttp, jcodec, AndroidX, Material and Room - carry notices of their own, collected in docs/ThirdPartyLicenses.md of the source.</string>
+    <!-- Shortcuts for the About page, which opens with every section closed. -->
+    <string name="action_expand_all">Expand all</string>
+    <string name="action_collapse_all">Collapse all</string>
+    <!-- The two states of a section heading on the About page. A glyph rather than an icon
+         so a heading stays one line of text that can be read in any language. -->
+    <string name="about_arrow_expanded" translatable="false">&#x25be;</string>
+    <string name="about_arrow_collapsed" translatable="false">&#x25b8;</string>
+    <string name="msg_server_profile_added">Server added</string>
+    <string name="msg_server_profile_deleted">Server deleted</string>
+    <string name="msg_normal_view_mode">Normal mode enabled</string>
+    <string name="msg_input_disabled">Input disabled</string>
+    <string name="msg_video_disabled">Video disabled</string>
+    <string name="msg_gesture_style_locked_to_touchpad">\'Touchpad\' gesture style is active</string>
+    <!--Temporary message for view mode migration -->
+    <string name="msg_zoom_locked">Zoom locked</string>
+    <string name="msg_zoom_unlocked">Zoom unlocked</string>
+    <string name="msg_zoom_reset">Zoom reset to 100%</string>
+    <string name="msg_zoom_reset_default">Zoom reset to default</string>
+    <string name="msg_zoom_saved">Saved current zoom as default</string>
+    <string name="msg_pip_not_supported">Not supported on this device</string>
+    <string name="msg_ptr_hiding_not_supported">Not supported on this device</string>
+    <string name="msg_loading">Loading…</string>
+    <string name="msg_imported">Imported</string>
+    <string name="msg_imported_pairing">Imported, including the GameStream pairing certificate</string>
+    <string name="msg_exported">Exported</string>
+    <string name="msg_saved">Saved</string>
+    <string name="msg_done">Done</string>
+    <string name="msg_export_auth_required">Enter the device lock-screen PIN, pattern, password, or fingerprint to continue</string>
+    <string name="err_import_too_large">Import file is too large (limit: 1 MiB).</string>
+    <string name="err_invalid_qr_code">Invalid AVNC QR code.</string>
+    <string name="err_qr_export_failed">Failed to generate QR code:</string>
+    <string name="err_unsupported_qr_uri">Unsupported or invalid URI.</string>
+    <string name="msg_confirm_import_uri">Import from the following URI?</string>
+    <string name="msg_required">Required</string>
+    <string name="msg_invalid_mac_address">Invalid MAC address</string>
+    <string name="msg_invalid_key_file">Invalid private key file</string>
+    <string name="msg_invalid_vnc_uri">Invalid Moonlight URI</string>
+    <string name="msg_copied_to_clipboard">Copied</string>
+    <string name="msg_tap_to_select_a_key">Tap to select a key:</string>
+    <string name="msg_shortcut_server_deleted">This server has been deleted</string>
+
+    <!-- Accessibility descriptions -->
+    <string name="desc_settings_btn">Settings</string>
+    <string name="desc_saved_servers_tab">Saved servers</string>
+    <string name="desc_discovered_servers_tab">Discovered servers</string>
+    <string name="desc_add_new_server_btn">Add server</string>
+    <string name="desc_save_discovered_server_btn">Save</string>
+    <string name="desc_discovery_stop_btn">Stop discovering servers</string>
+    <string name="desc_discovery_running">Discovering servers on your network</string>
+    <string name="desc_keyboard_btn">Open keyboard</string>
+    <string name="desc_virtual_keys_btn">Show virtual keys</string>
+    <string name="desc_view_modes_toggle">View modes</string>
+    <string name="desc_view_mode_normal">Normal mode</string>
+    <string name="desc_view_mode_no_input">Disable all inputs</string>
+    <string name="desc_view_mode_no_video">Disable video</string>
+    <string name="desc_zoom_options_btn">Zoom options</string>
+    <string name="desc_reset_zoom_btn">Reset zoom</string>
+    <string name="desc_lock_zoom_btn">Lock zoom</string>
+    <string name="desc_save_zoom_btn">Save current zoom as default</string>
+    <string name="desc_retry_connection_btn">Reconnect</string>
+    <string name="desc_stats_toggle">Show latency, frame rate and other performance info</string>
+    <string name="desc_audio_toggle">Silence the remote audio on this phone</string>
+    <string name="desc_toolbar_items_toggle">Show or hide these buttons</string>
+    <string name="desc_move_up">Move up</string>
+    <string name="desc_move_down">Move down</string>
+    <string name="tip_toolbar_items_order">Hold a row\'s handle and drag it to change the order of the buttons.</string>
+    <string name="title_toolbar_items">Visible buttons</string>
+    <string name="desc_toolbar_items_drag">Drag to reorder</string>
+    <string name="desc_exit_btn">Exit</string>
+    <!-- Names for those two buttons in the "Visible buttons" panel. Their tooltips are whole
+         sentences, which read as paragraphs next to a list of one-word entries. -->
+    <string name="label_toolbar_item_stats">Performance info</string>
+    <string name="label_toolbar_item_audio">Remote audio mute</string>
+    <string name="msg_connecting_stage">Connecting: %1$s</string>
+    <string name="desc_back_btn">Back</string>
+    <string name="desc_discovered_list">List of devices found by the last scan</string>
+    <string name="desc_saved_servers_list">List of saved Servers</string>
+
+    <!-- Preference -->
+    <string name="pref_ui">Interface</string>
+    <string name="pref_ui_summary">Look and feel</string>
+    <string name="pref_viewer">Viewer</string>
+    <string name="pref_viewer_summary">Picture-in-picture, zoom</string>
+    <string name="pref_input">Input</string>
+    <string name="pref_input_summary">Gestures, mouse, virtual keys</string>
+    <string name="pref_servers">Servers</string>
+    <string name="pref_server_summary">Login, discovery</string>
+    <string name="pref_tools">Tools</string>
+    <string name="pref_tools_summary">Backup &amp; restore, debugging</string>
+    <string name="pref_experimental">Experimental</string>
+    <string name="pref_experimental_summary">Extra goodies</string>
+
+    <string name="pref_gesture_action_none" translatable="false">@string/title_none</string>
+    <string name="pref_gesture_action_left_click">Left-click</string>
+    <string name="pref_gesture_action_left_press">Long-press</string>
+    <string name="pref_gesture_action_middle_click">Middle-click</string>
+    <string name="pref_gesture_action_right_click">Right-click</string>
+    <string name="pref_gesture_action_double_click">Double-click</string>
+    <string name="pref_gesture_action_move_pointer">Move pointer</string>
+    <string name="pref_gesture_action_pan">Pan local frame</string>
+    <string name="pref_gesture_action_remote_scroll">Scroll remote content</string>
+    <string name="pref_gesture_action_remote_drag">Drag remote content</string>
+    <string name="pref_gesture_action_remote_drag_middle">Drag with middle button</string>
+    <string name="pref_gesture_action_remote_back_press">Back-press on server</string>
+    <string name="pref_gesture_action_open_keyboard">Open keyboard</string>
+
+    <string name="pref_theme">Theme</string>
+    <string name="pref_accent_color">Interface color</string>
+    <string name="pref_theme_option_system">System</string>
+    <string name="pref_theme_option_dark">Dark</string>
+    <string name="pref_theme_option_light">Light</string>
+    <string name="pref_language">Language</string>
+    <string name="pref_language_summary">Choose which language the app uses, independently of the system language. Takes effect immediately.</string>
+    <string name="pref_language_option_system">System default</string>
+    <string name="pref_bell">Bell</string>
+    <string name="pref_bell_summary">VNC only: plays a short beep on this phone when the remote system rings its bell (for example, a terminal alert).</string>
+    <string name="pref_sort_server_list">Sort saved servers by name</string>
+    <string name="pref_floating_text_transparency">Floating message transparency</string>
+    <string name="pref_floating_text_transparency_summary">How see-through the message that pops up at the bottom of a screen is: 0 leaves it solid, 100 makes it invisible. A touch anywhere puts the message away, so it cannot sit on a button you want.</string>
+    <string name="pref_protocol_badges">Protocol badge names</string>
+    <string name="pref_protocol_vnc_badge">RFB</string>
+    <string name="pref_protocol_gamestream_badge">GameStream</string>
+    <string name="pref_protocol_android_badge">ADB</string>
+    <string name="pref_protocol_badge_summary">Override the label shown on protocol badges. Pick a preset or type your own with the Custom option.</string>
+    <string name="pref_protocol_badge_custom">Custom</string>
+    <string name="pref_protocol_badge_edit_hint">Enter a name</string>
+    <string name="pref_gesture">Gestures</string>
+    <string name="pref_gesture_style">Gesture style</string>
+    <string name="pref_gesture_style_auto" translatable="false">@string/title_automatic</string>
+    <string name="pref_gesture_style_auto_summary">Uses the style chosen under Settings → Input</string>
+    <string name="pref_gesture_style_touchscreen">Touchscreen</string>
+    <string name="pref_gesture_style_touchscreen_summary">Do actions at touch-point</string>
+    <string name="pref_gesture_style_touchpad">Touchpad</string>
+    <string name="pref_gesture_style_touchpad_summary">Do actions at pointer</string>
+    <string name="pref_single_tap">Single tap</string>
+    <string name="pref_two_finger_tap">Two-finger tap</string>
+    <string name="pref_three_finger_tap">Three-finger tap</string>
+    <string name="pref_double_tap">Double tap</string>
+    <string name="pref_long_press">Long press</string>
+    <string name="pref_swipe1">One-finger swipe</string>
+    <string name="pref_swipe2">Two-finger swipe</string>
+    <string name="pref_swipe3">Three-finger swipe</string>
+    <string name="pref_double_tap_swipe">Double tap and swipe</string>
+    <string name="pref_long_press_swipe">Long press and swipe</string>
+    <string name="pref_swipe_sensitivity">Swipe sensitivity</string>
+    <string name="pref_invert_vertical_scrolling">Invert vertical scrolling</string>
+    <string name="pref_mouse">Mouse</string>
+    <string name="pref_mouse_passthrough">Mouse passthrough</string>
+    <string name="pref_mouse_passthrough_summary_off">Use mouse events for local gestures</string>
+    <string name="pref_mouse_passthrough_summary_on">Send mouse events directly to server</string>
+    <string name="pref_capture_pointer">Capture pointer</string>
+    <string name="pref_capture_pointer_summary">Needs mouse passthrough. Confines the mouse pointer to the stream and hides the local cursor, so the mouse\'s relative motion drives the remote pointer.</string>
+    <string name="pref_hide_local_cursor">Hide local pointer</string>
+    <string name="pref_mouse_back">Back button</string>
+    <string name="pref_mouse_back_action_default">Default</string>
+    <string name="pref_vk">Virtual keys</string>
+    <string name="pref_vk_show_all">Show all keys</string>
+    <string name="pref_customize_virtual_keys">Key settings</string>
+    <string name="pref_vk_open_with_keyboard">Open with keyboard</string>
+    <string name="pref_vk_open_with_keyboard_summary">Shows the virtual-key row automatically when the on-screen keyboard opens, and hides it again when the keyboard closes.</string>
+    <string name="pref_vk_row_count">Rows</string>
+    <string name="pref_vk_position">Virtual keys position</string>
+    <string name="vk_position_bottom">Bottom</string>
+    <string name="vk_position_top">Top</string>
+    <string name="pref_vk_use_super_with_single_tap">Use Super key with single tap</string>
+    <string name="pref_vk_use_super_with_single_tap_summary">Makes the Super key in the virtual-key row fire on a single tap, instead of staying held until tapped again.</string>
+    <string name="pref_km">Key mappings</string>
+    <string name="pref_km_right_alt_to_super">Right Alt → Super</string>
+    <string name="pref_km_language_switch_to_super">Language Switch → Super</string>
+    <string name="pref_km_back_to_escape">Back → Escape</string>
+    <string name="pref_km_back_to_escape_summary">Does not affect the navigation bar</string>
+    <string name="pref_phone_keyboard">Phone keyboard</string>
+    <string name="pref_ime_text_timing">Text input timing</string>
+    <string name="ime_text_timing_confirm">When the word is confirmed</string>
+    <string name="ime_text_timing_immediate">As each key is typed</string>
+    <string name="pref_orientation">Screen orientation</string>
+    <string name="pref_orientation_option_auto">Automatic</string>
+    <string name="pref_orientation_option_portrait">Portrait</string>
+    <string name="pref_orientation_option_landscape">Landscape</string>
+    <string name="pref_fullscreen">Fullscreen</string>
+    <string name="pref_display_cutout">Extend into cutout area</string>
+    <string name="pref_enable_pip">Picture-in-picture</string>
+    <string name="pref_keep_screen_on">Keep screen ON</string>
+    <string name="pref_toolbar">Toolbar</string>
+    <string name="pref_toolbar_alignment">Alignment</string>
+    <string name="pref_toolbar_alignment_option_start">Left side</string>
+    <string name="pref_toolbar_alignment_option_end">Right side</string>
+    <string name="pref_toolbar_open_with_swipe">Swipe-in from edge to open</string>
+    <string name="pref_clipboard_sync">Clipboard sync</string>
+    <string name="pref_clipboard_strict_latin1">Strict Latin-1 clipboard</string>
+    <string name="pref_clipboard_strict_latin1_summary">VNC only: use the classic clipboard field exactly as the protocol defines it, without working out from the bytes that the server actually sent UTF-8 or a Windows ANSI codepage (GBK, Big5, …).</string>
+    <string name="pref_clipboard_limit">Custom clipboard size limit</string>
+    <string name="pref_clipboard_limit_summary">ADB only: the controlled device and this app each cap one clipboard packet at 5000 bytes, which quietly drops a longer copy. Set your own cap instead - it is sent to the device, so both directions keep working.</string>
+    <string name="pref_clipboard_limit_value">Clipboard size limit (bytes)</string>
+    <string name="pref_clipboard_limit_dialog">1 to 65535 bytes. A value outside that range is moved back inside. Text is counted in UTF-8 bytes, so one Chinese character costs three.</string>
+    <string name="pref_saved_server_lock_summary">Require biometric/password unlock to connect</string>
+    <string name="pref_saved_server_lock">Lock saved servers</string>
+    <string name="pref_auto_reconnect">Reconnect automatically</string>
+    <string name="pref_auto_reconnect_summary">After the connection drops on its own, retry automatically every few seconds. A session you end yourself is never reconnected.</string>
+    <string name="pref_forget_known_hosts">Forget known hosts</string>
+    <string name="pref_forget_known_hosts_question">Forget known SSH hosts and trusted server certificates?</string>
+    <string name="pref_discovery">Discovery</string>
+    <string name="pref_rediscovery_indicator">Highlight rediscovered servers</string>
+    <string name="pref_rediscovery_indicator_summary">Marks the saved servers that a network scan currently finds, so you can see which ones are reachable.</string>
+    <string name="pref_import_export">Backup &amp; restore</string>
+    <string name="pref_debugging">Debugging</string>
+    <string name="pref_logs">View recent partial logs</string>
+    <string name="pref_keycode_map">Keycode map</string>
+    <string name="pref_touch_test">Touch test</string>
+    <string name="pref_key_test">Key test</string>
+        <string name="title_try">Try</string>
+    <string name="pref_zoom">Zoom</string>
+    <string name="pref_zoom_min">Minimum</string>
+    <string name="pref_zoom_max">Maximum</string>
+    <string name="pref_per_orientation_zoom">Separate zoom for each orientation</string>
+    <string name="pref_show_gesture_style_toggle">Show gesture style toggle</string>
+
+    <string name="desc_server_url">Server address</string>
+    <string name="desc_clear_url_btn">Clear</string>
+    <string name="desc_search_btn">Search saved servers</string>
+    <string name="tip_search">Type to search saved servers. Tap the settings button to choose which fields to match.</string>
+    <string name="desc_search_fields_btn">Search settings</string>
+    <string name="title_search_fields">Search by</string>
+    <string name="search_field_name">Name</string>
+    <string name="search_field_host">Address</string>
+    <string name="search_field_protocol">Protocol</string>
+    <string name="search_field_port">Port</string>
+    <string name="search_field_mac">MAC address</string>
+    <string name="search_field_broadcast_address">Broadcast address</string>
+    <string name="search_field_broadcast_port">Broadcast port</string>
+    <string name="search_field_ssh_host">SSH host</string>
+    <string name="search_field_username">Username</string>
+    <string name="title_search_select_all">Select all</string>
+    <string name="title_search_select_none">Clear all</string>
+
+    <!-- Explanations for options whose title alone is not self-evident. -->
+    <string name="pref_display_cutout_summary">Draw the stream behind the notch or punch-hole to fill the full screen height. Off leaves that area as a black margin.</string>
+    <string name="pref_direct_scan">Direct-scan rendering (SurfaceView)</string>
+    <string name="pref_direct_scan_summary">Send decoded frames straight to a SurfaceView instead of routing them back through GL, saving a few milliseconds of latency on GameStream and Android devices. Turn off to fall back to the GL renderer if the punched-through surface misbehaves. No effect on VNC.</string>
+    <string name="pref_pause_bg_updates">Pause updates in background (experimental)</string>
+    <string name="pref_pause_bg_updates_summary">Stop decoding new frames while the app is in the background, to save battery. The picture may lag briefly when you return.</string>
+    <string name="pref_enable_pip_summary">Keep watching the remote screen in a small floating window after you leave the app.</string>
+    <string name="pref_per_orientation_zoom_summary">Remember a separate zoom level for portrait and landscape, instead of one shared value.</string>
+    <string name="pref_zoom_min_summary">Lowest zoom you can pinch down to.</string>
+    <string name="pref_zoom_max_summary">Highest zoom you can pinch up to.</string>
+    <string name="pref_toolbar_open_with_swipe_summary">Open the toolbar by swiping in from the nearby screen edge.</string>
+    <string name="pref_show_gesture_style_toggle_summary">Adds a toolbar button to switch between the touchscreen and touchpad gesture styles.</string>
+    <string name="pref_swipe_sensitivity_summary">Scales how far a swipe moves the remote content; a higher value travels further for the same finger motion.</string>
+    <string name="pref_invert_vertical_scrolling_summary">Reverse the direction that scrolling moves the remote content.</string>
+    <string name="pref_hide_local_cursor_summary">Hide this device\'s own pointer during the session, leaving only the remote pointer visible.</string>
+    <string name="pref_hide_remote_cursor_summary">Hide the remote pointer, leaving only this device\'s cursor visible.</string>
+    <string name="pref_km_right_alt_to_super_summary">Send the keyboard\'s right Alt key to the remote as the Super (Windows) key.</string>
+    <string name="pref_km_language_switch_to_super_summary">Send the language-switch key as the Super (Windows) key, so the on-screen keyboard can open the Start menu.</string>
+    <string name="pref_clipboard_sync_summary">Share copied text between this device and the remote.</string>
+    <string name="pref_forget_known_hosts_summary">Delete stored SSH host keys and trusted server certificates. You\'ll be asked to verify them again next connection.</string>
+
+    <!--
+      Every choice worded "Automatic" (or "System"/"Default") says what it decides on its own,
+      because the word alone does not: in the server editor an automatic choice defers to the
+      matching app-wide setting, while on the settings screens it defers to the phone itself.
+      The editor's lines appear under each entry in its drop-down; the rest are shown inside the
+      choice dialog, where the summary line stays free to show the current value.
+    -->
+    <string name="desc_editor_orientation_auto">Follows the orientation set under Settings → Viewer</string>
+    <string name="desc_editor_orientation_portrait">Stays upright for this server, however you hold the phone</string>
+    <string name="desc_editor_orientation_landscape">Stays sideways for this server, however you hold the phone</string>
+    <string name="desc_editor_security_auto">Asks the server which types it supports and picks among those</string>
+    <string name="desc_editor_security_none">No password, and nothing is encrypted</string>
+    <string name="desc_editor_security_vncauth">The classic VNC password challenge</string>
+    <string name="desc_editor_security_anontls">Encrypted, without checking the server\'s certificate</string>
+    <string name="desc_editor_security_vencrypt">Encrypted login with a username and password</string>
+    <string name="desc_editor_security_ard">macOS screen sharing login: username and password</string>
+    <string name="desc_orientation_auto">Automatic lets the phone decide, following its own rotation setting. Portrait and landscape lock the stream instead, however you hold the phone.</string>
+    <string name="desc_theme_system">System follows the phone\'s dark-mode setting and changes along with it. Light and dark stay as chosen even when the system flips.</string>
+    <string name="desc_language_system">System default uses the language the phone itself is set to. Picking a language here overrides it, right away.</string>
+    <string name="desc_mouse_back_default">Default leaves that button alone and lets the system act on it, which usually means leaving the stream. Any other choice turns it into a click sent to the remote machine.</string>
+    <!--Shown on the stream toolbar, where there is no room for a sentence: the automatic
+        entry names the style it currently resolves to.--> 
+    <string name="desc_gesture_style_auto_resolved">Automatic (%1$s)</string>
+    <string name="desc_toolbar_alignment">Which edge of the picture the toolbar docks to. Left side puts the drawer against the left edge, right side against the right; for languages that read right to left the two are swapped.</string>
+    <string name="pref_customize_virtual_keys_summary">The keys over the stream and how they behave</string>
+    <string name="pref_key_layout">Key layout</string>
+    <string name="pref_key_layout_summary">Choose which keys appear and in what order</string>
+    <string name="pref_vk_hold_keys">Hold modifier keys</string>
+    <string name="pref_vk_hold_keys_summary">Ctrl, Alt, Shift and Super stay pressed after a single tap until you tap them again. A key typed after them fires once and leaves the modifier held.</string>
+
+    <!-- The mark the viewer paints over the picture at the remote pointer's own position. -->
+    <string name="pref_local_cursor_marker">Local pointer marker</string>
+    <string name="pref_local_cursor_marker_show">Show marker</string>
+    <string name="pref_local_cursor_marker_show_summary">Marks the coordinate this app sends to the computer, with the tip or the center of the mark exactly on it. Over VNC the server confirms where its pointer really is; over GameStream nothing comes back, so the mark shows the position a touch was mapped to. When the desktop is a different size than the stream - bands added by the host, for instance - a fixed residual offset stays possible, and the dot shape or the size slider is the way around it.</string>
+    <string name="pref_cursor_marker_size">Marker size</string>
+    <string name="pref_cursor_marker_size_summary">The arrow as a percentage of its default size.</string>
+</resources>

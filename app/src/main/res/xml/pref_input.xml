@@ -1,0 +1,220 @@
+<!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="@string/pref_input">
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_gesture"
+        app:title="@string/pref_gesture">
+
+        <com.limelight.ui.prefs.ListPreferenceEx
+            app:defaultValue="touchpad"
+            app:entries="@array/gesture_style_entries"
+            app:entryValues="@array/gesture_style_values"
+            app:key="gesture_style"
+            app:title="@string/pref_gesture_style"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="double-click"
+            app:entries="@array/double_tap_action_entries"
+            app:entryValues="@array/double_tap_action_values"
+            app:key="gesture_double_tap"
+            app:title="@string/pref_double_tap"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="left-press"
+            app:entries="@array/long_press_action_entries"
+            app:entryValues="@array/long_press_action_values"
+            app:key="gesture_long_press"
+            app:title="@string/pref_long_press"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="right-click"
+            app:entries="@array/tap2_action_entries"
+            app:entryValues="@array/tap2_action_values"
+            app:key="gesture_tap2"
+            app:title="@string/pref_two_finger_tap"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="open-keyboard"
+            app:entries="@array/tap3_action_entries"
+            app:entryValues="@array/tap3_action_values"
+            app:key="gesture_tap3"
+            app:title="@string/pref_three_finger_tap"
+            app:useSimpleSummaryProvider="true" />
+
+        <com.limelight.ui.prefs.ListPreferenceEx
+            app:defaultValue="none"
+            app:entries="@array/swipe1_action_entries"
+            app:entryValues="@array/swipe1_action_values"
+            app:key="gesture_swipe1"
+            app:title="@string/pref_swipe1"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="remote-scroll"
+            app:entries="@array/swipe2_action_entries"
+            app:entryValues="@array/swipe2_action_values"
+            app:key="gesture_swipe2"
+            app:title="@string/pref_swipe2"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="none"
+            app:entries="@array/swipe3_action_entries"
+            app:entryValues="@array/swipe3_action_values"
+            app:key="gesture_swipe3"
+            app:title="@string/pref_swipe3"
+            app:useSimpleSummaryProvider="true" />
+
+        <com.limelight.ui.prefs.ListPreferenceEx
+            app:defaultValue="none"
+            app:entries="@array/double_tap_swipe_action_entries"
+            app:entryValues="@array/double_tap_swipe_action_values"
+            app:key="gesture_double_tap_swipe"
+            app:title="@string/pref_double_tap_swipe"
+            app:useSimpleSummaryProvider="true" />
+
+        <com.limelight.ui.prefs.ListPreferenceEx
+            app:defaultValue="remote-drag"
+            app:entries="@array/long_press_swipe_action_entries"
+            app:entryValues="@array/long_press_swipe_action_values"
+            app:key="gesture_long_press_swipe"
+            app:title="@string/pref_long_press_swipe"
+            app:useSimpleSummaryProvider="true" />
+
+        <!--
+            How far a swipe drags what it drives. The same key the stream toolbar's own
+            sensitivity slider edits, so either writes the same choice; the range has to agree
+            with AppPreferences.SWIPE_SENSITIVITY_MIN/MAX, which is where the value is clamped.
+        -->
+        <SeekBarPreference
+            android:max="40"
+            app:defaultValue="10"
+            app:key="gesture_swipe_sensitivity"
+            app:min="1"
+            app:summary="@string/pref_swipe_sensitivity_summary"
+            app:title="@string/pref_swipe_sensitivity" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            app:key="invert_vertical_scrolling"
+            app:summary="@string/pref_invert_vertical_scrolling_summary"
+            app:title="@string/pref_invert_vertical_scrolling" />
+
+        <!--
+            The edge width that opens the toolbar drawer used to be edited here. It tunes the
+            toolbar rather than a gesture, so the row moved to the toolbar section under
+            Settings -> Viewer (pref_viewer.xml); the key itself is unchanged and still shared
+            with the drawer's own slider.
+        -->
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_mouse"
+        app:title="@string/pref_mouse">
+
+        <SwitchPreference
+            app:defaultValue="true"
+            app:key="mouse_passthrough"
+            app:summaryOff="@string/pref_mouse_passthrough_summary_off"
+            app:summaryOn="@string/pref_mouse_passthrough_summary_on"
+            app:title="@string/pref_mouse_passthrough" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:dependency="mouse_passthrough"
+            app:key="capture_pointer"
+            app:summary="@string/pref_capture_pointer_summary"
+            app:title="@string/pref_capture_pointer" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="hide_local_cursor"
+            app:summary="@string/pref_hide_local_cursor_summary"
+            app:title="@string/pref_hide_local_cursor" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="hide_remote_cursor"
+            app:summary="@string/pref_hide_remote_cursor_summary"
+            app:title="@string/title_hide_remote_cursor" />
+
+        <ListPreference
+            app:defaultValue="right-click"
+            app:entries="@array/mouse_back_action_entries"
+            app:entryValues="@array/mouse_back_action_values"
+            app:key="mouse_back"
+            app:title="@string/pref_mouse_back"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <!--
+      The keys used to be spread over this list: three switches here, and below them an entry
+      into a grid nobody thought to look in for a switch. All of it now lives behind one name.
+    -->
+    <PreferenceCategory
+        app:icon="@drawable/ic_keyboard_mini"
+        app:title="@string/pref_vk">
+
+        <Preference
+            app:fragment="com.limelight.ui.prefs.PrefsActivity$VirtualKeys"
+            app:summary="@string/pref_customize_virtual_keys_summary"
+            app:title="@string/pref_customize_virtual_keys" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_keyboard_mini"
+        app:title="@string/pref_phone_keyboard">
+
+        <ListPreference
+            app:defaultValue="confirm"
+            app:entries="@array/ime_text_timing_entries"
+            app:entryValues="@array/ime_text_timing_values"
+            app:key="ime_text_timing"
+            app:title="@string/pref_ime_text_timing"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_keyboard"
+        app:title="@string/pref_km">
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="km_right_alt_to_super"
+            app:summary="@string/pref_km_right_alt_to_super_summary"
+            app:title="@string/pref_km_right_alt_to_super" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="km_language_switch_to_super"
+            app:summary="@string/pref_km_language_switch_to_super_summary"
+            app:title="@string/pref_km_language_switch_to_super" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="km_back_to_escape"
+            app:summary="@string/pref_km_back_to_escape_summary"
+            app:title="@string/pref_km_back_to_escape" />
+    </PreferenceCategory>
+
+    <!-- Puts just this screen's options back to what the app ships with, after a confirm.
+         See PrefsActivity.PrefFragment and pref_reset_category_defaults. -->
+    <Preference
+        app:icon="@drawable/ic_refresh"
+        app:key="reset_category_defaults"
+        app:title="@string/pref_reset_category_defaults" />
+
+</PreferenceScreen>

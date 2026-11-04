@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!--
+        The floating mini window puts the live stream on top of other apps, which needs
+        this special-access permission. It is not a normal install-time grant: the user
+        turns it on in system settings, so every entry point has to check Settings
+        .canDrawOverlays() and offer the settings screen when it is still off.
+    -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <!--  USB host is only needed by the Android-device protocol (controlling another  -->
+    <!--  phone over OTG). The app stays installable on devices without it.            -->
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="false" />
+
+    <!--
+        Backups are turned off on purpose. The app keeps real secrets in its private
+        files and in its database: the ADB private key, the ADB pairing certificate,
+        every VNC password and every pinned host certificate. `allowBackup=true` puts
+        all of that into the device's cloud backup and makes it readable by `adb backup`
+        on any API level that still honours it. Upstream AVNC left this at its default
+        (false); it has to stay that way.
+    -->
+    <application
+        android:name=".App"
+        android:allowBackup="false"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/App.Theme"
+        android:usesCleartextTraffic="true">
+
+        <!-- The launcher entry point. -->
+        <activity-alias
+            android:name=".StartupActivity"
+            android:exported="true"
+            android:targetActivity=".ui.home.HomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".UriReceiverActivity"
+            android:exported="true"
+            android:targetActivity=".ui.vnc.IntentReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="vnc" />
+                <data android:scheme="moonlight" />
+                <data android:scheme="android" />
+            </intent-filter>
+
+            <!--  Plugging a controlled device in via OTG should land the user inside the app,  -->
+            <!--  where the ADB authorisation prompt on the other device can be explained.      -->
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/usb_device_filter" />
+        </activity-alias>
+
+        <activity
+            android:name=".ui.home.HomeActivity"
+            android:theme="@style/App.SplashTheme.Dark" />
+
+        <activity android:name=".ui.home.LocalSendActivity" />
+
+        <!--
+            Transparent host the LocalSend floating window hops through for the two things a
+            passive overlay cannot do itself: raise the system file picker and show a text-entry
+            or link dialog. Never in Recents, finished as soon as its picker or dialog returns.
+            noHistory is deliberately NOT set: the file-picker hops stop this Activity while the
+            system picker is in front, and a noHistory transparent host is destroyed the moment it
+            is stopped, so the picker's result - and the add-to-outbox it carries - would be lost.
+            It finishes itself once the result or dialog returns, so it never lingers.
+        -->
+        <activity
+            android:name=".localsend.LsFloatPickerActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/App.Theme.FloatPicker" />
+
+        <activity android:name=".ui.home.UrlBarActivity" />
+
+        <activity
+            android:name=".ui.vnc.VncActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"
+            tools:ignore="UnusedAttribute" />
+
+        <activity
+            android:name=".ui.vnc.IntentReceiverActivity"
+            android:theme="@style/App.SplashTheme.Dark" />
+
+        <activity android:name=".ui.prefs.PrefsActivity" />
+
+        <activity android:name=".ui.about.AboutActivity" />
+
+        <!--
+            Per-app language (in-app picker on the Interface page). On Android 13+ the
+            chosen locale is stored by the system; on Android 12 and below this lets the
+            AppCompat library persist and re-apply it across restarts. Disabled by default
+            and only read for its metadata.
+        -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
+
+    </application>
+</manifest>

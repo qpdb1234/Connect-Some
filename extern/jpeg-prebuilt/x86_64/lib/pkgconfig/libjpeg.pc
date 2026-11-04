@@ -1,0 +1,10 @@
+prefix=D:/Download/MoonlightAVNC-source/MoonlightAVNC/extern/jpeg-prebuilt/x86_64
+exec_prefix=D:/Download/MoonlightAVNC-source/MoonlightAVNC/extern/jpeg-prebuilt/x86_64
+libdir=D:/Download/MoonlightAVNC-source/MoonlightAVNC/extern/jpeg-prebuilt/x86_64/lib
+includedir=D:/Download/MoonlightAVNC-source/MoonlightAVNC/extern/jpeg-prebuilt/x86_64/include
+
+Name: libjpeg
+Description: A SIMD-accelerated JPEG codec that provides the libjpeg API
+Version: 3.1.4
+Libs: -L${libdir} -ljpeg
+Cflags: -I${includedir}

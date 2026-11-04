@@ -1,0 +1,326 @@
+<!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+      When app is launched, Android shows a temporary window until the app is ready.
+      The background color for this temporary window is selected from the theme specified
+      for the activity in app manifest. E.g. it will be white for a Light theme.
+
+      If we specify DayNight theme in manifest for startup activity, but user has selected
+      dark theme in AVNC, they may see a white flash before activity starts drawing. To
+      workaround this, we use App.SplashTheme.Dark in the manifest to get a dark window,
+      but switch to main theme in Activity's onCreate().
+
+      Since API 31, Android provides SplashScreen API to change splash theme at runtime,
+      which we use to match the splash theme with user's prefs (see HomeActivity).
+      Note: Some custom ROMs don't respect/support the splash theme introduced in API 31.
+      On such devices, we still rely on the above mentioned workaround.
+    -->
+    <style name="App.SplashTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+
+    <style name="App.SplashTheme.Light" parent="Theme.MaterialComponents.Light.NoActionBar" />
+
+    <style name="App.SplashTheme.Dark" parent="Theme.MaterialComponents.NoActionBar" />
+
+    <!--
+      This base theme is used for configuration-specific styling (e.g. night mode, API 23)
+    -->
+    <style name="App.BaseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+
+    <!--
+      This is the main theme.
+
+      Gold is the accent a fresh install starts on, and the color of the picker's default
+      swatch: AccentTheme.DEFAULT_ARGB has to name the very same color, because it is what
+      gets read before the preference holds anything, and variantFor() sends it straight
+      back to this style. Unlike every other accent it is not one of the generated variants,
+      so this style is the only place its exact value is written down.
+
+      `colorSecondary` is what Material paints its switches, checkboxes, radio buttons,
+      sliders, progress bars and text-field cursors with, and the library default is a
+      fixed teal that stayed on screen whatever the interface color was set to. Pinning it
+      to `colorPrimary` here rather than in every generated variant keeps the accent in one
+      place: gen_accent.xml only has to override `colorPrimary` and the rest follows.
+    -->
+    <style name="App.Theme" parent="App.BaseTheme">
+        <item name="appBarLayoutStyle">@style/Widget.MaterialComponents.AppBarLayout.Surface</item>
+        <item name="colorPrimary">@color/accent_default</item>
+        <item name="colorPrimaryVariant">@color/accent_default_dark</item>
+        <!--
+          The interface sits on a neutral surface - white in light mode, dark gray in night -
+          which the DayNight parent already provides, so nothing is bound to `colorPrimary`
+          as a background here. The accent is what stands out against that: buttons filled
+          with it and `colorOnPrimary` written on top, black or white by the color's
+          luminance. The generated variants set `colorOnPrimary` to black for the light
+          accents and leave it out otherwise, so the base answers with white and the dark
+          accents get light text. The champagne-gold default is light, so it carries its own
+          black-on-gold style (App.Theme.Gold) rather than this base.
+        -->
+        <item name="colorOnPrimary">@android:color/white</item>
+
+        <!--
+          Every spelling of the accent color, including the ones the library would otherwise
+          answer with its own teal. Material controls are painted from `colorSecondary`, a
+          bare framework SeekBar or CheckBox reads the android: namespace, and a dialog's
+          buttons read `colorAccent`; all of them name `colorPrimary` so the interface can
+          only ever have one accent, whichever one the picker was given.
+        -->
+        <item name="colorSecondary">?attr/colorPrimary</item>
+        <item name="colorSecondaryVariant">?attr/colorPrimary</item>
+        <item name="colorAccent">?attr/colorPrimary</item>
+        <item name="android:colorAccent">?attr/colorPrimary</item>
+        <item name="colorControlActivated">?attr/colorPrimary</item>
+        <item name="android:colorControlActivated">?attr/colorPrimary</item>
+        <item name="colorControlNormal">?attr/colorPrimary</item>
+        <item name="android:colorControlNormal">?attr/colorPrimary</item>
+
+        <!--
+          Material brightens raised surfaces toward the accent as they gain elevation. Left
+          on, cards and dialogs would drift off the neutral background toward the chosen
+          color and the surfaces would stop matching each other. Turned off so every region
+          keeps the plain color of the mode the user is in.
+        -->
+        <item name="elevationOverlayEnabled">false</item>
+    </style>
+
+    <!--
+      The champagne-gold default is a light color, so its contrast foreground is black rather
+      than the base white. AccentTheme.variantFor() answers with this style for DEFAULT_ARGB.
+    -->
+    <style name="App.Theme.Gold">
+        <item name="colorOnPrimary">@android:color/black</item>
+    </style>
+
+    <!--
+      Host for the floating window's file picker and its text / link dialogs. The overlay itself
+      cannot raise the IME or own a dialog window, so those actions hop through a transparent
+      Activity: it draws nothing itself (fully translucent, no title, no dim) and only ever
+      carries a system picker or an AlertDialog, closing as soon as that interaction ends. It
+      descends from App.Theme so androidx AppCompat dialogs find an AppCompat theme on it.
+    -->
+    <style name="App.Theme.FloatPicker" parent="App.Theme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <!--
+      The "Interface color" picker renders its choice by switching to one of the
+      App.Theme.H..S..V.. variants generated in gen_accent.xml (see AccentTheme). Each of
+      those replaces only colorPrimary; the accent attributes tied to it above move with it,
+      and the neutral surfaces stay the parent theme's, whichever accent was picked.
+    -->
+
+    <style name="AlertDialog.Dimmed" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="android:backgroundDimAmount">.6</item>
+    </style>
+
+
+    <style name="FormField">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/margin_small</item>
+    </style>
+
+    <style name="FormField.EditText">
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:drawablePadding">15dp</item>
+        <item name="android:drawableTint" tools:ignore="NewApi">@color/control_icon</item>
+    </style>
+
+    <style name="FormField.LabelWithIcon">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:drawablePadding">14dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">@dimen/padding_small</item>
+        <item name="android:drawableTint" tools:ignore="NewApi">@color/control_icon</item>
+    </style>
+
+    <style name="FormField.CheckBox">
+        <item name="android:paddingStart">11dp</item>
+    </style>
+
+    <!--
+      One two-digit box of a MAC address. No maxLength on purpose: a whole address
+      pasted into a single box has to survive long enough for the watcher in
+      ProfileEditor to notice it and spread it over all six boxes.
+    -->
+    <style name="MacField">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:digits">0123456789abcdefABCDEF</item>
+        <item name="android:gravity">center</item>
+        <item name="android:inputType">textCapCharacters|textNoSuggestions</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body2</item>
+    </style>
+
+    <!-- Colon between two MacField boxes. -->
+    <style name="MacSeparator">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingHorizontal">1dp</item>
+        <item name="android:text">:</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
+    </style>
+
+    <style name="UrlBar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:background">@drawable/bg_urlbar</item>
+        <item name="android:layout_marginStart">@dimen/margin_normal</item>
+        <item name="android:layout_marginEnd">@dimen/margin_normal</item>
+        <item name="android:layout_marginTop">@dimen/margin_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_normal</item>
+    </style>
+
+    <style name="ImageButton">
+        <item name="android:layout_width">@dimen/action_btn_size</item>
+        <item name="android:layout_height">@dimen/action_btn_size</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    </style>
+
+    <!--
+        Like ImageButton but uses a bounded rectangular ripple instead of the circular
+        borderless one. Used inside the toolbar drawer where the container already has
+        its own rounded-rect background and a circular ripple looks out of place among
+        the rectangular toggle presses next to it.
+    -->
+    <style name="ImageButton.Bounded">
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+    <!--
+        Wake-on-LAN on a server card. Unlike the other card buttons it gets a solid, quiet
+        gray chip instead of a borderless icon: the tap has to be found without hunting for
+        it, and gray keeps an action that sends a magic packet to somebody else's machine
+        from outshouting the server it belongs to.
+    -->
+    <style name="ImageButton.Wake">
+        <item name="android:background">@drawable/bg_wake_button</item>
+        <item name="android:tint">?android:textColorSecondary</item>
+    </style>
+
+    <style name="ImageButton.Toggle">
+        <item name="android:background">@drawable/bg_toggle_button</item>
+        <item name="android:foreground">?selectableItemBackground</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textOff" />
+        <item name="android:textOn" />
+    </style>
+
+    <style name="ServerList">
+        <item name="android:paddingBottom">@dimen/server_card_min_height</item>
+        <item name="android:clipToPadding">false</item>
+    </style>
+
+    <style name="ServerCard">
+        <item name="android:layout_marginTop">@dimen/margin_normal</item>
+        <item name="android:layout_marginStart">@dimen/margin_normal</item>
+        <item name="android:layout_marginEnd">@dimen/margin_normal</item>
+        <item name="android:focusable">true</item>
+        <item name="android:minHeight">@dimen/server_card_min_height</item>
+        <item name="cardElevation">@dimen/server_card_elevation</item>
+        <item name="strokeWidth">@dimen/server_card_stroke_width</item>
+        <item name="contentPadding">@dimen/padding_normal</item>
+        <item name="strokeColor">@color/colorBorder</item>
+    </style>
+
+    <style name="ServerCardHintIcon">
+        <item name="android:layout_width">16dp</item>
+        <item name="android:layout_height">16dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_normal</item>
+        <item name="android:layout_marginEnd">@dimen/margin_normal</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="tint">?android:textColorSecondary</item>
+        <item name="tintMode">src_in</item>
+    </style>
+
+    <style name="VirtualKey">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">34dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body2</item>
+        <!--
+          The bar paints itself with colorSurface, so everything standing on it - labels as well
+          as the icons tinted in code - has to be painted with the color that pairs with that.
+          Left to the widget default these buttons inherit a text color from whatever framework
+          Button style the platform hands out, which is a dark one and vanishes into the bar as
+          soon as the interface goes dark.
+        -->
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="VirtualKey.Compact">
+        <item name="android:minWidth">36dp</item>
+    </style>
+
+    <style name="VirtualKey.Special">
+        <item name="tint">?attr/colorOnSurface</item>
+        <item name="tintMode">src_in</item>
+    </style>
+
+    <style name="VirtualKey.Toggle">
+        <item name="android:background">@drawable/bg_toggle_button</item>
+        <item name="android:foreground">?selectableItemBackground</item>
+    </style>
+
+    <style name="VirtualKey.Toggle.Image">
+        <item name="android:paddingStart">12dp</item> <!--To make the start drawable centered-->
+        <item name="android:textOff" />
+        <item name="android:textOn" />
+    </style>
+
+    <!--
+      A key on the full QWERTY keyboard. Same footprint as VirtualKey but a real keycap
+      instead of a bare ripple, so a dense grid of letters reads as keys rather than floating
+      text, and no drop shadow (the board already sits on its own surface).
+    -->
+    <style name="FullKeyboardKey" parent="VirtualKey">
+        <item name="android:background">@drawable/bg_full_keyboard_key</item>
+        <item name="android:textColor">@color/full_keyboard_key_text</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:includeFontPadding">false</item>
+        <!--
+          A key is a fixed cell but its label is not: "PgUp" and the stacked "~ / `" need to
+          fit where a bare "Q" has room to spare. FullKeyboard measures and sets each label's
+          size itself (see fitLabel), so the text never ellipsizes; two lines lets a shifted
+          glyph sit over its base.
+        -->
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">none</item>
+    </style>
+
+    <style name="ToolbarFlyoutToggle" parent="ImageButton.Toggle">
+        <item name="android:drawableEnd">@drawable/ic_toggle_more</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">0dp</item>
+    </style>
+
+    <style name="Button.IconOnly" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="iconPadding">0dp</item>
+        <item name="iconTint">@color/checkable_button_icon_color_simple</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:layout_width">@dimen/action_btn_size</item>
+        <item name="android:layout_height">@dimen/action_btn_size</item>
+    </style>
+
+</resources>

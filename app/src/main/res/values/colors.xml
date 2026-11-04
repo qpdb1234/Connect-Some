@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<resources>
+    <color name="colorBorder">#E8E8E8</color>
+    <color name="colorUrlBarBackground">#E8E8E8</color>
+
+    <!--
+      Accent colors for the "Interface color" picker live in gen_accent.xml (generated
+      theme variants, see AccentTheme). The default is spelled out here instead, because the
+      framework's own accent (purple) would otherwise show wherever the theme is not
+      overridden, and it is not what the picker offers as its default.
+
+      It sits off the generated grid: a soft champagne gold rather than one of the 1152
+      representable accents. That is affordable because App.Theme is the one theme whose
+      colorPrimary is written literally, and AccentTheme.variantFor() answers with it for
+      exactly this ARGB - see the note there about the picker only reaching this color by
+      code, never by dragging.
+
+      The variant darkens the accent the way gen_accent.xml does it: the HSV value is scaled
+      by 0.78125 before the channels are rounded down, which on an already-quantized triple
+      costs a unit here and there (#FFFFD400 goes to #FFC7A600, not C7A5). Applying that
+      factor straight to this color's channels and rounding down is the closest match.
+    -->
+    <color name="accent_default">#FFEECE6D</color>
+    <color name="accent_default_dark">#FFB9A055</color>
+
+    <!-- Fill of the Wake-on-LAN chip on a server card: neutral gray in both themes, so
+         the button reads as an action without borrowing any accent colour. -->
+    <color name="colorWakeButton">#E8E8E8</color>
+
+    <!-- Floating mini window. These are deliberately theme independent (no values-night
+         counterpart): the window floats over somebody else's app, so a panel that flipped
+         with our own light/dark setting would either vanish against a white page or glare
+         on a black one. The set matches the upstream Easycontrol mini window, which this
+         one is modelled on - white card, near-black icons, blue drag handle, red dismiss.
+         -->
+    <color name="colorMiniCard">#FFFFFF</color>
+    <color name="colorMiniOnCard">#1A1A1A</color>
+    <color name="colorMiniBar">#579CF9</color>
+    <color name="colorMiniAlert">#CA5357</color>
+    <color name="colorMiniHandle">#66808080</color>
+
+    <!-- Floating assist ball. Theme independent for the same reason as the mini window: it
+         floats over the remote picture rather than over our own chrome. A plain black disc
+         with no glyph - the ball has to read as an object on any stream, not pick up a theme
+         colour that could match the desktop behind it. -->
+    <color name="colorAssistBall">#000000</color>
+
+    <!--
+      Full QWERTY keyboard. Deliberately theme independent (no values-night counterpart):
+      the requested look is a fixed black board - black keycaps separated by gray hairline
+      borders, white labels, black top/grip bar - so it must not drift with the app's
+      light/dark or accent setting the way the surface/onSurface pair used to.
+
+      Pressed and latched (checked) caps lighten to a dark gray so a keypress still reads
+      as feedback against the black, while the white label stays legible on top.
+    -->
+    <color name="colorFullKbBg">#000000</color>
+    <color name="colorFullKbKey">#000000</color>
+    <color name="colorFullKbKeyPressed">#3C3C3C</color>
+    <color name="colorFullKbBorder">#808080</color>
+    <color name="colorFullKbText">#FFFFFF</color>
+</resources>

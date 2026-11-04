@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.limelight.viewmodel.PrefsViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/title_backup_password_protection"
+                android:textSize="16sp" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/backup_password_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textOn=""
+                android:textOff="" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/colorBorder" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_export"
+            style="@style/PreferenceCategoryTitleTextStyle" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:background="@color/colorBorder" />
+
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.exportProfiles}"
+            android:text="@string/title_export_profiles" />
+
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.exportSecrets}"
+            android:enabled="@{viewModel.exportProfiles}"
+            android:text="@string/title_export_passwords_and_keys" />
+
+        <!-- The GameStream client certificate and its key. They are secrets, so they ride on
+             the switch above; without them a restored server list still asks for a PIN on every
+             host, which is the one thing a backup was supposed to avoid. -->
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.exportPairingIdentity}"
+            android:enabled="@{viewModel.exportSecrets &amp;&amp; viewModel.exportProfiles}"
+            android:text="@string/title_export_pairing_identity" />
+
+        <!-- LocalSend pinned devices. Not a secret (aliases, hosts and ports only), so it is
+             not gated behind the passwords switch; it rides on its own because a favorite is a
+             convenience list the user rebuilds by hand otherwise. -->
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.exportLocalSendFavorites}"
+            android:text="@string/title_export_localsend_favorites" />
+
+        <!-- Discovery's learned addresses and MACs. Not a secret, but the reason a card can name
+             a host before this round re-probes it; restoring spares a reinstall the whole walk. -->
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.exportDiscoveryCache}"
+            android:text="@string/title_export_discovery_cache" />
+
+        <!-- SSH known hosts and trusted VNC certificates: the trust already granted, which is
+             public material rather than a key, so it is its own switch and not under secrets. -->
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.exportSshTrust}"
+            android:text="@string/title_export_ssh_trust" />
+
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.exportPrefAppearance}"
+            android:text="@string/title_export_pref_appearance" />
+
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.exportPrefInput}"
+            android:text="@string/title_export_pref_input" />
+
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.exportPrefViewer}"
+            android:text="@string/title_export_pref_viewer" />
+
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.exportPrefServer}"
+            android:text="@string/title_export_pref_server" />
+
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.exportPrefOther}"
+            android:text="@string/title_export_pref_other" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="12dp" />
+
+        <Button
+            android:id="@+id/export_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="@{viewModel.exportProfiles || viewModel.exportPrefAppearance || viewModel.exportPrefInput || viewModel.exportPrefViewer || viewModel.exportPrefServer || viewModel.exportPrefOther}"
+            android:paddingHorizontal="30dp"
+            android:paddingVertical="@dimen/padding_normal"
+            android:text="@string/title_export_file"
+            app:icon="@drawable/ic_file" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="12dp" />
+
+        <Button
+            android:id="@+id/export_qr_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="@{viewModel.exportProfiles || viewModel.exportPrefAppearance || viewModel.exportPrefInput || viewModel.exportPrefViewer || viewModel.exportPrefServer || viewModel.exportPrefOther}"
+            android:paddingHorizontal="30dp"
+            android:paddingVertical="@dimen/padding_normal"
+            android:text="@string/title_export_qr"
+            app:icon="@drawable/ic_qr_code" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="24dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:background="@color/colorBorder" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_import"
+            style="@style/PreferenceCategoryTitleTextStyle" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:background="@color/colorBorder" />
+
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.deleteCurrentServerBeforeImport}"
+            android:paddingTop="@dimen/padding_small"
+            android:text="@string/title_delete_servers_before_import" />
+
+        <!-- Ticked by default: picking a backup file and restoring it means asking for the
+             identity that file carries. On a device that is paired by its own certificate as
+             well, this is the switch that says those pairings move to the backup's side. -->
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.importPairingIdentity}"
+            android:text="@string/title_import_pairing_identity" />
+
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.importLocalSendFavorites}"
+            android:text="@string/title_import_localsend_favorites" />
+
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.importDiscoveryCache}"
+            android:text="@string/title_import_discovery_cache" />
+
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.importSshTrust}"
+            android:text="@string/title_import_ssh_trust" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="12dp" />
+
+        <Button
+            android:id="@+id/import_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="30dp"
+            android:paddingVertical="@dimen/padding_normal"
+            android:text="@string/title_import_file"
+            app:icon="@drawable/ic_file" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="12dp" />
+
+        <Button
+            android:id="@+id/import_qr_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="30dp"
+            android:paddingVertical="@dimen/padding_normal"
+            android:text="@string/title_import_qr"
+            app:icon="@drawable/ic_qr_code" />
+    </LinearLayout>
+    </ScrollView>
+</layout>

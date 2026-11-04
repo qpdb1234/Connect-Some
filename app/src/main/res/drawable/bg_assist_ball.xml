@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2026  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<!--
+  Background of the floating assist ball. Unlike the toolbar buttons it floats over the
+  remote picture instead of over the app chrome, so it is a plain black disc: a theme
+  colour would borrow the accent that the rest of the UI uses and could also match the
+  desktop behind it. No border and no glyph - the user asked for the ball to be a plain
+  disc, nothing but the shape itself. The drawer's palette tints this fill at runtime.
+-->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?colorControlHighlight">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/colorAssistBall" />
+            <size
+                android:width="@dimen/action_btn_size"
+                android:height="@dimen/action_btn_size" />
+        </shape>
+    </item>
+</ripple>

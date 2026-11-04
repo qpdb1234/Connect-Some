@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Translation of values/strings_vnc.xml.
+  Only the entries that other translatable text refers to by name are provided
+  here; the rest falls back to the English default.
+-->
+<resources>
+
+    <!-- Label of the Scan button on the discovery tab. -->
+    <string name="action_scan">Сканировать</string>
+
+    <string name="desc_mini_window_btn">Мини-окно</string>
+    <string name="desc_mini_keys">Клавиши дистанционного управления</string>
+    <string name="desc_mini_fullscreen">Вернуться в полноэкранный режим</string>
+    <string name="desc_mini_close">Закрыть мини-окно</string>
+    <string name="desc_mini_back">Назад</string>
+    <string name="desc_mini_home">Главная</string>
+    <string name="desc_mini_overview">Недавние приложения</string>
+    <string name="desc_mini_keyboard">Клавиатура</string>
+    <string name="desc_mini_resize">Изменить размер мини-окна</string>
+    <string name="msg_mini_reconnect">Мини-окно переподключает поток</string>
+    <string name="msg_mini_no_permission">Разрешите наложение поверх других приложений, чтобы использовать мини-окно</string>
+
+    <!-- Gesture chip labels -->
+    <string name="gesture_single_tap">Одиночное касание</string>
+    <string name="gesture_double_tap">Двойное касание</string>
+    <string name="gesture_long_press">Долгое нажатие</string>
+    <string name="gesture_swipe">Смахивание</string>
+    <string name="gesture_2finger_tap">Касание 2 пальцами</string>
+    <string name="gesture_2finger_swipe">Смахивание 2 пальцами</string>
+    <string name="gesture_other">Другое</string>
+
+    <string name="title_backup_password_protection">Защита паролем резервной копии</string>
+    <string name="msg_backup_password_toggle_auth">Введите PIN-код, графический ключ, пароль или отпечаток пальца экрана блокировки, чтобы изменить этот параметр</string>
+    <string name="desc_vk_close">Закрыть виртуальные клавиши</string>
+    <string name="action_restore_default_color">Восстановить цвет по умолчанию</string>
+</resources>

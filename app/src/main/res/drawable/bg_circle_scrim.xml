@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2026  Connect Some.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<!--
+  Backdrop for the discovery stop cross when it is centred on the scan ring. It has to be
+  only partly opaque: the ring stroke behind the icon should still read, so the cross does not
+  sit on a solid disc that hides the very progress it interrupts. A tap ripples over the same
+  translucent circle.
+-->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?colorControlHighlight">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#66000000" />
+            <size
+                android:width="@dimen/action_btn_size"
+                android:height="@dimen/action_btn_size" />
+        </shape>
+    </item>
+</ripple>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Translation of values/strings_vnc.xml.
+  Only the entries that other translatable text refers to by name are provided
+  here; the rest falls back to the English default.
+-->
+<resources>
+
+    <!-- Label of the Scan button on the discovery tab. -->
+    <string name="action_scan">Pesquisar</string>
+
+    <string name="desc_mini_window_btn">Janela mini</string>
+    <string name="desc_mini_keys">Teclas de controle remoto</string>
+    <string name="desc_mini_fullscreen">Voltar para ecrã completo</string>
+    <string name="desc_mini_close">Fechar a janela mini</string>
+    <string name="desc_mini_back">Anterior</string>
+    <string name="desc_mini_home">Início</string>
+    <string name="desc_mini_overview">Aplicações recentes</string>
+    <string name="desc_mini_keyboard">Teclado</string>
+    <string name="desc_mini_resize">Redimensionar a janela mini</string>
+    <string name="msg_mini_reconnect">A janela mini reinicia a transmissão</string>
+    <string name="msg_mini_no_permission">Permita a sobreposição sobre outras aplicações para usar a janela mini</string>
+
+    <!-- Gesture chip labels -->
+    <string name="gesture_single_tap">Toque único</string>
+    <string name="gesture_double_tap">Toque duplo</string>
+    <string name="gesture_long_press">Pressionar longamente</string>
+    <string name="gesture_swipe">Deslizar</string>
+    <string name="gesture_2finger_tap">Toque com 2 dedos</string>
+    <string name="gesture_2finger_swipe">Deslizar com 2 dedos</string>
+    <string name="gesture_other">Outro</string>
+
+    <string name="action_restore_default_color">Restaurar cor predefinida</string>
+<string name="title_backup_password_protection">Proteção por senha do backup</string>
+    <string name="msg_backup_password_toggle_auth">Insira o PIN, padrão, senha ou impressão digital do ecrã de bloqueio para alterar esta definição</string>
+    <string name="desc_vk_close">Fechar teclas virtuais</string>
+</resources>

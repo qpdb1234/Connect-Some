@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<!-- One section of the About page: a heading that opens and closes the block of bullets under
+     it. AboutFragment inflates this once per pair in about_section_titles / about_section_bodies,
+     so a section that only exists in one language would need a layout as well - which it does
+     not. The heading is the switch because it is the only thing on screen while the section is
+     shut, and asking the reader to hunt for a separate control would defeat the point. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_large"
+    android:animateLayoutChanges="false"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/about_section_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="?attr/colorAccent"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/about_section_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:lineSpacingExtra="4dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:visibility="gone" />
+</LinearLayout>

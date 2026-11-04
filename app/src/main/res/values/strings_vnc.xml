@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Strings for the extra protocols (VNC / RFB and the Android-device protocol)
+  and for the parts of the UI that have to distinguish them. Kept apart from
+  strings_moonlight.xml (which carries the GameStream kernel strings) so the
+  protocol split is visible in the resources too. Defaults are English;
+  translate in values-zh-rCN / values-zh-rTW.
+-->
+<resources>
+
+    <!--
+      Protocol choice in the profile editor (the one place the user picks it).
+      Bare protocol names only, because the three choices share one line - and
+      'RFB' is what this app actually speaks, 'VNC' being the client side of it.
+    -->
+    <string name="protocol_game_stream">GameStream</string>
+    <string name="protocol_vnc">RFB</string>
+    <string name="protocol_android">ADB</string>
+
+    <!-- Short protocol name on a server card. Same wording as the editor choice. -->
+    <string name="protocol_badge_game_stream">GameStream</string>
+    <string name="protocol_badge_vnc">RFB</string>
+    <string name="protocol_badge_android">ADB</string>
+
+    <!--
+      Shown in the editor when libnative-vnc.so is missing from this build. The
+      GameStream protocol stays usable, so this is a note about one option only.
+    -->
+    <string name="msg_vnc_unavailable">This build does not contain the VNC (RFB) native library, so VNC servers cannot be added or connected. GameStream / Sunshine hosts are unaffected.</string>
+
+    <!-- Warns that saving after a protocol switch discards the old protocol's options. -->
+    <string name="msg_protocol_switched">Protocol-specific options of this saved server will be reset when you save. Pairing data is kept.</string>
+
+    <!-- VNC-only profile field. -->
+    <string name="title_use_local_cursor">Draw the remote cursor on this device</string>
+
+    <!--
+      Wake-on-LAN. Waking is a separate action from connecting, which is why it
+      has its own card button.
+    -->
+    <string name="desc_wake_server_btn">Wake this server</string>
+    <string name="action_wol_fill_broadcast">Use my network\'s broadcast address</string>
+    <string name="msg_wol_sent">Magic packet sent for %1$s</string>
+    <string name="msg_wol_failed">Could not send the magic packet: %1$s</string>
+    <string name="msg_wol_no_local_network">This device is not on a Wi-Fi or wired network, so the broadcast address cannot be worked out.</string>
+    <string name="msg_wol_target_not_ipv4">Enter the computer\'s IPv4 address first - the broadcast address is derived from it.</string>
+    <string name="action_wol_scan_mac">Scan for the MAC address</string>
+    <string name="msg_wol_mac_found">MAC address found: %1$s</string>
+    <string name="msg_wol_mac_not_found">No source reported a MAC address for %1$s. Type it in instead.</string>
+    <string name="msg_invalid_ipv4_address">Invalid IPv4 address</string>
+    <string name="msg_invalid_port">Enter a port between 1 and 65535</string>
+
+    <!--
+      Manual scan. A round walks the whole subnet, so it only ever runs from this
+      button.
+    -->
+    <string name="action_scan">Scan</string>
+    <string name="title_unnamed_device">Unnamed device</string>
+    <string name="label_discovered_mac">MAC %1$s</string>
+    <!-- A device model learned from an mDNS TXT attribute, shown under the card title. -->
+    <string name="label_discovered_model">Model %1$s</string>
+    <!-- A folded card names every port its protocol answered on, so the one card that
+         replaced several still shows the range it stands for. -->
+    <string name="label_discovered_ports">ports %1$s</string>
+    <string name="msg_discovered_no_service">No supported service found on this device</string>
+
+    <!--
+      Scan progress. A round runs for tens of seconds and fills the list while it goes, so
+      the tab names the stage it is in and counts the cards found so far; the subnet walk's
+      own percentage is on the ring next to this line, which is why it is not repeated here.
+    -->
+    <string name="msg_discovery_idle">No scan yet. Tap Scan to look for machines on this network.</string>
+    <string name="msg_scan_browsing">Listening for announcements \u00b7 %1$d found</string>
+    <string name="msg_scan_walking">Walking the subnet \u00b7 %1$d found</string>
+    <string name="msg_scan_probing">Checking remote-desktop ports \u00b7 %1$d found</string>
+    <string name="msg_scan_naming">Looking up names \u00b7 %1$d found</string>
+    <string name="msg_scan_settling">Waiting for the last announcements \u00b7 %1$d found</string>
+    <string name="msg_scan_none">The scan found nothing on this network</string>
+    <!-- A VPN's local proxy accepts every connection, which would make the whole subnet look
+         like live servers. The scan therefore pins each probe to the physical network and only
+         shows machines it can confirm there; this says why the list can look shorter under a VPN. -->
+    <string name="msg_scan_vpn_hint">A VPN is hijacking this scan. Only machines confirmed on the local network are shown; allow your LAN in the VPN (or turn it off) and scan again</string>
+    <plurals name="msg_scan_done">
+        <item quantity="one">Found %1$d device, %2$d of them connectable</item>
+        <item quantity="other">Found %1$d devices, %2$d of them connectable</item>
+    </plurals>
+    <string name="title_copy_mac">Copy MAC address</string>
+    <!-- A discovered card always carries an address; a saved server may hold a hostname instead,
+         which is why the two lists word their copy action differently. -->
+    <string name="title_copy_ip_address">Copy IP address</string>
+    <string name="title_add_as_server">Add as server</string>
+    <!-- The same hand-written add, but the hardware address the scan learned goes straight
+         into the Wake-on-LAN fields, which is the only reason to prefer it. -->
+    <string name="title_add_server_with_wol">Add as server and fill in WoL</string>
+
+    <!--
+      A card whose hardware address no source could name still says so. The two long-press
+      entries stay on the menu either way, so the app answers the question instead of
+      pretending the question does not apply to this machine.
+    -->
+    <string name="label_discovered_mac_unknown">MAC not found</string>
+    <string name="msg_mac_not_found">No MAC address was found for this device</string>
+
+    <!--
+      Android-device protocol: the controlled device has to authorise this app
+      first, so most of these are instructions rather than error texts.
+    -->
+    <string name="label_android_codec">Use H.265 (HEVC) when the device supports it</string>
+    <string name="label_android_audio">Forward the device\'s system audio</string>
+    <string name="label_android_direct_touch">Send touches straight to the device (multi-touch)</string>
+    <string name="label_android_keep_awake">Keep the device awake while mirrored</string>
+
+    <string name="action_android_select_usb">Pick a USB device</string>
+    <string name="label_android_usb_none">No USB device selected - connecting over the network</string>
+    <string name="msg_android_no_usb_device">No USB device is connected. Plug the cable in (this phone must support OTG) and try again.</string>
+    <string name="msg_android_usb_permission">This app may not access that USB device yet. Allow it in the system dialog, then connect again.</string>
+    <string name="msg_android_usb_allow_debugging">On the controlled device, accept the \"Allow USB debugging?\" prompt, then connect again.</string>
+    <string name="msg_android_key_limit">This protocol has no key release: every key becomes a short press, so holding a key, repeats and modifier chords are unavailable.</string>
+    <string name="msg_android_text_via_clipboard">This character has no key code, so it was put on the device\'s clipboard - paste it there.</string>
+
+    <string name="title_android_pair">Wireless debugging pairing</string>
+    <string name="hint_android_pair_code">6-digit pairing code</string>
+    <string name="hint_android_pair_port">Pairing port</string>
+    <string name="hint_android_connect_port">Connection port (shown on the wireless debugging screen)</string>
+    <string name="msg_android_pairing_unavailable">This build does not contain the ADB wireless pairing component. Use a USB-OTG cable, or a device that already trusts this one.</string>
+    <string name="msg_android_pair_success">Paired. Fill in the connection port shown on the device and save.</string>
+    <string name="msg_android_pair_failed">Pairing failed: %1$s</string>
+
+    <!--
+      Cable to wireless: adbd is restarted on TCP through the cable, so the cable session
+      is sacrificed. That is why the address is verified before it is written into the form.
+    -->
+    <string name="action_android_tcpip">Wireless ADB over USB</string>
+    <string name="title_android_tcpip">Switch the cabled device to wireless ADB</string>
+    <string name="hint_android_tcpip_port">TCP port (usually 5555)</string>
+    <string name="msg_android_tcpip_needs_usb">Pick a USB device first - this switch can only run over the cable.</string>
+    <string name="msg_android_tcpip_no_ip">The device reported no network address. Connect it to Wi-Fi and try again.</string>
+    <string name="msg_android_tcpip_failed">Could not talk to the device over USB: %1$s</string>
+    <string name="msg_android_tcpip_unreachable">The device did not answer ADB on %1$s:%2$d after the restart. Its address may have changed, or it refuses debugging over TCP.</string>
+    <string name="msg_android_tcpip_success">ADB is listening on %1$s:%2$d and answered this app. Filled into the address fields; the USB device is no longer used.</string>
+
+    <string name="error_android_adb_auth">The device refused the ADB authentication. Confirm the \"Allow USB debugging?\" prompt on it.</string>
+    <string name="error_android_server_start">The helper could not be started on the device. Check that USB debugging is enabled.</string>
+    <string name="error_android_socket_timeout">Timed out waiting for the helper\'s video socket. Unlock the device and make sure USB debugging is still authorised.</string>
+    <string name="error_android_wire_silent">The device stopped answering on the ADB connection, so no channel could be opened. Reconnect the cable or the wireless debugging session.</string>
+    <string name="error_android_wire_dropped">The device hung up on the ADB connection while the session was being set up. Wireless debugging serves one client at a time: quit adb or scrcpy on the PC, then check that wireless debugging is still on and that this app is still allowed to connect.</string>
+    <string name="error_android_unsupported_opus">This build cannot decode Opus audio, so the device audio is forwarded as AAC instead.</string>
+
+    <!-- Session toolbar shortcuts. Labels stay short for the narrow drawer. -->
+    <string name="title_android_actions">Device actions</string>
+    <string name="action_android_back">Back</string>
+    <string name="action_android_home">Home</string>
+    <string name="action_android_recents">Recents</string>
+    <string name="action_android_rotate">Rotate</string>
+    <string name="action_android_power">Power menu</string>
+    <string name="action_android_screen">Screen on/off</string>
+    <string name="action_android_night">Night mode</string>
+    <string name="pref_android_keep_server_on_disconnect">Keep the helper running after disconnect</string>
+
+    <!--
+      Floating assist ball. It hovers over the stream and is configured from the toolbar
+      drawer, which is why its labels are short enough to fit that narrow panel.
+    -->
+    <string name="desc_assist_ball_toggle">Assist ball settings</string>
+    <string name="desc_assist_ball">Assist ball</string>
+    <string name="label_assist_ball_enable">Show the assist ball</string>
+    <string name="label_assist_ball_enable_summary">Show a floating ball over the stream. Tap it to open the toolbar or the keyboard.</string>
+    <string name="label_assist_ball_opacity">Transparency %1$d%%</string>
+    <string name="label_assist_ball_size">Size %1$d dp</string>
+    <string name="label_assist_ball_color">Color</string>
+    <string name="title_assist_ball_color">Ball color</string>
+    <string name="label_assist_ball_action">On tap</string>
+    <string name="action_assist_ball_toolbar">Open the toolbar</string>
+    <string name="action_assist_ball_keyboard">Open the keyboard</string>
+
+    <!--
+      Full QWERTY keyboard: a draggable overlay over the stream, configured from its own
+      drawer. Enabled/disabled, faded and pinned from that panel (see ui/vnc/FullKeyboard.kt).
+    -->
+    <string name="desc_full_keyboard_toggle">Full keyboard settings</string>
+    <string name="desc_full_keyboard">Full keyboard</string>
+    <string name="desc_full_keyboard_drag">Drag to move the full keyboard</string>
+    <string name="label_full_keyboard_grip" translatable="false"/>
+    <string name="label_full_keyboard_enable">Show full keyboard</string>
+    <string name="label_full_keyboard_opacity">Transparency %1$d%%</string>
+    <string name="label_full_keyboard_drag_lock">Lock position</string>
+    <string name="label_full_keyboard_scale">Size %1$d%%</string>
+
+    <!--
+      LocalSend: nearby-device file and text exchange over the local network - discovery by
+      UDP multicast, transfer over HTTPS with a self-signed certificate. The receive switch
+      lives only for this session; sending picks a file or a message first and the device that
+      should receive it afterwards. See com/limelight/localsend.
+    -->
+    <string name="desc_localsend_toggle">LocalSend</string>
+    <string name="label_localsend_receive">Turn on LocalSend to send and receive</string>
+    <string name="label_localsend_off">Switch on to look for nearby devices</string>
+    <string name="label_localsend_searching">Searching for nearby devices\u2026</string>
+    <string name="label_localsend_empty">No devices found. Turn on LocalSend on the other device too.</string>
+    <string name="label_localsend_hint">Tap a device to send the files you added.</string>
+    <string name="label_localsend_device_row">%1$s \u00b7 %2$s</string>
+    <string name="action_localsend_send_text">Send a text message</string>
+    <string name="dialog_localsend_offer">%1$s wants to send</string>
+    <string name="dialog_localsend_message">Message from %1$s</string>
+    <string name="dialog_localsend_text_hint">Type a message</string>
+    <string name="action_accept">Accept</string>
+    <string name="action_decline">Decline</string>
+    <string name="action_localsend_send">Send</string>
+    <string name="msg_localsend_sending">Sending\u2026</string>
+    <string name="msg_localsend_sent">Sent</string>
+    <string name="msg_localsend_declined">The receiver declined the transfer</string>
+    <string name="msg_localsend_nothing">The receiver chose not to accept any file</string>
+    <string name="msg_localsend_failed">Send failed: %1$s</string>
+    <!-- Part of a batch went out and part was skipped because its source could no longer be read. -->
+    <string name="msg_localsend_partial">Could not be read and were skipped: %1$s</string>
+
+    <!-- Standalone LocalSend screen reached from the home bar, plus transfer progress. -->
+    <string name="action_back">Back</string>
+    <string name="desc_localsend_home">LocalSend</string>
+    <string name="title_localsend_home">LocalSend</string>
+    <string name="label_localsend_home_enable">Discoverable and accepting files</string>
+    <string name="action_localsend_rescan">Search again</string>
+    <string name="action_localsend_rescanning">Searching · tap to stop</string>
+    <string name="action_localsend_stop">Stop</string>
+    <string name="msg_localsend_rescan_progress">Searching… %1$d%% (%2$d/%3$d) · tap to stop</string>
+    <string name="msg_localsend_rescan_empty">No devices found. Check that both machines are on the same network and that receiving is switched on.</string>
+    <string name="action_localsend_float">Float window</string>
+    <string name="action_localsend_open_full">Open full page</string>
+    <string name="desc_ls_float_close">Close LocalSend floating window</string>
+    <string name="desc_ls_float_drag">Drag to move the LocalSend floating window</string>
+    <string name="desc_ls_float_collapse">Collapse to the screen edge</string>
+    <string name="desc_ls_float_expand">Enlarge or restore the floating window</string>
+    <string name="desc_ls_float_resize">Resize the LocalSend floating window</string>
+    <string name="ls_float_action_add_ip">Add by IP</string>
+    <string name="ls_float_action_create_link">Create link</string>
+    <string name="msg_localsend_float_needs_overlay">Allow drawing over other apps to use the LocalSend floating window.</string>
+    <string name="label_localsend_sending">Sending</string>
+    <string name="label_localsend_receiving">Receiving</string>
+    <string name="label_localsend_progress">%1$s \u00b7 %2$s</string>
+    <string name="label_localsend_progress_multi">%1$s \u00b7 %2$d/%3$d \u00b7 %4$s</string>
+    <string name="label_localsend_offer_row">%1$s \u00b7 %2$s</string>
+    <string name="msg_localsend_saved">Saved %1$s to %2$s</string>
+
+    <!--
+      The three things the standalone screen adds to what the in-stream drawer mirrors: a peer
+      reached by typing its address instead of waiting for an announcement, devices pinned
+      against discovery's timeout, and files handed out as a plain link a browser can open.
+      See LsFavorites and LsShareServer.
+    -->
+    <string name="title_localsend_add_by_ip">Add a device by IP address</string>
+    <string name="title_localsend_add_by_ip_summary">Type the address of a LocalSend device that never announced itself</string>
+    <string name="hint_localsend_ip">192.168.1.5 or 192.168.1.5:53317</string>
+    <string name="msg_localsend_add_failed">Could not reach a LocalSend device at %1$s: %2$s</string>
+    <string name="msg_localsend_added">Added %1$s</string>
+    <string name="action_localsend_favorite">Add to favorites</string>
+    <string name="action_localsend_unfavorite">Remove from favorites</string>
+    <string name="title_localsend_favorites">Favorites</string>
+    <string name="action_clear_favorites">Clear all</string>
+    <!-- Shared label for every panel's reset button (pointer marker, full keyboard, toolbar
+         items, zoom), so they all read the same way. -->
+    <string name="action_restore_defaults">Restore defaults</string>
+    <string name="msg_confirm_restore_defaults">Restore the defaults for this panel? Your current settings here will be reset.</string>
+
+    <!--
+      Tools screen: one action that puts every setting back to what the app ships with. It is
+      deliberately more drastic than the per-panel restore above, so it confirms first and
+      says plainly that only settings are touched - saved servers are not part of preferences.
+    -->
+    <string name="action_reset_all_settings">Reset all settings</string>
+    <string name="pref_dedupe_servers">Remove duplicate servers</string>
+    <string name="msg_dedupe_servers_confirm">Keeps one card for every server that is reached on the same address, port and protocol, and removes the rest. Servers you named differently are still separate cards. This cannot be undone.</string>
+    <string name="msg_dedupe_servers_none">No duplicate servers found</string>
+    <string name="msg_dedupe_servers_done">Removed %1$d duplicate servers</string>
+    <string name="action_dedupe">Clean up</string>
+    <string name="msg_reset_all_settings_confirm">This sets every preference back to its default: look and feel, input, the toolbar, LocalSend and the rest. Saved servers are not changed, and the backup password protection switch is left as it is. This cannot be undone.</string>
+    <string name="msg_reset_all_settings_done">All settings restored to their defaults</string>
+
+    <!--
+      One row at the bottom of each settings category (Appearance, Viewer, Input, Server) that
+      restores just that screen to its shipped defaults. Narrower than the reset-all on Tools:
+      it touches only the options on the open screen and leaves every other category alone.
+    -->
+    <string name="pref_reset_category_defaults">Restore this screen\'s defaults</string>
+    <string name="msg_reset_category_defaults_confirm">Set every option on this screen back to its default value? Your current choices here are reset; other screens keep theirs. This cannot be undone.</string>
+    <string name="msg_reset_category_defaults_done">This screen restored to its defaults</string>
+    <string name="msg_clear_favorites_confirm">Remove every pinned device from the favorites list? This cannot be undone.</string>
+    <string name="msg_favorites_cleared">Favorites cleared</string>
+    <string name="title_localsend_discovered">Discovered</string>
+    <string name="action_localsend_share_link">Create a download link</string>
+    <string name="dialog_localsend_link_title">Download link</string>
+    <string name="action_localsend_copy_link">Copy link</string>
+    <string name="action_localsend_share">Share</string>
+    <string name="action_localsend_stop_shares">Stop sharing</string>
+    <string name="msg_localsend_link_failed">Could not create the link. Connect to a Wi-Fi network or turn on the hotspot first - a download link can only be opened by devices on the same local network, so mobile data is not enough.</string>
+
+    <!--
+      The live links, listed under the button that made them so one is not lost when its one-shot
+      dialog closes. The header carries a collapse arrow (a glyph from code) and the count.
+    -->
+    <string name="title_localsend_shares">%1$s Download links (%2$d)</string>
+    <string name="action_localsend_copy">Copy</string>
+    <string name="action_localsend_add_to_share">Add files</string>
+    <string name="action_localsend_revoke">Revoke</string>
+    <string name="action_localsend_remove_from_share">Remove this file</string>
+    <string name="label_localsend_shared_files">Files (%1$d)</string>
+    <string name="label_localsend_shared_file_row">%1$s \u00b7 %2$s</string>
+
+    <!-- The favorites list: a row is reordered by its drag handle, and unpinned from its menu. -->
+    <string name="desc_localsend_drag_favorite">Drag to reorder this favorite</string>
+    <string name="action_localsend_remove_favorite">Remove from favorites</string>
+    <string name="action_localsend_rename">Rename</string>
+    <string name="title_localsend_rename">Rename device</string>
+    <string name="hint_localsend_rename">Type a new name for this device</string>
+
+    <!-- Backup & restore switch for the pinned devices, kept out of the secrets gate. -->
+    <string name="title_export_localsend_favorites">Export LocalSend favorites</string>
+    <string name="title_import_localsend_favorites">Restore LocalSend favorites</string>
+
+    <!-- Backup switches for the non-secret caches: what discovery learned, and the trust the
+         user already granted over SSH and VNC. -->
+    <string name="title_export_discovery_cache">Export discovered addresses and MACs</string>
+    <string name="title_import_discovery_cache">Restore discovered addresses and MACs</string>
+    <string name="title_export_ssh_trust">Export known hosts and trusted certificates</string>
+    <string name="title_import_ssh_trust">Restore known hosts and trusted certificates</string>
+
+    <!--
+      A text message is written before the device is chosen, unlike a batch of files, so the
+      chooser needs a title of its own and a pinned machine that discovery has not confirmed
+      needs a word saying it is away.
+    -->
+    <string name="label_localsend_order_hint">Added files wait here, so a device that is not switched on yet costs nothing. Tap a device to send them to it, and the same files can go on to another device afterwards. A long press pins a device as a favorite.</string>
+    <string name="title_localsend_pick_target">Send to</string>
+    <string name="label_localsend_offline">offline</string>
+    <string name="msg_localsend_no_targets">No device to send to yet. Search again or add a device by IP address.</string>
+    <string name="action_localsend_add_message">Add to queue</string>
+    <string name="msg_localsend_text_staged">Message added to Ready to send. Tap a device to send it.</string>
+
+    <!--
+      The outbox: files are picked up front and then kept, because the machine they are meant
+      for is often not switched on yet, and one batch usually goes to more than one of them.
+      See LsManager.staged.
+    -->
+    <string name="action_localsend_add_files">Add files to send</string>
+    <string name="title_localsend_outbox">Ready to send</string>
+    <string name="label_localsend_staged_row">%1$s \u00b7 %2$s</string>
+    <string name="label_localsend_staged_count">%1$d file(s) ready to send</string>
+    <string name="action_localsend_remove_all">Remove all files</string>
+    <string name="desc_localsend_remove_file">Remove this file</string>
+    <string name="msg_localsend_nothing_staged">No files to send yet. Add files first.</string>
+
+    <!--
+      The read permission the document picker handed over has gone by the time the file is
+      actually dialed, which an outbox that waits for a device makes possible. Naming the
+      provider's error would be no use here: the only fix is to pick the file again.
+    -->
+    <string name="msg_localsend_uri_expired">The picked files can no longer be read. Add them again.</string>
+
+    <!-- Background of the letterbox bands around the streamed picture, set from the toolbar
+         palette. Offered as 'background' rather than 'border' because it fills the whole area
+         behind the picture, not a line around it. -->
+    <string name="desc_letterbox_color_btn">Background color</string>
+    <string name="title_letterbox_color">Background color</string>
+
+    <!-- Inside every color palette. It moves the markers onto the color the app ships with;
+         the change reaches the screen only when the user confirms the dialog. -->
+    <string name="action_restore_default_color">Restore default color</string>
+
+    <string name="desc_mini_window_btn">Mini window</string>
+    <string name="desc_mini_keys">Remote control keys</string>
+    <string name="desc_mini_fullscreen">Back to full screen</string>
+    <string name="desc_mini_close">Close mini window</string>
+    <string name="desc_mini_back">Back</string>
+    <string name="desc_mini_home">Home</string>
+    <string name="desc_mini_overview">Recent apps</string>
+    <string name="desc_mini_keyboard">Keyboard</string>
+    <string name="desc_mini_resize">Resize mini window</string>
+    <string name="desc_mini_navbar">Navigation keys</string>
+    <string name="desc_mini_collapse">Collapse to the screen edge</string>
+    <string name="desc_mini_expand">Expand mini window</string>
+    <string name="desc_mini_reset">Reset size and position</string>
+    <string name="desc_mini_rotate">Rotate the remote screen</string>
+    <string name="desc_mini_power">Power menu</string>
+    <string name="desc_mini_screen_on">Turn the remote screen on</string>
+    <string name="desc_mini_screen_off">Turn the remote screen off</string>
+    <string name="msg_mini_reconnect">The mini window restarts the stream</string>
+    <string name="msg_mini_no_permission">Allow drawing over other apps to use the mini window</string>
+
+    <!--
+      Mini window chrome in the style of Mi-Freeform: a three-slot top bar and a bottom bar
+      whose double tap fire actions the user picks in the viewer settings. These name the
+      actions and the settings that choose them.
+    -->
+    <string name="desc_mini_none">None</string>
+    <string name="desc_mini_drag_handle">Move mini window</string>
+    <string name="pref_mini_window">Mini window</string>
+    <string name="pref_mini_top_slot_0">Top bar - left</string>
+    <string name="pref_mini_top_slot_1">Top bar - middle</string>
+    <string name="pref_mini_top_slot_2">Top bar - right</string>
+    <string name="pref_mini_double_tap">Bottom bar - double tap</string>
+    <string name="desc_mini_bar_actions">Choose what each mini window button does. Pick None to leave a slot empty.</string>
+
+    <!--
+      The row of phone keys - Back, Home, Recent apps - under the mini window's picture. It only
+      has a transport on a device driven over ADB, so each protocol gets its own switch and the
+      two desktop ones start with the row hidden instead of showing keys that cannot fire.
+    -->
+    <string name="pref_mini_nav_keys">Mini window phone keys</string>
+    <string name="pref_mini_nav_keys_adb">Phone keys - ADB</string>
+    <string name="pref_mini_nav_keys_gamestream">Phone keys - GameStream</string>
+    <string name="pref_mini_nav_keys_vnc">Phone keys - RFB</string>
+    <string name="desc_mini_nav_keys_summary">Show the Back / Home / Recent apps row under the picture in the mini window, per protocol. Only a device driven over ADB can receive these keys, so GameStream and RFB start with the row hidden.</string>
+
+    <!--
+      Resizing the mini window. The bottom bar's two dots and the card's two bottom corners each
+      answer a drag in one of the two ways below, and each is set separately because a dot sits on
+      the bar and mostly wants height, while a corner is on the edge of the card and wants both.
+    -->
+    <string name="desc_mini_corner_resize">Resize mini window from its bottom corner</string>
+    <string name="pref_mini_scale_mode">Mini window resizing</string>
+    <string name="desc_mini_scale_mode_summary">How the mini window\'s two kinds of resize handle turn a drag into a new size. The dots on the bottom bar are drawn marks; the card\'s exact bottom-left and bottom-right corners are invisible hot zones you grab the same way, and they sit on top of the shadow padding so the touch target lines up with the corner you can see. Proportional scaling grows both axes by the shape the window had before the drag, so a tall card stays tall and the picture keeps its own ratio inside it; free scaling follows the finger on each axis separately.</string>
+    <string name="pref_mini_dot_scale_mode">Bottom bar dots</string>
+    <string name="pref_mini_corner_scale_mode">Bottom-left and bottom-right corners</string>
+    <string name="pref_mini_scale_aspect">Scale proportionally</string>
+    <string name="pref_mini_scale_free">Free</string>
+
+    <!--
+      Connection progress. The identifiers arrive from moonlight-common-c (English,
+      lowercase) and from this app's Android-device protocol; the UI shows one of
+      these inside "Connecting: ...", so they have to read as a step in progress.
+    -->
+    <string name="stage_none">Preparing</string>
+    <string name="stage_platform_init">Setting up the platform</string>
+    <string name="stage_name_resolution">Resolving the host address</string>
+    <string name="stage_audio_init">Setting up the audio stream</string>
+    <string name="stage_rtsp_handshake">RTSP handshake</string>
+    <string name="stage_control_init">Setting up the control channel</string>
+    <string name="stage_video_init">Setting up the video stream</string>
+    <string name="stage_input_init">Setting up the input channel</string>
+    <string name="stage_control_up">Opening the control channel</string>
+    <string name="stage_video_up">Opening the video stream</string>
+    <string name="stage_audio_up">Opening the audio stream</string>
+    <string name="stage_input_up">Opening the input channel</string>
+    <string name="stage_handshake">Handshaking with the host</string>
+    <string name="stage_launch">Launching the app</string>
+    <string name="stage_android_adb">Connecting to the device over ADB</string>
+    <string name="stage_android_server">Starting the helper on the device</string>
+    <string name="stage_android_encoder">Starting the screen encoder</string>
+    <string name="stage_android_socket">Opening the video channels</string>
+
+    <!--
+      Why an Android-device session ended. The stream labels name the channel that
+      died and are joined to the exception by error_stream_broken_detail.
+    -->
+    <string name="error_connect_cancelled">The connection was cancelled</string>
+    <string name="error_adb_interrupted">The ADB connection was interrupted</string>
+    <string name="error_video_stream_broken">The video stream broke</string>
+    <string name="error_event_stream_broken">The event stream broke</string>
+    <string name="error_heartbeat_broken">The heartbeat stopped</string>
+    <string name="error_control_channel_unavailable">The control channel is gone</string>
+    <string name="error_stream_broken_detail">%1$s: %2$s</string>
+    <string name="error_android_clipboard_garbled">The device sent clipboard data this session could not follow, so it was disconnected.</string>
+    <string name="error_android_timeout">The connection to the controlled device timed out.</string>
+
+    <!-- Performance overlay. Both numbers come from one measurement window. -->
+    <string name="label_perf_overlay">%1$.1f FPS \u00b7 %2$.1f ms</string>
+
+    <!-- Instructions printed on the two debugging screens (Tools in settings). -->
+    <string name="hint_touch_test">The chips above are log markers — they do NOT filter events.\nAll touch events are always recorded.\n\n1. Tap a chip above to insert a marker into the log (e.g. "GestureStart: Double Tap")\n2. Perform the gesture in this area — coordinates update live\n3. The event log below records every MotionEvent as it arrives\n4. Tap another chip to insert a new marker and organize the log\n5. Press \'Copy\' to take the whole log with you</string>
+    <string name="hint_key_test">1. Tap here to bring up the keyboard if you need it\n2. Press the keys you want to test\n3. The translation of each key shows up below\n4. Press \'Copy\' to take the whole log with you</string>
+    <string name="label_pointer_count">%1$d finger(s)</string>
+    <string name="label_gesture_now">Now: %1$s \u00b7 %2$s \u00b7 %3$s</string>
+
+    <!-- Gesture chip labels on the touch-test screen. -->
+    <string name="gesture_single_tap">Single Tap</string>
+    <string name="gesture_double_tap">Double Tap</string>
+    <string name="gesture_long_press">Long Press</string>
+    <string name="gesture_swipe">Swipe</string>
+    <string name="gesture_2finger_tap">2-Finger Tap</string>
+    <string name="gesture_2finger_swipe">2-Finger Swipe</string>
+    <string name="gesture_other">Other</string>
+
+    <!--
+      ADB transport failures. These are the wire-level answers, and the session layer
+      turns them into the reason a connection ended - so they name what went wrong and
+      what to check, not the internal call that failed.
+    -->
+    <string name="error_adb_service_unreachable">Could not reach the ADB service on %1$s:%2$d: %3$s</string>
+    <string name="error_adb_usb_not_found">No USB device named %1$s. Check the OTG connection.</string>
+    <string name="error_adb_push_failed">Could not copy the helper component to the device: %1$s</string>
+    <string name="error_adb_channel_occupied">The device accepted the ADB connection but then refused to open any channel on it. Older devices serve only one host at a time - disconnect the other ADB or remote-control client first, then try again. (%1$s)</string>
+    <string name="error_adb_server_launch">Could not start the helper process on the device: %1$s</string>
+    <string name="error_adb_closed">The ADB connection is closed</string>
+    <string name="error_adb_channel_timeout">Timed out opening the ADB channel to %1$s</string>
+    <string name="error_adb_response_timeout">Timed out waiting for the device to answer</string>
+    <string name="error_adb_server_off">The helper process is not running on the device</string>
+    <string name="error_adb_server_silent">The helper process on the device is not answering</string>
+    <string name="error_adb_connect_failed">The ADB connection failed</string>
+
+    <!-- Wireless debugging pairing, reported back into the pairing dialog of the editor. -->
+    <string name="error_pair_rejected">Pairing was rejected. Check that the pairing code is still valid, then start it again.</string>
+    <string name="error_pair_needed">This address has to be paired first: pair it in the \"Wireless debugging\" screen of the controlled device, then connect.</string>
+    <string name="error_pair_handshake">The pairing handshake failed. The code may have expired or been mistyped - read it again from the \"Wireless debugging\" screen.</string>
+    <string name="error_pair_unreachable">Could not connect to %1$s:%2$d. Check that both devices are on the same network and that the port is the one shown in the \"Pair device\" window.</string>
+    <string name="error_pair_failed">Pairing failed: %1$s</string>
+    <string name="error_adb_key_format">This ADB host key format is not supported</string>
+
+    <!-- The two ADB wires: the address and the cable. -->
+    <string name="error_device_closed">The device closed the ADB connection</string>
+    <string name="error_device_closed_partial">The device closed the ADB connection partway through a message (%1$d of %2$d bytes)</string>
+    <string name="error_usb_open_denied">The USB device could not be opened. Allow this app to access it first.</string>
+    <string name="error_usb_no_adb">This USB device has no ADB interface. Check that USB debugging is enabled on it.</string>
+    <string name="error_usb_busy">The USB ADB interface could not be claimed exclusively (something else, perhaps the system adbd helper, holds it).</string>
+    <string name="error_usb_endpoints">The USB ADB endpoints are incomplete.</string>
+    <string name="error_usb_wired">Wired connection error: %1$s</string>
+
+    <!--
+      RFB failures the native library reports without an error string of its own, plus
+      the factory's answer for a protocol this build cannot create a client for.
+    -->
+    <string name="error_vnc_connect_failed">Could not connect to the VNC server. Check the address, the port and that the server is online.</string>
+    <string name="error_vnc_encoding_unsupported">The VNC server stopped sending picture updates, possibly because it only offers the Tight encoding while this build has no JPEG decoder. Enable Raw/Hextile/ZRLE/Zlib on the server.</string>
+    <string name="error_unknown_protocol">Unknown protocol: %1$s</string>
+
+    <!--
+      Failures that reach the viewer without a message of their own. A session can end on an
+      exception nobody expected - a cancelled prompt, a lock held too long, a missing native
+      library - and every one of those has to say something, because the alternative is a
+      black screen that never explains itself.
+      (A missing native library is already covered by `error_native_library_missing`
+      in strings_moonlight.xml, which is the one the viewer refers to.)
+    -->
+    <string name="error_session_interrupted">The session could not be started because of an unexpected error: %1$s</string>
+    <string name="error_session_interrupted_unknown">The session could not be started because of an unexpected error.</string>
+    <string name="title_unknown_certificate">Unknown server certificate</string>
+
+    <!-- Last resort when a session never got established and the client has no reason. -->
+    <string name="error_session_start_failed">Connection failed: no session could be established with the host.</string>
+
+
+    <string name="action_reset">Reset</string>
+    <string name="msg_auto_copy_on_exit">Copy automatically on exit</string>
+    <string name="msg_debug_loading">Loading...</string>
+    <string name="msg_debug_no_logs">No logs yet!</string>
+    <string name="msg_debug_cleared">Cleared!</string>
+
+    <string name="desc_virtual_keys">Virtual keys</string>
+    <string name="desc_vk_toggle_keyboard">Toggle keyboard</string>
+    <string name="desc_vk_exit">Exit the remote session</string>
+    <string name="desc_vk_open_toolbar">Open the menu</string>
+    <string name="desc_vk_close">Close virtual keys</string>
+    <string name="desc_vk_edit_keys">Key settings</string>
+
+    <!-- Section titles of the "add a key" picker, which follows the shape of a keyboard. -->
+    <string name="group_vk_left_mod">Left modifiers</string>
+    <string name="group_vk_right_mod">Right modifiers</string>
+    <string name="group_vk_common">Common and navigation</string>
+    <string name="group_vk_punctuation">Punctuation and symbols</string>
+    <string name="group_vk_letters">Letters</string>
+    <string name="group_vk_numbers">Numbers</string>
+    <string name="group_vk_function">Function keys</string>
+    <string name="group_vk_numpad">Numpad</string>
+    <string name="group_vk_media">Media and volume</string>
+    <string name="group_vk_actions">Actions</string>
+
+    <string name="state_created">Preparing</string>
+    <string name="state_connecting">Connecting</string>
+    <string name="state_connected">Connected</string>
+    <string name="state_disconnected">Disconnected</string>
+
+    <string name="error_clipboard_copy_failed">Unable to copy text</string>
+    <string name="error_forget_hosts_failed">Could not forget the known hosts</string>
+    <string name="error_web_browser_missing">No web browser is installed</string>
+
+    <!--
+      SSH tunneling. The field is inherited from imported profiles and from
+      `vnc://...&ChannelType=24` links, but no tunnel can be opened in this build, so a
+      connection that would silently go straight to the target instead has to be refused
+      out loud.
+    -->
+    <string name="error_ssh_tunnel_unsupported">This server is configured to be reached through an SSH tunnel, which this app does not support. Connecting without the tunnel would send the password over an unencrypted link, so the attempt was stopped.</string>
+    <string name="msg_ssh_tunnel_unsupported">SSH tunneling is not supported: this entry has been switched back to a direct connection.</string>
+    <string name="msg_ssh_key_import_unsupported">SSH tunneling is not supported by this app, so a private key has nowhere to be used. It has not been stored.</string>
+
+    <!--
+      A `vnc://`, `moonlight://` or `android://` link can arrive from a browser, a chat
+      message or a QR code. Opening a remote control session is not something a link
+      should be allowed to do on its own, so the user is shown where it points.
+    -->
+    <string name="title_external_connection">Connection request</string>
+    <string name="msg_external_connection">Another app asked to open a remote session with %1$s on port %2$d over %3$s. Continue only if you started this yourself.</string>
+    <string name="title_connect">Connect</string>
+    <string name="title_error">Error</string>
+
+    <!-- Answers the receiver can give to an intent or a link it cannot use. -->
+    <string name="msg_unknown_intent">Invalid intent: the server information is missing.</string>
+    <string name="msg_no_server_named">No saved server is named \"%1$s\"</string>
+    <string name="msg_server_added_for_uri">Added a server for this link</string>
+    <string name="msg_unknown_channel_type">Unsupported channel type: %1$d</string>
+    <string name="msg_unknown_security_type">Unsupported security type: %1$d</string>
+
+    <!-- Startup failures the viewer reports before closing itself. -->
+    <string name="error_startup_generic">Something went wrong while starting the session</string>
+    <string name="error_startup_missing_server_info">Error: the server information is missing</string>
+    <string name="error_startup_invalid_server_id">Error: this server no longer exists</string>
+
+    <string name="title_backup_password_protection">Backup password protection</string>
+    <!-- Shown when the protection switch is thrown either way: the "password" is the device
+         lock credential, verified through DeviceAuthPrompt, exactly as AVNC does it. -->
+    <string name="msg_backup_password_toggle_auth">Enter the device lock-screen PIN, pattern, password, or fingerprint to change this setting</string>
+
+    <!-- Import and export. -->
+    <string name="err_import_unreadable">The selected file could not be opened.</string>
+    <string name="err_import_http">The backup file could not be read (HTTP %1$d).</string>
+    <string name="err_export_unwritable">The backup file could not be written.</string>
+    <string name="error_export_auth_failed">Authentication failed: %1$s</string>
+    <string name="error_no_file_picker">No app is available to pick a backup file.</string>
+    <string name="error_import_export_failed">The import or export could not be completed.</string>
+
+    <!--
+      The ADB wire and the helper's answers. Both are lengths and identifiers read off
+      the connection, so every place that refuses an implausible one needs a sentence.
+    -->
+    <string name="error_adb_too_many_channels">The device opened more ADB channels than one session can use. The connection has been closed.</string>
+    <string name="error_adb_backlog_too_large">The device kept sending data that nothing was reading, so the connection was closed before it could exhaust memory.</string>
+    <string name="error_adb_response_too_large">The helper answered with an impossible size (%1$d bytes).</string>
+    <string name="error_android_frame_length_bad">The video or audio stream stopped making sense, so the session was closed.</string>
+
+    <!-- The virtual keyboard's "send text" box turns every character into keystrokes. -->
+    <string name="msg_text_too_long_for_keys">That text is too long to send as key presses. Copy it to the clipboard instead.</string>
+
+    <!--
+      The stream toolbar's own panel for the local pointer marker. The switch and the size keep
+      the strings the viewer settings used to hold (pref_local_cursor_marker_show and
+      pref_cursor_marker_size); these are the parts the panel gained.
+    -->
+    <string name="pref_cursor_marker_shape">Marker shape</string>
+    <string name="pref_cursor_marker_shape_arrow">Arrow</string>
+    <string name="pref_cursor_marker_shape_dot">Dot</string>
+    <string name="label_cursor_marker_size">Marker size %1$d%%</string>
+    <string name="pref_drawer_edge_width">Toolbar swipe edge width</string>
+    <string name="pref_drawer_edge_width_summary">How wide a strip along the toolbar\'s edge a swipe has to start in to open it. A wider strip is easier to catch; a narrower one is harder to open by mistake.</string>
+    <string name="label_drawer_edge_width">Trigger width %1$d dp</string>
+    <string name="desc_drawer_edge_toggle">Toolbar swipe edge width</string>
+    <string name="pref_cursor_marker_color">Marker color</string>
+
+    <!--
+      The drawer's mouse sensitivity panel. It writes the same key as the "Swipe sensitivity"
+      row of the input settings (pref_swipe_sensitivity), so this summary has to say what that
+      older row does not: which swipes the multiplier reaches and which it leaves alone.
+    -->
+    <string name="desc_mouse_speed_toggle">Mouse sensitivity</string>
+    <string name="label_mouse_speed">Sensitivity %1$d%%</string>
+    <string name="pref_mouse_speed_summary">How far a swipe drags the remote pointer for the same finger movement: higher reaches further across a big desktop, lower gives finer control. This is the same value as the \"Swipe sensitivity\" row under Settings -&gt; Input. It reaches the one- and two-finger swipes; a swipe that follows a long press keeps its own speed, and in the touchscreen style your finger is the pointer, so nothing changes there.</string>
+
+    <!--
+      Log recording on the Tools screen. The dropdown chooses whether anything is recorded
+      at all, only this launch's log, or the full record kept across launches; "off" stops
+      the capture and adds nothing more. The export row writes the captured file, falling
+      back to a live logcat snapshot when nothing was recorded; the clear row empties both
+      that file and the buffer the recent-logs screen reads. The capture itself is a
+      follow-mode logcat writing to a small, self-limiting file.
+    -->
+    <string name="pref_logging">Enable log recording</string>
+    <string name="logging_mode_off">Off</string>
+    <string name="logging_mode_session">Only logs since this app launch</string>
+    <string name="logging_mode_all">All logs</string>
+    <string name="title_export_logs">Export logs</string>
+    <string name="pref_clear_all_logs">Clear all logs</string>
+    <string name="action_clear_logs">Clear</string>
+    <string name="msg_clear_all_logs_confirm">This empties both the log file and the recent-log buffer; what was recorded so far is gone for good. While log recording is on, recording simply continues from the cleared file.</string>
+    <string name="msg_logs_exported">Logs exported</string>
+    <string name="msg_logs_export_failed">Could not export logs: %1$s</string>
+</resources>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Translation of values/strings_vnc.xml.
+  Only the entries that other translatable text refers to by name are provided
+  here; the rest falls back to the English default.
+-->
+<resources>
+
+    <!-- Label of the Scan button on the discovery tab. -->
+    <string name="action_scan">Escanear</string>
+
+    <string name="desc_mini_window_btn">Ventá pequena</string>
+    <string name="desc_mini_keys">Teclas de control remoto</string>
+    <string name="desc_mini_fullscreen">Volver a pantalla completa</string>
+    <string name="desc_mini_close">Pechar a ventá pequena</string>
+    <string name="desc_mini_back">Atrás</string>
+    <string name="desc_mini_home">Inicio</string>
+    <string name="desc_mini_overview">Aplicacións recentes</string>
+    <string name="desc_mini_keyboard">Teclado</string>
+    <string name="desc_mini_resize">Redimensionar a ventá pequena</string>
+    <string name="msg_mini_reconnect">A ventá pequena reinicia a transmisión</string>
+    <string name="msg_mini_no_permission">Permite a superposición sobre outras aplicacións para usar a ventá pequena</string>
+
+    <!-- Gesture chip labels -->
+    <string name="gesture_single_tap">Toque simple</string>
+    <string name="gesture_double_tap">Toque dobre</string>
+    <string name="gesture_long_press">Pulsación longa</string>
+    <string name="gesture_swipe">Desprazar</string>
+    <string name="gesture_2finger_tap">Toque 2 dedos</string>
+    <string name="gesture_2finger_swipe">Desprazar 2 dedos</string>
+    <string name="gesture_other">Outro</string>
+
+    <string name="action_restore_default_color">Restaurar a cor predeterminada</string>
+<string name="title_backup_password_protection">Protección con contrasinal da copia de seguridade</string>
+    <string name="msg_backup_password_toggle_auth">Introduza o PIN, patrón, contrasinal ou impresión dixital do bloqueo de pantalla para cambiar esta configuración</string>
+    <string name="desc_vk_close">Pechar teclas virtuais</string>
+</resources>

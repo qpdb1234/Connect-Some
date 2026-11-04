@@ -1,0 +1,10 @@
+<!--
+  Not a real Android application: nothing here is ever installed. The dex inside
+  this module's APK is loaded by `app_process` on the controlled device, running
+  as the shell UID, which is why there are no components and no permissions.
+
+  Entry points invoked over ADB (see com.limelight.adb.Adb):
+    CLASSPATH=<jar> app_process / com.limelight.androidserver.Server
+    app_process -Djava.class.path=<jar> / com.limelight.androidserver.Scrcpy ...
+-->
+<manifest />

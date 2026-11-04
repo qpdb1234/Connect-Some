@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Translation of values/strings_vnc.xml.
+  Only the entries that other translatable text refers to by name are provided
+  here; the rest falls back to the English default.
+-->
+<resources>
+
+    <!-- Label of the Scan button on the discovery tab. -->
+    <string name="action_scan">Skenēt</string>
+
+    <string name="desc_mini_window_btn">Mini logs</string>
+    <string name="desc_mini_keys">Attālinātās vadības taustiņi</string>
+    <string name="desc_mini_fullscreen">Atpakaļ uz pilnekrānu</string>
+    <string name="desc_mini_close">Aizvērt mini logu</string>
+    <string name="desc_mini_back">Atpakaļ</string>
+    <string name="desc_mini_home">Sākums</string>
+    <string name="desc_mini_overview">Nesenās lietotnes</string>
+    <string name="desc_mini_keyboard">Tastatūra</string>
+    <string name="desc_mini_resize">Mainīt mini loga izmēru</string>
+    <string name="msg_mini_reconnect">Mini logs no jauna izveido savienojumu</string>
+    <string name="msg_mini_no_permission">Atļaujiet pārklāšanu pār citām lietotnēm, lai izmantotu mini logu</string>
+
+    <!-- Gesture chip labels -->
+    <string name="gesture_single_tap">Viens pieskāriens</string>
+    <string name="gesture_double_tap">Divkāršs pieskāriens</string>
+    <string name="gesture_long_press">Ilgstošs pieskāriens</string>
+    <string name="gesture_swipe">Pārvilkt</string>
+    <string name="gesture_2finger_tap">2 pirkstu pieskāriens</string>
+    <string name="gesture_2finger_swipe">2 pirkstu pārvilkšana</string>
+    <string name="gesture_other">Cits</string>
+
+    <string name="action_restore_default_color">Atiestatīt nokrāsoto krāsu</string>
+<string name="title_backup_password_protection">Dublējuma paroles aizsardzība</string>
+    <string name="msg_backup_password_toggle_auth">Ievadiet ekrāna bloķēšanas PIN, zīmējumu, paroli vai pirksta nospiedumu, lai mainītu šo iestatījumu</string>
+    <string name="desc_vk_close">Aizvērt virtuālās pogas</string>
+</resources>

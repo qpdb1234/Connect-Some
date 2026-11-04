@@ -1,0 +1,257 @@
+<!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="@string/pref_viewer">
+
+    <ListPreference
+        android:defaultValue="auto"
+        android:entries="@array/orientation_entries"
+        android:entryValues="@array/orientation_values"
+        android:key="viewer_orientation"
+        android:title="@string/pref_orientation"
+        app:useSimpleSummaryProvider="true" />
+
+    <SwitchPreference
+        app:defaultValue="true"
+        app:key="keep_screen_on"
+        app:title="@string/pref_keep_screen_on" />
+
+    <SwitchPreference
+        app:defaultValue="true"
+        app:key="fullscreen_display"
+        app:title="@string/pref_fullscreen" />
+
+    <SwitchPreference
+        app:defaultValue="false"
+        app:dependency="fullscreen_display"
+        app:key="viewer_draw_behind_cutout"
+        app:summary="@string/pref_display_cutout_summary"
+        app:title="@string/pref_display_cutout" />
+
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="pip_enabled"
+        app:summary="@string/pref_enable_pip_summary"
+        app:title="@string/pref_enable_pip" />
+
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="pause_fb_updates_in_background"
+        app:summary="@string/pref_pause_bg_updates_summary"
+        app:title="@string/pref_pause_bg_updates" />
+
+    <!--
+      GameStream / Android-device only: feed the hardware decoder straight into a SurfaceView
+      instead of sampling the frames back through GL, shaving a few milliseconds off latency
+      like upstream moonlight-android. On by default; leave it off to fall back to the GL path
+      on the rare device whose punched-through surface misbehaves. No effect on VNC.
+    -->
+    <SwitchPreference
+        app:defaultValue="true"
+        app:key="direct_scan_surface_view"
+        app:summary="@string/pref_direct_scan_summary"
+        app:title="@string/pref_direct_scan" />
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_zoom_in"
+        app:title="@string/pref_zoom">
+
+        <SeekBarPreference
+            android:max="100"
+            app:defaultValue="50"
+            app:key="zoom_min"
+            app:min="10"
+            app:showSeekBarValue="true"
+            app:summary="@string/pref_zoom_min_summary"
+            app:title="@string/pref_zoom_min" />
+
+        <SeekBarPreference
+            android:max="1000"
+            app:defaultValue="500"
+            app:key="zoom_max"
+            app:min="100"
+            app:showSeekBarValue="true"
+            app:summary="@string/pref_zoom_max_summary"
+            app:title="@string/pref_zoom_max" />
+
+        <SwitchPreference
+            app:defaultValue="true"
+            app:key="per_orientation_zoom"
+            app:summary="@string/pref_per_orientation_zoom_summary"
+            app:title="@string/pref_per_orientation_zoom" />
+    </PreferenceCategory>
+
+    <!--
+      The local pointer marker used to be configured here. It is a thing looked at while a
+      stream runs rather than a setting chosen before one, so the switch, its shape and its
+      size now live in the stream toolbar's own panel (see toolbar_drawer.xml and
+      Toolbar.setupLocalCursorControls). The two preference keys are untouched and still read
+      by InputView, so a marker someone sized from here keeps the size they gave it.
+    -->
+
+    <!--
+      The alignment entry carries its own explanation (see PrefsActivity.Viewer), so the
+      category header stays a bare title - the same sentence printed twice per screen reads
+      like a placeholder nobody finished.
+    -->
+    <PreferenceCategory
+        app:icon="@drawable/ic_toolbar"
+        app:layout="@layout/preference_category_multiline"
+        app:title="@string/pref_toolbar">
+
+        <ListPreference
+            app:defaultValue="start"
+            app:entries="@array/toolbar_alignment_entries"
+            app:entryValues="@array/toolbar_alignment_values"
+            app:key="toolbar_alignment"
+            app:title="@string/pref_toolbar_alignment" />
+
+        <SwitchPreference
+            app:defaultValue="true"
+            app:key="toolbar_open_with_swipe"
+            app:summary="@string/pref_toolbar_open_with_swipe_summary"
+            app:title="@string/pref_toolbar_open_with_swipe" />
+
+        <!--
+          How wide a strip along the toolbar's edge a swipe has to start in to open the drawer -
+          the fine-tuning of the switch above. The same key the drawer's own slider edits (see
+          Toolbar.setupDrawerEdgeControls), so either writes the same choice; the range here has
+          to agree with AppPreferences.DRAWER_EDGE_WIDTH_MIN/MAX, which is where the value is
+          clamped. A change here takes effect the next time a viewer is opened.
+        -->
+        <SeekBarPreference
+            android:max="120"
+            app:defaultValue="20"
+            app:key="drawer_edge_trigger_dp"
+            app:min="12"
+            app:showSeekBarValue="true"
+            app:summary="@string/pref_drawer_edge_width_summary"
+            app:title="@string/pref_drawer_edge_width" />
+
+        <!--
+          Same key the assist ball's own on/off uses in the stream toolbar, so the two
+          always agree: turning this on shows the ball, switching the ball off in the
+          right-swipe menu turns this off. On by default.
+        -->
+        <SwitchPreference
+            app:defaultValue="true"
+            app:key="assist_ball_enabled"
+            app:summary="@string/label_assist_ball_enable_summary"
+            app:title="@string/label_assist_ball_enable" />
+    </PreferenceCategory>
+
+    <!--
+      Mini window chrome, in the style of Mi-Freeform: three configurable top-bar slots plus
+      an action on the bottom handle's double tap. Pick None to leave a slot empty.
+    -->
+    <PreferenceCategory
+        app:icon="@drawable/ic_mini_window"
+        app:layout="@layout/preference_category_multiline"
+        app:summary="@string/desc_mini_bar_actions"
+        app:title="@string/pref_mini_window">
+
+        <ListPreference
+            app:defaultValue="close"
+            app:entries="@array/mini_bar_action_entries"
+            app:entryValues="@array/mini_bar_action_values"
+            app:key="run_info_mini_top_slot_0"
+            app:title="@string/pref_mini_top_slot_0"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="fullscreen"
+            app:entries="@array/mini_bar_action_entries"
+            app:entryValues="@array/mini_bar_action_values"
+            app:key="run_info_mini_top_slot_1"
+            app:title="@string/pref_mini_top_slot_1"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="minimize"
+            app:entries="@array/mini_bar_action_entries"
+            app:entryValues="@array/mini_bar_action_values"
+            app:key="run_info_mini_top_slot_2"
+            app:title="@string/pref_mini_top_slot_2"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="keyboard"
+            app:entries="@array/mini_bar_action_entries"
+            app:entryValues="@array/mini_bar_action_values"
+            app:key="run_info_mini_double_tap"
+            app:title="@string/pref_mini_double_tap"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <!--
+      The phone-key row under the mini window's picture, switched per protocol. Back / Home /
+      Recents only have a transport on a device driven over ADB, so that one is on and the two
+      desktop protocols are off; the row's own toggle button in the window writes whichever
+      switch belongs to the session it is showing.
+    -->
+    <PreferenceCategory
+        app:icon="@drawable/ic_mini_navbar_toggle"
+        app:layout="@layout/preference_category_multiline"
+        app:summary="@string/desc_mini_nav_keys_summary"
+        app:title="@string/pref_mini_nav_keys">
+
+        <SwitchPreference
+            app:defaultValue="true"
+            app:key="run_info_mini_nav_keys_adb"
+            app:title="@string/pref_mini_nav_keys_adb" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="run_info_mini_nav_keys_gamestream"
+            app:title="@string/pref_mini_nav_keys_gamestream" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="run_info_mini_nav_keys_vnc"
+            app:title="@string/pref_mini_nav_keys_vnc" />
+    </PreferenceCategory>
+
+    <!--
+      What a drag on one of the mini window's resize handles does. Two kinds exist: the dots
+      drawn on the bottom bar and the invisible hot zones pinned to the card's exact
+      bottom-left and bottom-right corners. They get separate lists because they are held
+      differently: a dot is under the thumb and mostly asked for height, a corner zone is
+      grabbed at the window's edge and asked for both axes at once.
+    -->
+    <PreferenceCategory
+        app:icon="@drawable/ic_mini_corner_resize"
+        app:layout="@layout/preference_category_multiline"
+        app:summary="@string/desc_mini_scale_mode_summary"
+        app:title="@string/pref_mini_scale_mode">
+
+        <ListPreference
+            app:defaultValue="free"
+            app:entries="@array/mini_scale_mode_entries"
+            app:entryValues="@array/mini_scale_mode_values"
+            app:key="run_info_mini_dot_scale_mode"
+            app:title="@string/pref_mini_dot_scale_mode"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="free"
+            app:entries="@array/mini_scale_mode_entries"
+            app:entryValues="@array/mini_scale_mode_values"
+            app:key="run_info_mini_corner_scale_mode"
+            app:title="@string/pref_mini_corner_scale_mode"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <!-- Puts just this screen's options back to what the app ships with, after a confirm.
+         See PrefsActivity.PrefFragment and pref_reset_category_defaults. -->
+    <Preference
+        app:icon="@drawable/ic_refresh"
+        app:key="reset_category_defaults"
+        app:title="@string/pref_reset_category_defaults" />
+</PreferenceScreen>

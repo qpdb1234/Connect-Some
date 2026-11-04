@@ -1,0 +1,843 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.limelight.viewmodel.EditorViewModel" />
+    </data>
+
+    <com.limelight.util.EdgeToEdgeWrapperLayout
+        android:id="@+id/edge_to_edge_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?colorSurface"
+            android:orientation="vertical">
+
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <!-- Appbar                                                     -->
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/urlbar_height"
+                    app:navigationContentDescription="@string/desc_back_btn"
+                    app:navigationIcon="@drawable/ic_arrow_back">
+
+                </com.google.android.material.appbar.MaterialToolbar>
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <ScrollView
+                android:id="@+id/scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fadeScrollbars="false">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    android:paddingHorizontal="@dimen/padding_normal"
+                    android:paddingTop="@dimen/padding_normal"
+                    android:paddingBottom="60dp">
+
+
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <!-- VNC Server                                                 -->
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <!-- Protocol                                                     -->
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+                    <!--
+                        The protocol decides everything downstream (port, fields, menus).
+                        It is exposed here - and only here - as a plain choice; the rest
+                        of the editor reacts to it via visibility rules in the fragment.
+
+                        One row with the same gap between every pair of options. The
+                        labels are bare protocol names, so they fit; what they must not
+                        do is share the width as equal columns, because a column leaves
+                        its leftover space behind the text and the visible gaps then come
+                        out different ('GameStream' nearly touches 'RFB' while 'ADB' sits
+                        far away). Wrapping each option and putting one margin between
+                        them makes the gaps equal by construction; the group then starts
+                        at the same left edge as the fields below it.
+                    -->
+                    <RadioGroup
+                        android:id="@+id/protocol"
+                        style="@style/FormField"
+                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <RadioButton
+                            android:id="@+id/protocol_game_stream"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/margin_large"
+                            android:text="@string/protocol_game_stream" />
+
+                        <RadioButton
+                            android:id="@+id/protocol_vnc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/margin_large"
+                            android:text="@string/protocol_vnc" />
+
+                        <RadioButton
+                            android:id="@+id/protocol_android"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/protocol_android" />
+                    </RadioGroup>
+
+                    <!--Shown only when the selected protocol cannot be used in this build.-->
+                    <TextView
+                        android:id="@+id/protocol_notice"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                        android:textColor="?colorError"
+                        android:visibility="gone"
+                        tools:text="@string/msg_vnc_unavailable"
+                        tools:visibility="visible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/protocol" />
+
+                    <!--Prominent pairing entry point (GameStream PIN).-->
+                    <Button
+                        android:id="@+id/pair_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_small"
+                        android:text="@string/title_pair_host"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/protocol_notice" />
+
+                    <EditText
+                        android:id="@+id/name"
+                        style="@style/FormField.EditText"
+                        android:drawableStart="@drawable/ic_bookmark"
+                        android:hint="@string/hint_server_name"
+                        android:importantForAutofill="no"
+                        android:inputType="text"
+                        android:text="@={viewModel.profile.name}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/pair_btn" />
+
+                    <!--Host-->
+                    <EditText
+                        android:id="@+id/host"
+                        style="@style/FormField.EditText"
+                        android:drawableStart="@{viewModel.useRepeater ? @drawable/ic_swap :  @drawable/ic_computer}"
+                        android:hint="@{viewModel.useRepeater ? @string/hint_repeater_host : @string/hint_host}"
+                        android:importantForAutofill="no"
+                        android:inputType="textUri"
+                        android:text="@={viewModel.profile.host}"
+                        app:layout_constraintEnd_toStartOf="@id/port"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/name" />
+
+
+                    <!--Port-->
+                    <EditText
+                        android:id="@+id/port"
+                        style="@style/FormField.EditText"
+                        android:layout_marginStart="0dp"
+                        android:ems="3"
+                        android:hint="@string/hint_port"
+                        android:importantForAutofill="no"
+                        android:inputType="number"
+                        android:text='@={"" +  viewModel.profile.port}'
+                        app:layout_constraintBottom_toBottomOf="@id/host"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/host" />
+
+                    <!--Repeater-->
+                    <CheckBox
+                        android:id="@+id/use_repeater"
+                        style="@style/FormField.CheckBox"
+                        android:checked="@={viewModel.useRepeater}"
+                        android:text="@string/title_use_repeater"
+                        app:layout_constraintEnd_toStartOf="@id/id_on_repeater"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/host" />
+
+                    <EditText
+                        android:id="@+id/id_on_repeater"
+                        style="@style/FormField.EditText"
+                        android:hint="@string/hint_server_id"
+                        android:importantForAutofill="no"
+                        android:inputType="number"
+                        android:minWidth="100dp"
+                        android:text="@={viewModel.idOnRepeater}"
+                        app:isVisible="@{viewModel.useRepeater}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/use_repeater"
+                        app:layout_constraintTop_toBottomOf="@id/host" />
+
+
+                    <!--Auto Connect-->
+                    <CheckBox
+                        android:id="@+id/auto_connect"
+                        style="@style/FormField.CheckBox"
+                        android:checked="@={viewModel.profile.fConnectOnAppStart}"
+                        android:text="@string/title_connect_on_app_start"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/use_repeater" />
+
+                    <!--Wake-on-LAN-->
+                    <CheckBox
+                        android:id="@+id/wol"
+                        style="@style/FormField.CheckBox"
+                        android:checked="@={viewModel.enableWol}"
+                        android:text="@string/title_enable_wol"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/auto_connect" />
+
+                    <!--
+                      MAC address in six two-digit boxes. The separators live in the
+                      layout instead of in the text, so a typo cannot quietly leave a
+                      five-digit half-MAC behind; pasting a whole address into any box
+                      spreads it over all six (see ProfileEditor.setupMacFields).
+                    -->
+                    <TextView
+                        android:id="@+id/wol_mac_label"
+                        style="@style/FormField.LabelWithIcon"
+                        android:labelFor="@id/wol_mac_1"
+                        android:text="@string/hint_wol_mac"
+                        app:drawableStartCompat="@drawable/ic_wake_on_lan"
+                        app:isVisible="@{viewModel.enableWol}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/wol" />
+
+                    <LinearLayout
+                        android:id="@+id/wol_mac_row"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:layout_marginEnd="@dimen/margin_small"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        app:isVisible="@{viewModel.enableWol}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/wol_mac_label">
+
+                        <EditText
+                            android:id="@+id/wol_mac_1"
+                            style="@style/MacField"
+                            android:importantForAutofill="no" />
+
+                        <TextView
+                            style="@style/MacSeparator"
+                            tools:ignore="HardcodedText" />
+
+                        <EditText
+                            android:id="@+id/wol_mac_2"
+                            style="@style/MacField"
+                            android:importantForAutofill="no" />
+
+                        <TextView
+                            style="@style/MacSeparator"
+                            tools:ignore="HardcodedText" />
+
+                        <EditText
+                            android:id="@+id/wol_mac_3"
+                            style="@style/MacField"
+                            android:importantForAutofill="no" />
+
+                        <TextView
+                            style="@style/MacSeparator"
+                            tools:ignore="HardcodedText" />
+
+                        <EditText
+                            android:id="@+id/wol_mac_4"
+                            style="@style/MacField"
+                            android:importantForAutofill="no" />
+
+                        <TextView
+                            style="@style/MacSeparator"
+                            tools:ignore="HardcodedText" />
+
+                        <EditText
+                            android:id="@+id/wol_mac_5"
+                            style="@style/MacField"
+                            android:importantForAutofill="no" />
+
+                        <TextView
+                            style="@style/MacSeparator"
+                            tools:ignore="HardcodedText" />
+
+                        <EditText
+                            android:id="@+id/wol_mac_6"
+                            style="@style/MacField"
+                            android:importantForAutofill="no"
+                            android:nextFocusDown="@id/wol_broadcast_address"
+                            android:nextFocusForward="@id/wol_broadcast_address" />
+                    </LinearLayout>
+
+                    <!--
+                      Fills in the six boxes above. The hardware address is what a magic
+                      packet is written to, and it usually lives on a label inside the case
+                      rather than anywhere the user can read it - so each source that can
+                      still say it is tried in turn for the host this profile points at.
+                    -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/wol_scan_mac"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:text="@string/action_wol_scan_mac"
+                        android:textSize="13sp"
+                        app:isVisible="@{viewModel.enableWol}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/wol_mac_row" />
+
+                    <EditText
+                        android:id="@+id/wol_broadcast_address"
+                        style="@style/FormField.EditText"
+                        android:drawableStart="@drawable/ic_broadcast"
+                        android:hint="@string/hint_wol_address"
+                        android:importantForAutofill="no"
+                        android:inputType="text"
+                        android:text="@={viewModel.profile.wolBroadcastAddress}"
+                        app:isVisible="@{viewModel.enableWol}"
+                        app:layout_constraintEnd_toStartOf="@id/wol_port"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/wol_scan_mac" />
+
+
+                    <!--Port-->
+                    <EditText
+                        android:id="@+id/wol_port"
+                        style="@style/FormField.EditText"
+                        android:layout_marginStart="0dp"
+                        android:ems="3"
+                        android:hint="@string/hint_port"
+                        android:importantForAutofill="no"
+                        android:inputType="number"
+                        android:text='@={"" +  viewModel.profile.wolPort}'
+                        app:isVisible="@{viewModel.enableWol}"
+                        app:layout_constraintBottom_toBottomOf="@id/wol_broadcast_address"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/wol_broadcast_address" />
+
+                    <!--
+                      Fills in the broadcast address above. A magic packet only reaches a
+                      sleeping machine when it is sent to the broadcast address of the
+                      subnet it lives on, and the prefix of that subnet is a property of
+                      the network this device is attached to - which is exactly what this
+                      reads, so the field can stay empty for almost everyone.
+                    -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/wol_get_broadcast"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:text="@string/action_wol_fill_broadcast"
+                        android:textSize="13sp"
+                        app:isVisible="@{viewModel.enableWol}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/wol_broadcast_address" />
+
+                    <!--Button-up delay-->
+                    <CheckBox
+                        android:id="@+id/button_up_delay"
+                        style="@style/FormField.CheckBox"
+                        android:checked="@={viewModel.profile.fButtonUpDelay}"
+                        android:text="@string/title_button_up_delay"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/wol_get_broadcast" />
+
+                    <!--Resize remote desktop-->
+                    <CheckBox
+                        android:id="@+id/resize_remote_desktop"
+                        style="@style/FormField.CheckBox"
+                        android:checked="@={viewModel.profile.resizeRemoteDesktop}"
+                        android:text="@string/title_resize_remote_desktop"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/button_up_delay" />
+
+                    <!--Image Quality-->
+                    <TextView
+                        android:id="@+id/image_quality_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:labelFor="@id/image_quality"
+                        android:text="@string/title_image_quality"
+                        app:layout_constraintBottom_toBottomOf="@id/image_quality"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/image_quality" />
+
+                    <SeekBar
+                        android:id="@+id/image_quality"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/action_btn_size"
+                        android:layout_marginVertical="@dimen/margin_small"
+                        android:layout_marginStart="@dimen/margin_large"
+                        android:enabled="@{!viewModel.useRawEncoding}"
+                        android:max="9"
+                        android:minHeight="@dimen/action_btn_size"
+                        android:progress="@={viewModel.profile.imageQuality}"
+                        app:layout_constraintEnd_toStartOf="@id/raw_encoding"
+                        app:layout_constraintStart_toEndOf="@id/image_quality_label"
+                        app:layout_constraintTop_toBottomOf="@id/resize_remote_desktop" />
+
+                    <CheckBox
+                        android:id="@+id/raw_encoding"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/action_btn_size"
+                        android:layout_marginEnd="@dimen/margin_small"
+                        android:checked="@={viewModel.useRawEncoding}"
+                        android:text="@string/title_image_quality_raw"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/image_quality"
+                        app:layout_constraintTop_toTopOf="@id/image_quality" />
+
+
+                    <!--Gesture style-->
+                    <TextView
+                        android:id="@+id/gesture_style_label"
+                        style="@style/FormField.LabelWithIcon"
+                        android:labelFor="@id/gesture_style"
+                        android:text="@string/pref_gesture_style"
+                        app:drawableStartCompat="@drawable/ic_gesture"
+                        app:layout_constraintBottom_toBottomOf="@id/gesture_style"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/gesture_style" />
+
+                    <com.limelight.util.SpinnerEx
+                        android:id="@+id/gesture_style"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_normal"
+                        android:minHeight="@dimen/action_btn_size"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/gesture_style_label"
+                        app:layout_constraintTop_toBottomOf="@id/image_quality"
+                        app:value="@={viewModel.profile.gestureStyle}"
+                        app:valueDescriptions="@{ @stringArray/profile_editor_gesture_style_descriptions }"
+                        app:valueLabels="@{ @stringArray/profile_editor_gesture_style_labels }"
+                        app:values="@{ @stringArray/profile_editor_gesture_style_values }"
+                        tools:entries="@array/dummy_array" />
+
+                    <!--Screen orientation-->
+                    <TextView
+                        android:id="@+id/screen_orientation_label"
+                        style="@style/FormField.LabelWithIcon"
+                        android:labelFor="@id/screen_orientation"
+                        android:text="@string/title_orientation"
+                        app:drawableStartCompat="@drawable/ic_screen_rotation"
+                        app:layout_constraintBottom_toBottomOf="@id/screen_orientation"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/screen_orientation" />
+
+                    <com.limelight.util.SpinnerEx
+                        android:id="@+id/screen_orientation"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/action_btn_size"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/gesture_style"
+                        app:layout_constraintTop_toBottomOf="@id/gesture_style"
+                        app:value="@={viewModel.profile.screenOrientation}"
+                        app:valueDescriptions="@{ @stringArray/profile_editor_orientation_descriptions }"
+                        app:valueLabels="@{ @stringArray/orientation_entries }"
+                        app:values="@{ @stringArray/orientation_values }"
+                        tools:entries="@array/dummy_array" />
+
+
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <!-- Security                                                   -->
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+                    <TextView
+                        android:id="@+id/security_label"
+                        style="@style/FormField.LabelWithIcon"
+                        android:text="@string/title_vnc_security"
+                        app:drawableStartCompat="@drawable/ic_shield"
+                        app:layout_constraintBottom_toBottomOf="@id/security"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/security" />
+
+                    <com.limelight.util.SpinnerEx
+                        android:id="@+id/security"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/action_btn_size"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/screen_orientation"
+                        app:layout_constraintTop_toBottomOf="@id/screen_orientation"
+                        app:value="@={viewModel.profile.securityType}"
+                        app:valueDescriptions="@{ @stringArray/profile_editor_security_descriptions }"
+                        app:valueLabels="@{ @stringArray/profile_editor_security_labels }"
+                        app:values="@{ @stringArray/profile_editor_security_values }"
+                        tools:entries="@array/dummy_array" />
+
+                    <!--Username-->
+                    <EditText
+                        android:id="@+id/username"
+                        style="@style/FormField.EditText"
+                        android:autofillHints="username"
+                        android:drawableStart="@drawable/ic_person"
+                        android:hint="@string/hint_username"
+                        android:inputType="text"
+                        android:text="@={viewModel.profile.username}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/security" />
+
+
+                    <!--Password-->
+                    <EditText
+                        android:id="@+id/password"
+                        style="@style/FormField.EditText"
+                        android:autofillHints="password"
+                        android:drawableStart="@drawable/ic_password"
+                        android:hint="@string/hint_password"
+                        android:inputType="textPassword"
+                        android:text="@={viewModel.profile.password}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/username" />
+
+
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <!-- Clipboard over VNC (GameStream only)                       -->
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+                    <!--
+                      GameStream has no clipboard message, so a copy needs an RFB server
+                      on the same machine to travel through. The port and secret of that
+                      server are not the streaming ones above: Sunshine answers on 47984
+                      with a pairing PIN, while a VNC server is a separate program with a
+                      password of its own. RFB carries the clipboard in its own session and
+                      an Android device has its own channel, hence this block is shown for
+                      GameStream alone.
+                    -->
+                    <EditText
+                        android:id="@+id/clipboard_port"
+                        style="@style/FormField.EditText"
+                        android:drawableStart="@drawable/ic_computer"
+                        android:hint="@string/hint_clipboard_vnc_port"
+                        android:inputType="number"
+                        android:text='@={"" + viewModel.profile.clipboardVncPort}'
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/password" />
+
+                    <EditText
+                        android:id="@+id/clipboard_password"
+                        style="@style/FormField.EditText"
+                        android:autofillHints="password"
+                        android:drawableStart="@drawable/ic_password"
+                        android:hint="@string/hint_clipboard_vnc_password"
+                        android:inputType="textPassword"
+                        android:text="@={viewModel.profile.clipboardVncPassword}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/clipboard_port" />
+
+
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <!-- Local cursor (RFB only)                                    -->
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+                    <CheckBox
+                        android:id="@+id/use_local_cursor"
+                        style="@style/FormField.CheckBox"
+                        android:checked="@={viewModel.profile.useLocalCursor}"
+                        android:text="@string/title_use_local_cursor"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/clipboard_password" />
+
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <!-- Android device (third protocol)                              -->
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+                    <!--
+                      Everything a directly driven Android device can be told about.
+                      The stream size, frame rate and bitrate are shared with the other
+                      protocols (they are the encoder's knobs, not RFB's), so only the
+                      device-specific choices live here. The whole block is hidden unless
+                      the protocol above says "Android device".
+                    -->
+                    <CheckBox
+                        android:id="@+id/android_codec"
+                        style="@style/FormField.CheckBox"
+                        android:checked="@={viewModel.androidUseH265}"
+                        android:text="@string/label_android_codec"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/use_local_cursor" />
+
+                    <CheckBox
+                        android:id="@+id/android_audio"
+                        style="@style/FormField.CheckBox"
+                        android:checked="@={viewModel.androidAudio}"
+                        android:text="@string/label_android_audio"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/android_codec" />
+
+                    <CheckBox
+                        android:id="@+id/android_direct_touch"
+                        style="@style/FormField.CheckBox"
+                        android:checked="@={viewModel.androidDirectTouch}"
+                        android:text="@string/label_android_direct_touch"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/android_audio" />
+
+                    <CheckBox
+                        android:id="@+id/android_keep_awake"
+                        style="@style/FormField.CheckBox"
+                        android:checked="@={viewModel.androidKeepAwake}"
+                        android:text="@string/label_android_keep_awake"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/android_direct_touch" />
+
+                    <!--
+                      A cable connection is addressed by the USB device name, not by an
+                      IP; the host/port fields above stay usable for the wireless case,
+                      so picking a device here is only a switch of transport.
+                    -->
+                    <Button
+                        android:id="@+id/android_usb_btn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:text="@string/action_android_select_usb"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/android_keep_awake" />
+
+                    <TextView
+                        android:id="@+id/android_usb_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_small"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                        app:layout_constraintBottom_toBottomOf="@id/android_usb_btn"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/android_usb_btn"
+                        app:layout_constraintTop_toTopOf="@id/android_usb_btn"
+                        app:layout_goneMarginStart="@dimen/margin_small"
+                        tools:text="@string/label_android_usb_none" />
+
+                    <!--
+                      Wireless debugging needs a one-off pairing with a six-digit code.
+                      Disabled (with an explanation in `protocol_notice`) on builds that
+                      were compiled without the pairing component.
+                    -->
+                    <Button
+                        android:id="@+id/android_pair_btn"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:text="@string/title_android_pair"
+                        android:textSize="13sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/android_usb_btn" />
+
+                    <!--
+                      One cable is enough to make a device reachable without one: adbd is
+                      asked to listen on TCP and the resulting address is verified before
+                      it replaces the cable entry.
+                    -->
+                    <Button
+                        android:id="@+id/android_tcpip_btn"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:text="@string/action_android_tcpip"
+                        android:textSize="13sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/android_pair_btn" />
+
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <!-- SSH Tunnel                                                 -->
+                    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+                    <CheckBox
+                        android:id="@+id/use_ssh_tunnel"
+                        style="@style/FormField.CheckBox"
+                        android:checked="@={viewModel.useSshTunnel}"
+                        android:text="@string/title_use_ssh_tunnel"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/android_tcpip_btn" />
+
+                    <!--SSH Options-->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        app:isVisible="@{viewModel.useSshTunnel}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/use_ssh_tunnel">
+
+                        <!--SSH Host-->
+                        <EditText
+                            android:id="@+id/ssh_host"
+                            style="@style/FormField.EditText"
+                            android:drawableStart="@drawable/ic_computer"
+                            android:hint="@{@string/hint_ssh_host}"
+                            android:importantForAutofill="no"
+                            android:inputType="textUri"
+                            android:text="@={viewModel.profile.sshHost}"
+                            app:layout_constraintEnd_toStartOf="@id/ssh_port"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <!--Port-->
+                        <EditText
+                            android:id="@+id/ssh_port"
+                            style="@style/FormField.EditText"
+                            android:ems="3"
+                            android:hint="@{@string/hint_ssh_port}"
+                            android:importantForAutofill="no"
+                            android:inputType="number"
+                            android:text='@={"" + viewModel.profile.sshPort}'
+                            app:layout_constraintBottom_toBottomOf="@id/ssh_host"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/ssh_host" />
+
+                        <!--Username-->
+                        <EditText
+                            android:id="@+id/ssh_username"
+                            style="@style/FormField.EditText"
+                            android:autofillHints="username"
+                            android:drawableStart="@drawable/ic_person"
+                            android:hint="@string/hint_username"
+                            android:inputType="text"
+                            android:text="@={viewModel.profile.sshUsername}"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/ssh_host" />
+
+                        <!--Auth Type-->
+                        <RadioGroup
+                            android:id="@+id/ssh_auth_type"
+                            style="@style/FormField"
+                            android:orientation="horizontal"
+                            android:paddingTop="@dimen/padding_small"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/ssh_username">
+
+                            <RadioButton
+                                android:id="@+id/ssh_auth_type_key"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:checked="@={viewModel.sshUsePrivateKey}"
+                                android:text="@string/title_private_key" />
+
+                            <RadioButton
+                                android:id="@+id/ssh_auth_type_password"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:checked="@={viewModel.sshUsePassword}"
+                                android:text="@string/title_password" />
+                        </RadioGroup>
+
+                        <!--Password-->
+                        <EditText
+                            android:id="@+id/ssh_password"
+                            style="@style/FormField.EditText"
+                            android:autofillHints="password"
+                            android:drawableStart="@drawable/ic_password"
+                            android:hint="@string/hint_password"
+                            android:inputType="textPassword"
+                            android:text="@={viewModel.profile.sshPassword}"
+                            app:isVisible="@{viewModel.sshUsePassword}"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/ssh_auth_type" />
+
+                        <!--Private Key Import-->
+                        <Button
+                            android:id="@+id/key_import_btn"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_normal"
+                            android:text="@{viewModel.hasSshPrivateKey ? @string/title_change : @string/title_import}"
+                            app:icon="@drawable/ic_file"
+                            app:isVisible="@{viewModel.sshUsePrivateKey}"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/ssh_auth_type" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
+
+            <com.google.android.material.bottomappbar.BottomAppBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:contentInsetEnd="15dp"
+                app:contentInsetStart="15dp"
+                app:elevation="@dimen/editor_bottom_bar_elevation"
+                tools:ignore="BottomAppBar">
+
+                <Button
+                    android:id="@+id/cancel_btn"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_cancel" />
+
+                <Button
+                    android:id="@+id/save_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="@string/title_save" />
+            </com.google.android.material.bottomappbar.BottomAppBar>
+        </LinearLayout>
+    </com.limelight.util.EdgeToEdgeWrapperLayout>
+</layout>

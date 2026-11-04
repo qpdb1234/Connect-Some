@@ -1,0 +1,31 @@
+# The machine-level Git for Windows config on the maintainer's box has
+# core.autocrlf=true, which would otherwise store a CRLF copy of every source
+# file in each clone. Text is normalized to LF in the repository and kept LF in
+# the working tree, so a diff between a Windows and a Linux checkout is empty.
+* text=auto eol=lf
+
+# Everything the build reads as bytes rather than as text.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.ttf binary
+*.otf binary
+*.mp4 binary
+*.mkv binary
+*.a binary
+*.so binary
+*.o binary
+*.jar binary
+*.aar binary
+*.db binary
+*.pack binary
+*.dex binary
+*.apk binary
+*.aab binary
+
+# The batch wrappers around the Gradle and libjpeg-turbo builds are run by cmd,
+# which is happier with CRLF; the sh ones (gradlew, no extension) stay LF above.
+*.bat text eol=crlf

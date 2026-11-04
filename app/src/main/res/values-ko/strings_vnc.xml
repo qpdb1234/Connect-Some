@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Translation of values/strings_vnc.xml.
+  Only the entries that other translatable text refers to by name are provided
+  here; the rest falls back to the English default.
+-->
+<resources>
+
+    <!-- Label of the Scan button on the discovery tab. -->
+    <string name="action_scan">스캔</string>
+
+    <string name="desc_mini_window_btn">미니 창</string>
+    <string name="desc_mini_keys">원격 조작 키</string>
+    <string name="desc_mini_fullscreen">전체 화면으로 돌아가기</string>
+    <string name="desc_mini_close">미니 창 닫기</string>
+    <string name="desc_mini_back">뒤로</string>
+    <string name="desc_mini_home">홈</string>
+    <string name="desc_mini_overview">최근 앱</string>
+    <string name="desc_mini_keyboard">키보드</string>
+    <string name="desc_mini_resize">미니 창 크기 조절</string>
+    <string name="msg_mini_reconnect">미니 창에서 스트리밍을 다시 연결합니다</string>
+    <string name="msg_mini_no_permission">다른 앱 위에 표시를 허용해야 미니 창을 사용할 수 있습니다</string>
+
+    <!-- Gesture chip labels -->
+    <string name="gesture_single_tap">한 번 탭</string>
+    <string name="gesture_double_tap">두 번 탭</string>
+    <string name="gesture_long_press">길게 누르기</string>
+    <string name="gesture_swipe">스와이프</string>
+    <string name="gesture_2finger_tap">두 손가락 탭</string>
+    <string name="gesture_2finger_swipe">두 손가락 스와이프</string>
+    <string name="gesture_other">기타</string>
+
+    <string name="action_restore_default_color">기본 색상 복원</string>
+<string name="title_backup_password_protection">백업 비밀번호 보호</string>
+    <string name="msg_backup_password_toggle_auth">이 설정을 변경하려면 화면 잠금 PIN, 패턴, 비밀번호 또는 지문을 입력하세요</string>
+    <string name="desc_vk_close">가상 키 닫기</string>
+</resources>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Translation of values/strings_vnc.xml.
+  Only the entries that other translatable text refers to by name are provided
+  here; the rest falls back to the English default.
+-->
+<resources>
+
+    <!-- Label of the Scan button on the discovery tab. -->
+    <string name="action_scan">فحص</string>
+
+    <string name="desc_mini_window_btn">نافذة مصغرة</string>
+    <string name="desc_mini_keys">مفاتيح التحكم عن بعد</string>
+    <string name="desc_mini_fullscreen">العودة إلى الشاشة الكاملة</string>
+    <string name="desc_mini_close">إغلاق النافذة المصغرة</string>
+    <string name="desc_mini_back">رجوع</string>
+    <string name="desc_mini_home">الرئيسية</string>
+    <string name="desc_mini_overview">التطبيقات الأخيرة</string>
+    <string name="desc_mini_keyboard">لوحة المفاتيح</string>
+    <string name="desc_mini_resize">تغيير حجم النافذة المصغرة</string>
+    <string name="msg_mini_reconnect">تعيد النافذة المصغرة تشغيل البث</string>
+    <string name="msg_mini_no_permission">اسمح بالظهور فوق التطبيقات الأخرى لاستخدام النافذة المصغرة</string>
+
+    <!-- Gesture chip labels -->
+    <string name="gesture_single_tap">نقرة واحدة</string>
+    <string name="gesture_double_tap">نقرة مزدوجة</string>
+    <string name="gesture_long_press">ضغط مطول</string>
+    <string name="gesture_swipe">سحب</string>
+    <string name="gesture_2finger_tap">نقرة بإصبعين</string>
+    <string name="gesture_2finger_swipe">سحب بإصبعين</string>
+    <string name="gesture_other">أخرى</string>
+
+    <string name="title_backup_password_protection">حماية كلمة مرور النسخ الاحتياطي</string>
+    <string name="msg_backup_password_toggle_auth">أدخل رمز PIN أو النمط أو كلمة المرور أو بصمة الإصبع لقفل الشاشة لتغيير هذا الإعداد</string>
+    <string name="desc_vk_close">إغلاق المفاتيح الافتراضية</string>
+    <string name="action_restore_default_color">استعادة اللون الافتراضي</string>
+</resources>

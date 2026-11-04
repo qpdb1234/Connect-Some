@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Card surface of the floating mini window: the window itself, the button panel that
+    slides out under the drag handle, and the tab it collapses into are all one shape with
+    one fill, exactly like upstream's single `background_cron`.
+
+    Keeping the radius here rather than in an OutlineProvider matters for more than looks:
+    a View derives its shadow outline from its background, which is how these pieces get an
+    elevation shadow without a custom drawable callback. Note that the video is *not* clipped
+    to it - a GLSurfaceView punches its own surface through the window rather than being
+    drawn into it - so its corners stay square where the card rounds off.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/colorMiniCard" />
+    <corners android:radius="12dp" />
+</shape>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Mini window: the corner resize grip. A diagonal arrow towards the card's bottom corner,
+    in the spirit of Mi-Freeform's `bar_corners_bg` marks - a plain hint rather than a button,
+    tinted with `colorMiniHandle` by the layout so it reads on the card in either theme.
+
+    Drawn pointing down-right; the left grip is the same asset mirrored with `scaleX="-1"`.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="2.2"
+        android:pathData="M8,8 L18,18" />
+    <path
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="2.2"
+        android:pathData="M18,12.5 L18,18 L12.5,18" />
+</vector>

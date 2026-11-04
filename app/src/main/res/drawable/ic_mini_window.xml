@@ -1,0 +1,23 @@
+<!-- Portrait phone/window frame (rounded stroke outline) with a filled
+     portrait screen inside (also rounded).  strokeWidth=2 to match the
+     visual mass of the toolbar-edge icon.  Both base colours are black so
+     the top-level tint (?attr/colorOnSurface) recolours them uniformly. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="?attr/colorOnSurface">
+    <!-- Outer frame: rounded portrait outline, r=2 -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M6,2 L18,2 Q20,2 20,4 L20,20 Q20,22 18,22 L6,22 Q4,22 4,20 L4,4 Q4,2 6,2 Z"
+        android:strokeWidth="2"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <!-- Inner screen: filled rounded portrait rectangle, r=1.5 -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M9.5,6 L14.5,6 Q16,6 16,7.5 L16,16.5 Q16,18 14.5,18 L9.5,18 Q8,18 8,16.5 L8,7.5 Q8,6 9.5,6 Z" />
+</vector>

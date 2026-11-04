@@ -1,0 +1,36 @@
+<!--
+    What the mini window folds into: a floating ball that shows the server's
+    name (first two characters) or a sequence number.  Tap the ball to bring
+    the window back.  Drag to reposition freely on screen.
+
+    The padding carries the ball's elevation shadow so it is not clipped at
+    the window edge.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:contentDescription="@string/desc_mini_expand"
+    android:padding="8dp"
+    android:elevation="8dp">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_mini_collapse_ball">
+
+        <TextView
+            android:id="@+id/mini_collapse_text"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:textColor="@color/colorMiniOnCard"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:focusable="false"
+            tools:text="PC" />
+    </FrameLayout>
+
+</FrameLayout>

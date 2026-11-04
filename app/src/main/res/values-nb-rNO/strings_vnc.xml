@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Translation of values/strings_vnc.xml.
+  Only the entries that other translatable text refers to by name are provided
+  here; the rest falls back to the English default.
+-->
+<resources>
+
+    <!-- Label of the Scan button on the discovery tab. -->
+    <string name="action_scan">Skann</string>
+
+    <string name="desc_mini_window_btn">Minivindu</string>
+    <string name="desc_mini_keys">Fjernkontrolltaster</string>
+    <string name="desc_mini_fullscreen">Tilbake til fullskjerm</string>
+    <string name="desc_mini_close">Lukk minivinduet</string>
+    <string name="desc_mini_back">Tilbake</string>
+    <string name="desc_mini_home">Hjem</string>
+    <string name="desc_mini_overview">Nylige apper</string>
+    <string name="desc_mini_keyboard">Tastatur</string>
+    <string name="desc_mini_resize">Endre størrelsen på minivinduet</string>
+    <string name="msg_mini_reconnect">Minivinduet kobler til streamen på nytt</string>
+    <string name="msg_mini_no_permission">Tillat visning over andre apper for å bruke minivinduet</string>
+
+    <!-- Gesture chip labels -->
+    <string name="gesture_single_tap">Enkelt trykk</string>
+    <string name="gesture_double_tap">Dobbelt trykk</string>
+    <string name="gesture_long_press">Langt trykk</string>
+    <string name="gesture_swipe">Sveip</string>
+    <string name="gesture_2finger_tap">2-finger trykk</string>
+    <string name="gesture_2finger_swipe">2-finger sveip</string>
+    <string name="gesture_other">Annet</string>
+
+    <string name="action_restore_default_color">Gjenopprett standardfarge</string>
+<string name="title_backup_password_protection">Passordbeskyttelse for sikkerhetskopi</string>
+    <string name="msg_backup_password_toggle_auth">Skriv inn PIN, mønster, passord eller fingeravtrykk for låseskjermen for å endre denne innstillingen</string>
+    <string name="desc_vk_close">Lukk virtuelle taster</string>
+</resources>

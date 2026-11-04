@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<!--
+  Everything about the row of keys that floats over the stream, gathered under one name.
+  These used to be split across two places: three switches sat in the input list while the
+  layout itself was reached by a fourth entry below them, so "change the keys" meant first
+  finding out which of the two screens held the option in question.
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="@string/pref_customize_virtual_keys">
+
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="vk_open_with_keyboard"
+        app:summary="@string/pref_vk_open_with_keyboard_summary"
+        app:title="@string/pref_vk_open_with_keyboard" />
+
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="vk_use_super_with_single_tap"
+        app:summary="@string/pref_vk_use_super_with_single_tap_summary"
+        app:title="@string/pref_vk_use_super_with_single_tap" />
+
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="vk_hold_keys"
+        app:summary="@string/pref_vk_hold_keys_summary"
+        app:title="@string/pref_vk_hold_keys" />
+
+    <ListPreference
+        android:entries="@array/vk_row_count_values"
+        android:entryValues="@array/vk_row_count_values"
+        app:defaultValue="2"
+        app:key="vk_row_count"
+        app:title="@string/pref_vk_row_count"
+        app:useSimpleSummaryProvider="true" />
+
+    <!--
+      Which edge the key bar floats against. A position rather than a behaviour, but it belongs
+      here with the rest of the bar's own settings; the viewer applies it the next time the bar
+      is raised.
+    -->
+    <ListPreference
+        android:entries="@array/vk_position_entries"
+        android:entryValues="@array/vk_position_values"
+        app:defaultValue="bottom"
+        app:key="vk_position"
+        app:title="@string/pref_vk_position"
+        app:useSimpleSummaryProvider="true" />
+
+    <!--
+      The arrangement of the keys, as opposed to their behaviour. It gets a screen of its own
+      because it is a grid to drag around rather than a switch to flip.
+    -->
+    <Preference
+        app:fragment="com.limelight.ui.prefs.VirtualKeysEditor"
+        app:summary="@string/pref_key_layout_summary"
+        app:title="@string/pref_key_layout" />
+
+    <!-- Puts just this screen's options back to what the app ships with, after a confirm.
+         See PrefsActivity.PrefFragment and pref_reset_category_defaults. -->
+    <Preference
+        app:icon="@drawable/ic_refresh"
+        app:key="reset_category_defaults"
+        app:title="@string/pref_reset_category_defaults" />
+
+</PreferenceScreen>

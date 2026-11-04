@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Translation of values/strings_vnc.xml.
+  Only the entries that other translatable text refers to by name are provided
+  here; the rest falls back to the English default.
+-->
+<resources>
+
+    <!-- Label of the Scan button on the discovery tab. -->
+    <string name="action_scan">Scannen</string>
+
+    <string name="desc_mini_window_btn">Mini-Fenster</string>
+    <string name="desc_mini_keys">Fernbedienungstasten</string>
+    <string name="desc_mini_fullscreen">Zurück zu Vollbild</string>
+    <string name="desc_mini_close">Mini-Fenster schließen</string>
+    <string name="desc_mini_back">Zurück</string>
+    <string name="desc_mini_home">Startbildschirm</string>
+    <string name="desc_mini_overview">Zuletzt verwendete Apps</string>
+    <string name="desc_mini_keyboard">Tastatur</string>
+    <string name="desc_mini_resize">Mini-Fenster Größe ändern</string>
+    <string name="msg_mini_reconnect">Das Mini-Fenster baut die Verbindung neu auf</string>
+    <string name="msg_mini_no_permission">Über anderen Apps einblenden erlauben, um das Mini-Fenster zu nutzen</string>
+
+    <!-- Gesture chip labels -->
+    <string name="gesture_single_tap">Einfach tippen</string>
+    <string name="gesture_double_tap">Doppelt tippen</string>
+    <string name="gesture_long_press">Lang drücken</string>
+    <string name="gesture_swipe">Wischen</string>
+    <string name="gesture_2finger_tap">2-Finger tippen</string>
+    <string name="gesture_2finger_swipe">2-Finger wischen</string>
+    <string name="gesture_other">Andere</string>
+
+    <string name="action_restore_default_color">Standardfarbe wiederherstellen</string>
+<string name="title_backup_password_protection">Backup-Passwortschutz</string>
+    <string name="msg_backup_password_toggle_auth">Geben Sie die PIN, das Muster, das Passwort oder den Fingerabdruck der Bildschirmsperre ein, um diese Einstellung zu ändern</string>
+    <string name="desc_vk_close">Virtuelle Tasten schließen</string>
+</resources>

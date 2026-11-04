@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2026  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<!--
+  Keycap label color: onSurface over the empty cap, onPrimary once the key is latched down
+  (a toggle modifier stays checked) or pressed, because bg_full_keyboard_key fills those
+  states with colorPrimary and onSurface would disappear against it.
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true" android:color="@color/colorFullKbText" />
+    <item android:state_pressed="true" android:color="@color/colorFullKbText" />
+    <item android:color="@color/colorFullKbText" />
+</selector>

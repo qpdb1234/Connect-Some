@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The drag handle of the mini window: a short blue pill inside a much larger invisible
+    touch area. That mismatch is deliberate and taken from upstream - the strip says "grab
+    me", while the surrounding 100x38dp keeps the target comfortable for a thumb.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/colorMiniBar" />
+    <corners android:radius="10dp" />
+</shape>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<resources>
+    <color name="colorBorder">#464646</color>
+    <color name="colorUrlBarBackground">#464646</color>
+
+    <!-- Gray of the Wake-on-LAN chip, dark-theme side: a step above the card surface so
+         the button stays visible without becoming a bright block in a dark list. -->
+    <color name="colorWakeButton">#3C3C3C</color>
+</resources>

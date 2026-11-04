@@ -1,0 +1,96 @@
+<!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="@string/pref_ui">
+
+    <ListPreference
+        app:defaultValue="system"
+        app:entries="@array/theme_entries"
+        app:entryValues="@array/theme_values"
+        app:key="theme"
+        app:title="@string/pref_theme"
+        app:useSimpleSummaryProvider="true" />
+
+    <ListPreference
+        app:defaultValue="system"
+        app:entries="@array/language_entries"
+        app:entryValues="@array/language_values"
+        app:key="app_language"
+        app:summary="@string/pref_language_summary"
+        app:title="@string/pref_language" />
+
+    <com.limelight.ui.prefs.AccentColorPreference
+        app:defaultValue="#FFEECE6D"
+        app:dialogTitle="@string/pref_accent_color"
+        app:key="accent_color"
+        app:title="@string/pref_accent_color" />
+
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="bell_enabled"
+        app:summary="@string/pref_bell_summary"
+        app:title="@string/pref_bell"/>
+
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="sort_server_list"
+        app:title="@string/pref_sort_server_list" />
+
+    <!-- How see-through the message at the bottom of a screen is; see FloatingText. The value is
+         the transparency itself (0 solid, 100 invisible), so the number the row shows can be read
+         straight off the title without a second unit. -->
+    <SeekBarPreference
+        app:defaultValue="0"
+        app:key="floating_text_transparency_percent"
+        android:max="100"
+        app:showSeekBarValue="true"
+        app:summary="@string/pref_floating_text_transparency_summary"
+        app:title="@string/pref_floating_text_transparency" />
+
+    <!-- Custom names for the three protocol badges. Each offers two presets plus a
+         "Custom…" entry that opens a free-text input. -->
+    <PreferenceCategory
+        app:layout="@layout/preference_category_multiline"
+        app:summary="@string/pref_protocol_badge_summary"
+        app:title="@string/pref_protocol_badges">
+
+        <com.limelight.ui.prefs.ProtocolBadgePreference
+            app:defaultValue="RFB"
+            app:entries="@array/protocol_vnc_badge_entries"
+            app:entryValues="@array/protocol_vnc_badge_values"
+            app:key="protocol_vnc_badge"
+            app:title="@string/pref_protocol_vnc_badge" />
+
+        <com.limelight.ui.prefs.ProtocolBadgePreference
+            app:defaultValue="GameStream"
+            app:entries="@array/protocol_gamestream_badge_entries"
+            app:entryValues="@array/protocol_gamestream_badge_values"
+            app:key="protocol_gamestream_badge"
+            app:title="@string/pref_protocol_gamestream_badge" />
+
+        <com.limelight.ui.prefs.ProtocolBadgePreference
+            app:defaultValue="ADB"
+            app:entries="@array/protocol_android_badge_entries"
+            app:entryValues="@array/protocol_android_badge_values"
+            app:key="protocol_android_badge"
+            app:title="@string/pref_protocol_android_badge" />
+
+    </PreferenceCategory>
+
+    <!-- Puts just this screen's options back to what the app ships with, after a confirm.
+         Wired in PrefsActivity.PrefFragment; the same row lives at the bottom of the other
+         category screens (Tools offers the whole-app reset instead). See
+         pref_reset_category_defaults. -->
+    <Preference
+        app:icon="@drawable/ic_refresh"
+        app:key="reset_category_defaults"
+        app:title="@string/pref_reset_category_defaults" />
+
+</PreferenceScreen>

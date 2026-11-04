@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Standalone LocalSend screen reached from the home bar. Mirrors what the in-stream drawer
+  offers - a switch to become discoverable and accept incoming files, the live list of nearby
+  devices discovery has confirmed, and a progress bar for whichever transfer is moving - and
+  adds the three things that need a screen of their own: adding a device by address, pinning
+  favorites, and handing files out as a download link. Files are picked up front and then kept
+  in the outbox below, waiting for a device to appear and for as many sends as it takes.
+  The device rows and the outbox rows are built in code because both sets change while the
+  screen is open.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_normal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/back_btn"
+                style="@style/ImageButton"
+                android:contentDescription="@string/action_back"
+                android:src="@drawable/ic_arrow_back" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/title_localsend_home"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+        </LinearLayout>
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/localsend_enable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:minHeight="@dimen/action_btn_size"
+            android:text="@string/label_localsend_home_enable" />
+
+        <TextView
+            android:id="@+id/localsend_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/label_localsend_off"
+            android:textColor="?android:textColorSecondary" />
+
+        <!-- Files join the outbox here and stay in it; a text message is one-shot, so it still
+             runs straight into the device chooser. -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/localsend_add_files"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/action_localsend_add_files"
+            app:icon="@drawable/ic_upload" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/localsend_send_text"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_localsend_send_text"
+            app:icon="@drawable/ic_keyboard" />
+
+        <!--
+          The outbox, hidden while it holds nothing. Each row carries its own removal button so
+          a file picked by mistake can be dropped without throwing the whole batch away.
+        -->
+        <TextView
+            android:id="@+id/localsend_section_outbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="@string/title_localsend_outbox"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/localsend_staged_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/localsend_remove_all"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_localsend_remove_all"
+            android:visibility="gone"
+            app:icon="@drawable/ic_clear" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/localsend_rescan"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/action_localsend_rescan"
+            app:icon="@drawable/ic_refresh" />
+
+        <!--
+          Problem-7 #4: the same peer list and receive switch as a draggable overlay the user
+          can keep up while working in a different app. Only meaningful once the SYSTEM_ALERT_WINDOW
+          grant exists; LsFloatingWindow.show() itself takes the user to the settings screen on
+          the first attempt if not.
+        -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/localsend_float"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_localsend_float"
+            app:icon="@drawable/ic_mini_fullscreen" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/label_localsend_order_hint"
+            android:textColor="?android:textColorSecondary" />
+
+        <!--
+          Reachable without an announcement, without another app finding us, and without the
+          other machine being on this subnet's multicast at all. The link below is the other
+          direction: files handed out to a browser rather than to LocalSend.
+        -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/localsend_add_ip"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/title_localsend_add_by_ip"
+            app:icon="@drawable/ic_add" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/localsend_share_link"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_localsend_share_link"
+            app:icon="@drawable/ic_download" />
+
+        <!--
+          The live links, each manageable, shown under the button that made them. The header
+          doubles as the collapse switch and is filled from code (see LocalSendActivity);
+          the container holds one row per link and stays gone while there are none.
+        -->
+        <TextView
+            android:id="@+id/localsend_shares_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:textColor="?android:textColorSecondary"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/localsend_shares_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <!-- Shown only while at least one link is live; stopping is the undo of the button above. -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/localsend_stop_shares"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_localsend_stop_shares"
+            android:visibility="gone"
+            app:icon="@drawable/ic_clear" />
+
+        <TextView
+            android:id="@+id/localsend_section_discovered"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="@string/title_localsend_discovered"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2" />
+
+        <LinearLayout
+            android:id="@+id/localsend_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:orientation="vertical" />
+
+        <!--
+          Pinned devices, hidden while there are none. Kept below the live list and out of it:
+          a favorite is a bookmark that survives the machine being off, so an offline row here
+          is expected rather than an error. The header row carries a 'clear all' entry on its
+          right; both it and the title appear only while the list has something in it, so the
+          title is what the code toggles and the button follows the same visibility.
+        -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/localsend_section_favorites"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/title_localsend_favorites"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/localsend_clear_favorites"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/action_clear_favorites"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <!--
+          Pinned devices, dragged to reorder. Height wraps its rows and nested scrolling is
+          off, because the whole screen already scrolls: the list must not fight the parent
+          for a vertical drag, so a row's handle is the only thing that starts a reorder.
+        -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/localsend_favorites_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:nestedScrollingEnabled="false"
+            android:scrollbars="none" />
+
+        <ProgressBar
+            android:id="@+id/localsend_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:max="100"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/localsend_progress_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:textColor="?android:textColorSecondary"
+            android:visibility="gone" />
+
+    </LinearLayout>
+</ScrollView>

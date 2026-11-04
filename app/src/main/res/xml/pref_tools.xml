@@ -1,0 +1,66 @@
+<!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="@string/pref_tools">
+
+    <Preference
+        app:fragment="com.limelight.ui.prefs.ImportExportFragment"
+        app:title="@string/pref_import_export" />
+
+    <!-- Restoring a backup without replacing the list appends its servers again, so the same
+         machine can end up with several identical cards. One sweep for those, placed next to
+         the entry that can produce them. -->
+    <Preference
+        app:icon="@drawable/ic_recycle_bin"
+        app:key="dedupe_servers"
+        app:title="@string/pref_dedupe_servers" />
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_bug"
+        app:title="@string/pref_debugging">
+
+        <!-- What the background capture writes: nothing, only this launch's log, or the
+             whole growing record. Export and clear below act on that file (and, for clear,
+             on the logcat buffer the recent-logs screen reads). -->
+        <ListPreference
+            app:defaultValue="off"
+            app:entries="@array/logging_mode_entries"
+            app:entryValues="@array/logging_mode_values"
+            app:key="logging_mode"
+            app:title="@string/pref_logging"
+            app:useSimpleSummaryProvider="true" />
+
+        <Preference
+            app:key="export_logs"
+            app:title="@string/title_export_logs" />
+
+        <Preference
+            app:key="clear_all_logs"
+            app:title="@string/pref_clear_all_logs" />
+
+        <Preference
+            app:fragment="com.limelight.ui.prefs.LogsFragment"
+            app:title="@string/pref_logs" />
+
+        <Preference
+            app:fragment="com.limelight.ui.prefs.TouchTestFragment"
+            app:title="@string/pref_touch_test" />
+
+        <Preference
+            app:fragment="com.limelight.ui.prefs.KeyTestFragment"
+            app:title="@string/pref_key_test" />
+    </PreferenceCategory>
+
+    <!-- One action that puts every preference back to its shipped default, after a confirm.
+         Reached from the Tools screen next to the backup entries it stands opposite to. -->
+    <Preference
+        app:icon="@drawable/ic_tools"
+        app:key="reset_all_settings"
+        app:title="@string/action_reset_all_settings" />
+</PreferenceScreen>

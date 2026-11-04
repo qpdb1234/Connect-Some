@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The floating mini window, styled after Mi-Freeform's freeform window: a rounded card with
+    the stream in the middle, a top bar of three equal icon slots above it and a bottom bar
+    under it whose two end dots resize the window and whose handle drags it (double tap runs
+    the configured action). Two invisible hot zones pinned to the card's exact bottom-left
+    and bottom-right corners resize it as well, in the other direction of travel - they
+    carry no drawn handle and reach past the root's padding via negative margins so the
+    touch target sits at the corner the user aims for, not one inset by the shadow.
+
+    The window is a *box*, not a wrapper around the picture: [MiniWindow] sizes the window
+    itself from the remembered placement (one placement per local orientation, so a phone held
+    upright gets an upright card and a phone held sideways a sideways one). The picture takes
+    whatever is left of the card after the bars and keeps the stream's own ratio inside it -
+    which is what the background of `mini_picture` is for: a stream whose shape differs from the
+    box's is letterboxed rather than stretched, in the user's letterbox color (the same palette
+    as the full-screen viewer, applied at run time by MiniWindow). Dragging a grip in "aspect"
+    mode snaps the box to the stream's ratio and the bars disappear; "free" mode lets them
+    come back.
+
+    The top-bar slots are not fixed buttons: [MiniWindow] fills each ImageView with the icon
+    of whatever action the user picked for that slot in the viewer settings, in the exact
+    spirit of Mi-Freeform's TopBarAction - the layout says where the buttons are, the
+    preferences say what they do. The bottom dots and the handle are plain marks (a grey capsule,
+    a grey bar), like Mi-Freeform's bar_corners_bg rather than labelled buttons. The two corner
+    resize zones are invisible: they take the card's bottom corners as touch targets but draw no
+    grip, so nothing in the corner reads as a stray handle.
+
+    The root's padding is the room the card's elevation shadow travels in - Mi-Freeform
+    does the same with the margins around its CardView; without it the shadow is clipped
+    at the window edge.
+
+    The frame view and its input view are the plain viewer classes: scaling, letterboxing
+    and the touch-to-remote mapping keep working here unchanged, as long as the viewport is
+    refreshed from this window's own size (see MiniWindow.kt) - which is `mini_picture`, the
+    counterpart of the full-screen `frame_container`.
+-->
+<com.limelight.ui.vnc.MiniWindowView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_mini_card"
+    android:elevation="8dp">
+
+    <!-- The window is sized by the WindowManager.LayoutParams, which MiniWindow takes from the
+         placement of the current slot; the card fills it.
+
+         The root carries no padding at all: the bars absorb the old top/bottom inset in their
+         own height, so each icon centers inside the full white band it sits in rather than
+         riding high in it, and the canvas - and the picture inside it - span the card edge to
+         edge with no white band beside the video. -->
+    <LinearLayout
+        android:id="@+id/mini_canvas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- The top bar: three equal slots, icons filled at run time from the configured
+             actions. A bare tap target each, exactly Mi-Freeform's view_top_bar.
+             Its height is the old 18dp bar plus the root's former 8dp top padding, which is
+             what centers the icons in the white band under the card's top edge. -->
+        <LinearLayout
+            android:id="@+id/mini_top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="26dp"
+            android:layout_marginHorizontal="8dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/mini_top_slot0"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_selectable"
+                android:contentDescription="@string/desc_mini_keys"
+                android:focusable="false"
+                android:padding="4dp"
+                tools:src="@drawable/ic_clear"
+                app:tint="@color/colorMiniOnCard" />
+
+            <ImageButton
+                android:id="@+id/mini_top_slot1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_selectable"
+                android:contentDescription="@string/desc_mini_keys"
+                android:focusable="false"
+                android:padding="4dp"
+                tools:src="@drawable/ic_mini_fullscreen"
+                app:tint="@color/colorMiniOnCard" />
+
+            <ImageButton
+                android:id="@+id/mini_top_slot2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_selectable"
+                android:contentDescription="@string/desc_mini_keys"
+                android:focusable="false"
+                android:padding="4dp"
+                tools:src="@drawable/ic_mini_collapse"
+                app:tint="@color/colorMiniOnCard" />
+        </LinearLayout>
+
+        <!-- The picture: all of the canvas that the chrome does not take. The stream keeps its
+             own ratio inside it, so the background shows through as letterbox bars whenever the
+             box's shape and the stream's differ. The black written here is only the default:
+             MiniWindow paints this box with the user's letterbox color from the viewer
+             toolbar, the same fill the full-screen frame_container gets.
+
+             It spans the canvas edge to edge; reaching past the card's shadow padding is the
+             canvas' job (see above), so the stream's letterbox is the only thing beside the
+             video. -->
+        <FrameLayout
+            android:id="@+id/mini_picture"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#FF000000">
+
+            <com.limelight.ui.vnc.FrameView
+                android:id="@+id/mini_frame_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Direct-scan counterpart of mini_frame_view, chosen by render mode in
+                 MiniWindow.kt exactly like the full-screen viewer does. Transparent
+                 background for the same hole-punch reason as the full-screen
+                 stream_surface_view. -->
+            <com.limelight.ui.vnc.StreamSurfaceView
+                android:id="@+id/mini_stream_surface_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:visibility="gone" />
+
+            <com.limelight.ui.vnc.input.InputView
+                android:id="@+id/mini_input_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <!-- The remote's own navigation keys, drawn by us under the picture because at this
+             size the ones on the device being mirrored are too small to hit. -->
+        <LinearLayout
+            android:id="@+id/mini_nav_bar"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/mini_overview_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@drawable/bg_selectable"
+                android:contentDescription="@string/desc_mini_overview"
+                android:focusable="false"
+                android:padding="4dp"
+                android:src="@drawable/ic_mini_overview"
+                app:tint="@color/colorMiniOnCard" />
+
+            <ImageButton
+                android:id="@+id/mini_home_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@drawable/bg_selectable"
+                android:contentDescription="@string/desc_mini_home"
+                android:focusable="false"
+                android:padding="4dp"
+                android:src="@drawable/ic_mini_home"
+                app:tint="@color/colorMiniOnCard" />
+
+            <ImageButton
+                android:id="@+id/mini_back_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@drawable/bg_selectable"
+                android:contentDescription="@string/desc_mini_back"
+                android:focusable="false"
+                android:padding="4dp"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="@color/colorMiniOnCard" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <!-- The bottom bar: the two end dots resize the window (drag them vertically),
+             the handle drags the window and answers a double tap with the configured
+             action. Same three-segment shape as Mi-Freeform's view_bar.
+
+             The contentDescription lives on each segment rather than on the little shape drawn
+             inside it: installTooltips() puts a tooltip on whatever carries the description, and a
+             view that has one starts answering ACTION_DOWN - so describing the decoration would
+             hand the press to the decoration and the grip above it would never see the drag. -->
+        <LinearLayout
+            android:id="@+id/mini_bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="8dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/mini_resize_left"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/desc_mini_resize">
+
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_mini_handle_bar"
+                    android:focusable="false" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/mini_drag_handle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/desc_mini_drag_handle">
+
+                <View
+                    android:layout_width="48dp"
+                    android:layout_height="4dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_mini_handle_bar"
+                    android:focusable="false" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/mini_resize_right"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/desc_mini_resize">
+
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_mini_handle_bar"
+                    android:focusable="false" />
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- The corner resize zones. Outside the canvas on purpose: they belong to the card's own
+         bottom corners, where the bottom bar's dots are not, and dragging one pulls the window
+         wider as well as taller - which is why the edge it is not on stays where it was. Mirrored
+         on the left. They carry no visible grip: the card's outline is enough to find them, and
+         an icon in the corner was what read as a stray handle. Touch only, driven by the corner
+         scale mode (proportional by default). The negative margins undo the root's own padding
+         so each zone reaches the true bottom-left (or bottom-right) corner of the overlay, not
+         the corner that is inset by the shadow room; a zone anchored inside the padding would
+         sit visibly off the corner and the user would keep missing it.
+     -->
+    <View
+        android:id="@+id/mini_resize_corner_left"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="-8dp"
+        android:layout_marginBottom="-12dp"
+        android:focusable="false" />
+
+    <View
+        android:id="@+id/mini_resize_corner_right"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="-8dp"
+        android:layout_marginBottom="-12dp"
+        android:focusable="false" />
+
+</com.limelight.ui.vnc.MiniWindowView>

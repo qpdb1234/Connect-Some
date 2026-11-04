@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Chinese (Taiwan) strings. Most names come from strings_moonlight.xml; the last
+  three override names that live in strings.xml (resource lookup is by name and
+  configuration, so the file they sit in does not matter).
+-->
+<resources>
+    <string name="error_usb_prohibited">裝置管理員已禁止 USB 存取，請檢查 Knox 或 MDM 設定。</string>
+    <string name="toast_controller_type_changed">啟用運動感應器模擬後，手把類型可能已變更</string>
+    <string name="perf_overlay_streamdetails">影片串流：%1$s %2$.2f FPS</string>
+    <string name="perf_overlay_decoder">解碼器：%1$s</string>
+    <string name="perf_overlay_incomingfps">網路接收影格率：%1$.2f FPS</string>
+    <string name="perf_overlay_renderingfps">渲染影格率：%1$.2f FPS</string>
+    <string name="perf_overlay_netdrops">網路遺失影格：%1$.2f%%</string>
+    <string name="perf_overlay_netlatency">平均網路延遲：%1$d ms（抖動：%2$d ms）</string>
+    <string name="perf_overlay_hostprocessinglatency">主機處理延遲 最小/最大/平均：%1$.1f/%2$.1f/%3$.1f ms</string>
+    <string name="perf_overlay_dectime">平均解碼耗時：%1$.2f ms</string>
+
+    <string name="title_pair_host">配對主機</string>
+    <string name="title_select_app">選擇應用程式</string>
+    <string name="title_stream_quality">畫質設定</string>
+    <string name="hint_pairing_pin">配對碼 (PIN)</string>
+    <string name="msg_pairing_pin_prompt">請輸入主機上顯示的 4 位配對碼，然後點擊「配對」。</string>
+    <string name="title_pair_host_pairing">正在配對…</string>
+    <string name="msg_pairing_pin_display">請在主機（Sunshine 網頁介面 / GeForce Experience）的配對視窗中輸入以下配對碼，輸入後請保持本對話方塊開啟，等待配對完成。\n\n配對碼：%1$s</string>
+    <string name="msg_pairing_success">配對成功</string>
+    <string name="msg_pairing_pin_wrong">配對失敗：配對碼錯誤</string>
+    <string name="msg_pairing_failed">配對失敗，請確認主機線上且配對碼正確</string>
+    <string name="msg_no_apps_found">未取得應用程式清單，請確認已完成配對</string>
+    <string name="msg_stream_apps_loading">載入中…</string>
+    <string name="title_app_none">預設（桌面 / Steam）</string>
+    <string name="msg_selected_app">已選擇：%1$s</string>
+    <string name="title_stream_resolution">解析度</string>
+    <string name="title_stream_fps">影格率 (FPS)</string>
+    <string name="title_stream_bitrate">位元率 (kbps)</string>
+    <string name="title_enable_hdr">啟用 HDR</string>
+    <string name="title_enable_sops">依網路自動調整 (SOPS)</string>
+    <string name="title_play_local_audio">本機播放音訊</string>
+    <string name="hint_bitrate_kbps">位元率</string>
+    <string name="msg_stream_quality_saved">畫質設定已儲存</string>
+
+    <!-- ADB 手機串流畫質（對應 helper 的 maxSize / maxFps / maxVideoBit） -->
+    <string name="title_stream_resolution_long_edge">解析度（長邊，像素）</string>
+    <string name="title_stream_bitrate_mbps">位元率 (Mbps)</string>
+    <string name="msg_android_quality_hint">這些數值會直接送到被控手機上的編碼器，而 ADB 鏈路就是瓶頸：畫面更小、影格率更低、位元率更低，延遲和卡頓就更少，代價是清晰度下降。</string>
+    <!-- VNC（RFB）畫質：協議只有一個畫質檔位，以及一個伺服器可以拒絕的解析度請求；沒有位元率與影格率 -->
+    <string name="title_rfb_size_host_native">伺服器自身的解析度</string>
+    <string name="title_rfb_quality_level_value">檔位 %1$d（0 = 最省流量，9 = 最清晰）</string>
+    <string name="msg_rfb_quality_hint">畫質檔位是 VNC 對畫面唯一的控制：它以 0 到 9 的一個數字傳給伺服器，只對帶損壓縮的編碼起作用，而原始編碼完全不壓縮圖像。解析度是請求而不是設定——不支援 ExtendedDesktopSize 的伺服器會保持自己的螢幕尺寸，這種情況串流時會明確提示。這裡沒有位元率與影格率可填：伺服器在畫面變化時主動推送新畫面，耗多少頻寬由上面的檔位決定。兩項改動都在下次連線時生效。</string>
+    <string name="msg_rfb_size_unsupported">這台伺服器沒有採用請求的桌面解析度，它傳回來的畫面是 %1$d × %2$d。</string>
+    <string name="label_perf_overlay_rfb">%1$.1f FPS · %2$.1f ms · %3$d×%4$d</string>
+    <string name="label_perf_overlay_rfb_lag">%1$.1f FPS · %2$.1f ms · %3$d×%4$d · 輸入 %5$d ms</string>
+
+    <!-- GameStream 剪貼板走旁路 VNC 連線（RfbClipboardBridge） -->
+    <string name="pref_clipboard_gamestream_vnc">GameStream 剪貼板透過 VNC 同步</string>
+    <string name="pref_clipboard_gamestream_vnc_summary">GameStream 協定沒有剪貼板報文，複製的內容無處可去。開啟後本應用會額外連線同一部電腦上的 VNC 服務，只在上面傳遞剪貼板文字，畫面與輸入仍走 GameStream。關閉時，複製的內容會以按鍵方式輸入。</string>
+    <string name="hint_clipboard_vnc_port">VNC 連接埠（剪貼板）</string>
+    <string name="hint_clipboard_vnc_password">VNC 密碼（剪貼板）</string>
+    <string name="msg_clipboard_bridge_fallback">這部電腦沒有可用的 VNC 剪貼板，已改為按鍵輸入。</string>
+
+    <!-- 關於頁：先一段總述，再依方面分成若干小節；小節順序由 arrays.xml 裡的
+         about_section_titles 與 about_section_bodies 兩個平行陣列決定。 -->
+    <string name="desc_stats_toggle">顯示延遲/影格率等效能資訊</string>
+    <string name="msg_connecting_stage">正在連線：%1$s</string>
+    <string name="desc_audio_toggle">在手機端靜音遠端聲音（電腦不受影響）</string>
+
+    <string name="error_native_library_missing">缺少原生串流程式庫 libmoonlight-core.so：請編譯 moonlight-common-c 子模組後重新建置。</string>
+    <string name="error_native_library_missing_pairing">缺少原生串流程式庫，無法完成配對。</string>
+    <string name="error_connect_failed">連線失敗</string>
+    <string name="error_host_not_paired">裝置尚未與主機配對，請先完成配對。</string>
+    <string name="error_host_no_apps">主機沒有可啟動的應用程式，請先在 Sunshine 中設定應用程式（或在本機「選擇應用程式」中指定）後重試。</string>
+    <string name="name_desktop_app">桌面</string>
+    <string name="msg_pairing_failed_state">配對失敗：%1$s</string>
+    <string name="msg_pairing_exception">配對異常：%1$s</string>
+</resources>

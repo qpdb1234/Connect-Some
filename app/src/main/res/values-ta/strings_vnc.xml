@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Translation of values/strings_vnc.xml.
+  Only the entries that other translatable text refers to by name are provided
+  here; the rest falls back to the English default.
+-->
+<resources>
+
+    <!-- Label of the Scan button on the discovery tab. -->
+    <string name="action_scan">ஸ்கேன்</string>
+
+    <string name="desc_mini_window_btn">சிறிய சாளரம்</string>
+    <string name="desc_mini_keys">தொலை கட்டுப்பாட்டு விசைகள்</string>
+    <string name="desc_mini_fullscreen">முழுத் திரைக்குத் திரும்பு</string>
+    <string name="desc_mini_close">சிறிய சாளரத்தை மூடு</string>
+    <string name="desc_mini_back">பின்</string>
+    <string name="desc_mini_home">முகப்பு</string>
+    <string name="desc_mini_overview">சமீபத்திய செயலிகள்</string>
+    <string name="desc_mini_keyboard">விசைப்பலகை</string>
+    <string name="desc_mini_resize">சிறிய சாளரத்தின் அளவை மாற்று</string>
+    <string name="msg_mini_reconnect">சிறிய சாளரம் ஓட்டத்தை மீண்டும் இணைக்கும்</string>
+    <string name="msg_mini_no_permission">சிறிய சாளரத்தைப் பயன்படுத்த மற்ற செயலிகளுக்கு மேல் காட்சியை அனுமதிக்கவும்</string>
+
+    <!-- Gesture chip labels -->
+    <string name="gesture_single_tap">ஒற்றை தட்டல்</string>
+    <string name="gesture_double_tap">இரட்டை தட்டல்</string>
+    <string name="gesture_long_press">நீண்ட அழுத்தம்</string>
+    <string name="gesture_swipe">ஸ்வைப்</string>
+    <string name="gesture_2finger_tap">2 விரல் தட்டல்</string>
+    <string name="gesture_2finger_swipe">2 விரல் ஸ்வைப்</string>
+    <string name="gesture_other">மற்றவை</string>
+
+    <string name="action_restore_default_color">இயல்புநிலை நிறத்தை மீட்டமை</string>
+<string name="title_backup_password_protection">காப்புப்பிரதி கடவுச்சொல் பாதுகாப்பு</string>
+    <string name="msg_backup_password_toggle_auth">இந்த அமைப்பை மாற்ற, திரைப் பூட்டு PIN, முறை, கடவுச்சொல் அல்லது கைரேகையை உள்ளிடவும்</string>
+    <string name="desc_vk_close">மெய்நிகர் விசைகளை மூடு</string>
+</resources>

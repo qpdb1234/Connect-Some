@@ -1,0 +1,8 @@
+[submodule "app/src/main/cpp/moonlight-core/moonlight-common-c"]
+	path = app/src/main/cpp/moonlight-core/moonlight-common-c
+	url = https://github.com/moonlight-stream/moonlight-common-c.git
+	branch = master
+[submodule "extern/libvncserver"]
+	path = extern/libvncserver
+	url = https://github.com/gujjwal00/libvncserver
+	branch = avnc

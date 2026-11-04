@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2026  Connect Some.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<!--
+    Background for an action button inside the LocalSend floating card.
+
+    The standalone LocalSend page renders its actions as
+    Widget.MaterialComponents.Button.OutlinedButton: a rounded 1dp outline with a transparent
+    fill and a bounded ripple. The floating card cannot use that style, because it is inflated
+    with the application context - a MaterialButton fails to inflate without an AppCompat/Material
+    theme. This drawable reproduces the same look with plain framework pieces so the card's buttons
+    read as the bordered, content-hugging buttons they are on the page: the outline is the
+    colorMiniOnCard stroke below, the ripple is masked to the rounded rectangle, and the fill stays
+    transparent so the white card shows through.
+
+    The border is deliberately a semi-transparent black rather than solid #1A1A1A so it sits at the
+    same visual weight as the page's OutlinedButton outline (which the theme draws with alpha) and
+    does not overpower the label it frames.
+-->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#331A1A1A">
+
+    <!-- Ripple is confined to the rounded rectangle so it never bleeds past the corners. -->
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFFFF" />
+            <corners android:radius="6dp" />
+        </shape>
+    </item>
+
+    <!-- The persistent outline: transparent fill, rounded 1dp stroke. Drawn as the ripple's
+         content so it stays visible at rest and while the press ripple plays. -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="1dp"
+                android:color="#661A1A1A" />
+            <corners android:radius="6dp" />
+        </shape>
+    </item>
+</ripple>

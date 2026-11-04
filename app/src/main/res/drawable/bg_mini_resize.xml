@@ -1,0 +1,14 @@
+<!--
+    Corner grip for resizing the mini window. A right triangle hypotenuse-out, which is
+    the usual 'drag me to resize' affordance; it sits flush with the bottom right corner
+    of the window.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="22dp"
+    android:height="22dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#E6FFFFFF"
+        android:pathData="M24,24H10L24,10Z" />
+</vector>

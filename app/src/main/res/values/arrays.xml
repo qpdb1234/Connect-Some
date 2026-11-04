@@ -1,0 +1,454 @@
+<!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<resources>
+
+    <string-array name="theme_entries">
+        <item>@string/pref_theme_option_system</item>
+        <item>@string/pref_theme_option_dark</item>
+        <item>@string/pref_theme_option_light</item>
+    </string-array>
+    <string-array name="theme_values">
+        <item>system</item>
+        <item>dark</item>
+        <item>light</item>
+    </string-array>
+
+    <!-- In-app language picker. Entries are shown in their own language (endonyms), so they
+         are intentionally not translated; only "System default" is. Values are BCP-47 tags
+         that match the res/values-* qualifiers; "system" means follow the device locale. -->
+    <string-array name="language_entries">
+        <item>@string/pref_language_option_system</item>
+        <item>English</item>
+        <item>العربية</item>
+        <item>کوردیی ناوەندی</item>
+        <item>Čeština</item>
+        <item>Deutsch</item>
+        <item>Français</item>
+        <item>Galego</item>
+        <item>Bahasa Indonesia</item>
+        <item>Italiano</item>
+        <item>한국어</item>
+        <item>Latviešu</item>
+        <item>Norsk bokmål</item>
+        <item>Polski</item>
+        <item>Português</item>
+        <item>Português (Brasil)</item>
+        <item>Русский</item>
+        <item>Српски</item>
+        <item>தமிழ்</item>
+        <item>Türkçe</item>
+        <item>Українська</item>
+        <item>简体中文</item>
+        <item>繁體中文</item>
+    </string-array>
+    <string-array name="language_values">
+        <item>system</item>
+        <item>en</item>
+        <item>ar</item>
+        <item>ckb</item>
+        <item>cs</item>
+        <item>de</item>
+        <item>fr</item>
+        <item>gl</item>
+        <item>in</item>
+        <item>it</item>
+        <item>ko</item>
+        <item>lv</item>
+        <item>nb-NO</item>
+        <item>pl</item>
+        <item>pt</item>
+        <item>pt-BR</item>
+        <item>ru</item>
+        <item>sr</item>
+        <item>ta</item>
+        <item>tr</item>
+        <item>uk</item>
+        <item>zh-CN</item>
+        <item>zh-TW</item>
+    </string-array>
+
+    <string-array name="orientation_entries">
+        <item>@string/pref_orientation_option_auto</item>
+        <item>@string/pref_orientation_option_portrait</item>
+        <item>@string/pref_orientation_option_landscape</item>
+    </string-array>
+    <string-array name="orientation_values">
+        <item>auto</item>
+        <item>portrait</item>
+        <item>landscape</item>
+    </string-array>
+
+    <string-array name="toolbar_alignment_entries">
+        <item>@string/pref_toolbar_alignment_option_start</item>
+        <item>@string/pref_toolbar_alignment_option_end</item>
+    </string-array>
+    <string-array name="toolbar_alignment_values">
+        <item>start</item>
+        <item>end</item>
+    </string-array>
+
+    <!--
+      Mini window bar actions (Mi-Freeform style). The three top-bar slots and the bottom
+      bar's double tap each offer this list. The values must match MiniBarAction.key exactly.
+    -->
+    <string-array name="mini_bar_action_entries">
+        <item>@string/desc_mini_none</item>
+        <item>@string/desc_mini_close</item>
+        <item>@string/desc_mini_fullscreen</item>
+        <item>@string/desc_mini_collapse</item>
+        <item>@string/desc_mini_expand</item>
+        <item>@string/desc_mini_back</item>
+        <item>@string/desc_mini_home</item>
+        <item>@string/desc_mini_overview</item>
+        <item>@string/desc_mini_keyboard</item>
+        <item>@string/desc_mini_navbar</item>
+        <item>@string/desc_mini_reset</item>
+        <item>@string/desc_mini_rotate</item>
+        <item>@string/desc_mini_screen_on</item>
+        <item>@string/desc_mini_screen_off</item>
+        <item>@string/desc_mini_power</item>
+    </string-array>
+    <string-array name="mini_bar_action_values">
+        <item>none</item>
+        <item>close</item>
+        <item>fullscreen</item>
+        <item>minimize</item>
+        <item>expand</item>
+        <item>back</item>
+        <item>home</item>
+        <item>recents</item>
+        <item>keyboard</item>
+        <item>toggle-navbar</item>
+        <item>reset</item>
+        <item>rotate</item>
+        <item>screen-on</item>
+        <item>screen-off</item>
+        <item>power</item>
+    </string-array>
+
+    <!--
+      Mini window resize modes. The two kinds of handle on the window - the dots drawn on the
+      bottom bar and the invisible hot zones pinned to the card's exact bottom-left and
+      bottom-right corners - each pick from this list. The values are the ones
+      MiniWindow.scaleMode() recognises.
+    -->
+    <string-array name="mini_scale_mode_entries">
+        <item>@string/pref_mini_scale_aspect</item>
+        <item>@string/pref_mini_scale_free</item>
+    </string-array>
+    <string-array name="mini_scale_mode_values">
+        <item>aspect</item>
+        <item>free</item>
+    </string-array>
+
+    <string-array name="gesture_style_entries">
+        <item>@string/pref_gesture_style_touchscreen</item>
+        <item>@string/pref_gesture_style_touchpad</item>
+    </string-array>
+    <string-array name="gesture_style_values">
+        <item>touchscreen</item>
+        <item>touchpad</item>
+    </string-array>
+
+    <string-array name="tap2_action_entries">
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_right_click</item>
+        <item>@string/pref_gesture_action_open_keyboard</item>
+    </string-array>
+    <string-array name="tap2_action_values">
+        <item>none</item>
+        <item>right-click</item>
+        <item>open-keyboard</item>
+    </string-array>
+
+    <string-array name="tap3_action_entries">
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_right_click</item>
+        <item>@string/pref_gesture_action_middle_click</item>
+        <item>@string/pref_gesture_action_open_keyboard</item>
+    </string-array>
+    <string-array name="tap3_action_values">
+        <item>none</item>
+        <item>right-click</item>
+        <item>middle-click</item>
+        <item>open-keyboard</item>
+    </string-array>
+
+    <string-array name="double_tap_action_entries">
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_double_click</item>
+        <item>@string/pref_gesture_action_middle_click</item>
+        <item>@string/pref_gesture_action_right_click</item>
+    </string-array>
+    <string-array name="double_tap_action_values">
+        <item>none</item>
+        <item>double-click</item>
+        <item>middle-click</item>
+        <item>right-click</item>
+    </string-array>
+
+    <string-array name="long_press_action_entries">
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_double_click</item>
+        <item>@string/pref_gesture_action_middle_click</item>
+        <item>@string/pref_gesture_action_right_click</item>
+        <item>@string/pref_gesture_action_left_press</item>
+    </string-array>
+    <string-array name="long_press_action_values">
+        <item>none</item>
+        <item>double-click</item>
+        <item>middle-click</item>
+        <item>right-click</item>
+        <item>left-press</item>
+    </string-array>
+
+    <string-array name="swipe1_action_entries">
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_pan</item>
+        <item>@string/pref_gesture_action_remote_scroll</item>
+        <item>@string/pref_gesture_action_remote_drag</item>
+    </string-array>
+    <string-array name="swipe1_action_values">
+        <item>none</item>
+        <item>pan</item>
+        <item>remote-scroll</item>
+        <item>remote-drag</item>
+    </string-array>
+
+    <string-array name="swipe2_action_entries">
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_pan</item>
+        <item>@string/pref_gesture_action_remote_scroll</item>
+    </string-array>
+    <string-array name="swipe2_action_values">
+        <item>none</item>
+        <item>pan</item>
+        <item>remote-scroll</item>
+    </string-array>
+
+    <string-array name="swipe3_action_entries">
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_pan</item>
+        <item>@string/pref_gesture_action_remote_scroll</item>
+    </string-array>
+    <string-array name="swipe3_action_values">
+        <item>none</item>
+        <item>pan</item>
+        <item>remote-scroll</item>
+    </string-array>
+
+    <string-array name="double_tap_swipe_action_entries">
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_remote_drag</item>
+        <item>@string/pref_gesture_action_remote_drag_middle</item>
+        <item>@string/pref_gesture_action_pan</item>
+        <item>@string/pref_gesture_action_remote_scroll</item>
+    </string-array>
+    <string-array name="double_tap_swipe_action_values">
+        <item>none</item>
+        <item>remote-drag</item>
+        <item>remote-drag-middle</item>
+        <item>pan</item>
+        <item>remote-scroll</item>
+    </string-array>
+
+    <string-array name="long_press_swipe_action_entries">
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_remote_drag</item>
+        <item>@string/pref_gesture_action_remote_drag_middle</item>
+        <item>@string/pref_gesture_action_pan</item>
+        <item>@string/pref_gesture_action_remote_scroll</item>
+    </string-array>
+    <string-array name="long_press_swipe_action_values">
+        <item>none</item>
+        <item>remote-drag</item>
+        <item>remote-drag-middle</item>
+        <item>pan</item>
+        <item>remote-scroll</item>
+    </string-array>
+
+    <string-array name="mouse_back_action_entries">
+        <item>@string/pref_mouse_back_action_default</item>
+        <item>@string/pref_gesture_action_middle_click</item>
+        <item>@string/pref_gesture_action_right_click</item>
+        <item>@string/pref_gesture_action_remote_back_press</item>
+    </string-array>
+    <string-array name="mouse_back_action_values">
+        <item>default</item>
+        <item>middle-click</item>
+        <item>right-click</item>
+        <item>remote-back-press</item>
+    </string-array>
+
+    <string-array name="vk_row_count_values">
+        <!--These items should be convertible to integers-->
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <!--Which edge the key bar sits against; values must match AppPreferences.vkPosition
+        ("bottom" / "top"). Labels live in strings.xml so they follow the language.-->
+    <string-array name="vk_position_entries">
+        <item>@string/vk_position_bottom</item>
+        <item>@string/vk_position_top</item>
+    </string-array>
+    <string-array name="vk_position_values">
+        <item>bottom</item>
+        <item>top</item>
+    </string-array>
+
+    <!--When a phone keyboard's text reaches the host; values must match
+        AppPreferences.IME_TEXT_TIMING_CONFIRM / IME_TEXT_TIMING_IMMEDIATE. -->
+    <string-array name="ime_text_timing_entries">
+        <item>@string/ime_text_timing_confirm</item>
+        <item>@string/ime_text_timing_immediate</item>
+    </string-array>
+    <string-array name="ime_text_timing_values">
+        <item>confirm</item>
+        <item>immediate</item>
+    </string-array>
+
+    <!--Log-file capture mode on the Tools screen; values must match the set accepted by
+        AppPreferences.loggingMode ("off" / "session" / "all").-->
+    <string-array name="logging_mode_entries">
+        <item>@string/logging_mode_off</item>
+        <item>@string/logging_mode_session</item>
+        <item>@string/logging_mode_all</item>
+    </string-array>
+    <string-array name="logging_mode_values">
+        <item>off</item>
+        <item>session</item>
+        <item>all</item>
+    </string-array>
+
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~ Arrays for profile editor ~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--Values for gesture style-->
+    <string-array name="profile_editor_gesture_style_labels">
+        <item>@string/pref_gesture_style_auto</item>
+        <item>@string/pref_gesture_style_touchscreen</item>
+        <item>@string/pref_gesture_style_touchpad</item>
+    </string-array>
+    <string-array name="profile_editor_gesture_style_descriptions">
+        <item>@string/pref_gesture_style_auto_summary</item>
+        <item>@string/pref_gesture_style_touchscreen_summary</item>
+        <item>@string/pref_gesture_style_touchpad_summary</item>
+    </string-array>
+    <string-array name="profile_editor_gesture_style_values">
+        <item>auto</item>
+        <item>touchscreen</item>
+        <item>touchpad</item>
+    </string-array>
+
+    <!--Screen orientation in the editor: same three choices as the app-wide setting, but the
+        first one means something different there - it defers to that setting, not to the phone.
+        Each entry carries a line of its own in the drop-down (see SpinnerEx's valueDescriptions).-->
+    <string-array name="profile_editor_orientation_descriptions">
+        <item>@string/desc_editor_orientation_auto</item>
+        <item>@string/desc_editor_orientation_portrait</item>
+        <item>@string/desc_editor_orientation_landscape</item>
+    </string-array>
+
+    <!--Values for security types-->
+    <string-array name="profile_editor_security_labels">
+        <item>@string/title_automatic</item>
+        <item>@string/title_none</item>
+        <item>VncAuth</item>
+        <item>AnonTLS</item>
+        <item>VeNCrypt</item>
+        <item>macOS</item>
+    </string-array>
+    <string-array name="profile_editor_security_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>18</item>
+        <item>19</item>
+        <item>30</item>
+    </string-array>
+    <string-array name="profile_editor_security_descriptions">
+        <item>@string/desc_editor_security_auto</item>
+        <item>@string/desc_editor_security_none</item>
+        <item>@string/desc_editor_security_vncauth</item>
+        <item>@string/desc_editor_security_anontls</item>
+        <item>@string/desc_editor_security_vencrypt</item>
+        <item>@string/desc_editor_security_ard</item>
+    </string-array>
+
+
+    <!--Dummy string array used for testing-->
+    <string-array name="dummy_array">
+        <item>Item 1</item>
+        <item>Item 2</item>
+        <item>Item 3</item>
+    </string-array>
+
+    <!-- Protocol badge name presets. The last entry in each pair is always "Custom"
+         whose value is the empty string; selecting it triggers a free-text input. -->
+    <string-array name="protocol_vnc_badge_entries">
+        <item>RFB</item>
+        <item>VNC</item>
+        <item>@string/pref_protocol_badge_custom</item>
+    </string-array>
+    <string-array name="protocol_vnc_badge_values">
+        <item>RFB</item>
+        <item>VNC</item>
+        <item></item>
+    </string-array>
+
+    <string-array name="protocol_gamestream_badge_entries">
+        <item>GameStream</item>
+        <item>Moonlight</item>
+        <item>@string/pref_protocol_badge_custom</item>
+    </string-array>
+    <string-array name="protocol_gamestream_badge_values">
+        <item>GameStream</item>
+        <item>Moonlight</item>
+        <item></item>
+    </string-array>
+
+    <string-array name="protocol_android_badge_entries">
+        <item>ADB</item>
+        <item>Android</item>
+        <item>@string/pref_protocol_badge_custom</item>
+    </string-array>
+    <string-array name="protocol_android_badge_values">
+        <item>ADB</item>
+        <item>Android</item>
+        <item></item>
+    </string-array>
+
+    <!-- The About page renders one block per pair of these two arrays, in order, so adding a
+         section is one title plus one body in the strings files and one item in each here. -->
+    <string-array name="about_section_titles">
+        <item>@string/title_about_protocols</item>
+        <item>@string/title_about_discovery</item>
+        <item>@string/title_about_picture</item>
+        <item>@string/title_about_input</item>
+        <item>@string/title_about_overlay</item>
+        <item>@string/title_about_localsend</item>
+        <item>@string/title_about_data</item>
+        <item>@string/title_about_look</item>
+        <item>@string/title_about_limits</item>
+        <item>@string/title_about_origin</item>
+    </string-array>
+    <string-array name="about_section_bodies">
+        <item>@string/msg_about_protocols</item>
+        <item>@string/msg_about_discovery</item>
+        <item>@string/msg_about_picture</item>
+        <item>@string/msg_about_input</item>
+        <item>@string/msg_about_overlay</item>
+        <item>@string/msg_about_localsend</item>
+        <item>@string/msg_about_data</item>
+        <item>@string/msg_about_look</item>
+        <item>@string/msg_about_limits</item>
+        <item>@string/msg_about_origin</item>
+    </string-array>
+</resources>

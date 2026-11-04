@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Translation of values/strings_vnc.xml.
+  Only the entries that other translatable text refers to by name are provided
+  here; the rest falls back to the English default.
+-->
+<resources>
+
+    <!-- Label of the Scan button on the discovery tab. -->
+    <string name="action_scan">Analyser</string>
+
+    <string name="desc_mini_window_btn">Fenêtre mini</string>
+    <string name="desc_mini_keys">Touches de télécommande</string>
+    <string name="desc_mini_fullscreen">Retour en plein écran</string>
+    <string name="desc_mini_close">Fermer la fenêtre mini</string>
+    <string name="desc_mini_back">Retour</string>
+    <string name="desc_mini_home">Accueil</string>
+    <string name="desc_mini_overview">Applications récentes</string>
+    <string name="desc_mini_keyboard">Clavier</string>
+    <string name="desc_mini_resize">Redimensionner la fenêtre mini</string>
+    <string name="msg_mini_reconnect">La fenêtre mini relance le flux</string>
+    <string name="msg_mini_no_permission">Autorisez la superposition sur les autres applications pour utiliser la fenêtre mini</string>
+
+    <!-- Gesture chip labels -->
+    <string name="gesture_single_tap">Appui simple</string>
+    <string name="gesture_double_tap">Appui double</string>
+    <string name="gesture_long_press">Appui long</string>
+    <string name="gesture_swipe">Glissement</string>
+    <string name="gesture_2finger_tap">Appui 2 doigts</string>
+    <string name="gesture_2finger_swipe">Glissement 2 doigts</string>
+    <string name="gesture_other">Autre</string>
+
+    <string name="action_restore_default_color">Restaurer la couleur par défaut</string>
+<string name="title_backup_password_protection">Protection par mot de passe de la sauvegarde</string>
+    <string name="msg_backup_password_toggle_auth">Saisissez le code PIN, le schéma, le mot de passe ou l\'empreinte digitale de verrouillage de l\'écran pour modifier ce paramètre</string>
+    <string name="desc_vk_close">Fermer les touches virtuelles</string>
+</resources>

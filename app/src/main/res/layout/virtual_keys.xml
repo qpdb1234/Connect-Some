@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?colorSurface"
+        android:backgroundTint="#cfff"
+        android:backgroundTintMode="multiply"
+        android:contentDescription="@string/desc_virtual_keys"
+        tools:ignore="HardcodedText">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/vk_edge_btn_size" />
+
+        <!--
+        The fixed left column: the phone-keyboard toggle on top and the key-settings gear
+        directly below it. Both stand outside the grid on purpose. The grid is what the key
+        editor arranges, so a control the user must never lose - the way back to the settings,
+        and the way to raise the phone keyboard - belongs to the bar rather than to a cell the
+        editor could delete. The pager gives up this much space on its left so the two never
+        overlap, and the column splits its height evenly across the two rows of keys.
+        -->
+        <LinearLayout
+            android:layout_width="@dimen/vk_edge_btn_size"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/vk_toggle_keyboard_btn"
+                style="@style/VirtualKey.Compact"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:scaleType="centerInside"
+                android:contentDescription="@string/desc_vk_toggle_keyboard"
+                android:src="@drawable/ic_keyboard"
+                app:tint="?attr/colorOnSurface" />
+
+            <ImageButton
+                android:id="@+id/vk_edit_keys_btn"
+                style="@style/VirtualKey.Compact"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:scaleType="centerInside"
+                android:contentDescription="@string/desc_vk_edit_keys"
+                android:src="@drawable/ic_settings"
+                app:tint="?attr/colorOnSurface" />
+        </LinearLayout>
+
+        <!--
+        This is a temporary host for pages. It simplifies the design & inflation of keys.
+        Children of this ViewGroup will be detached at runtime and added to pager above.
+        -->
+        <LinearLayout
+            android:id="@+id/tmp_page_host"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!--~~~~~~~~~~~~~~~~~~~~~~~ Primary keys ~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <com.limelight.ui.vnc.NestableHorizontalScrollView
+                android:id="@+id/keys_page"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <GridLayout
+                    android:id="@+id/keys"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:rowCount="2" />
+            </com.limelight.ui.vnc.NestableHorizontalScrollView>
+        </LinearLayout>
+    </FrameLayout>
+</layout>

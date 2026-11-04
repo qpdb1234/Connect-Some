@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.limelight.model.ServerProfile" />
+
+        <variable
+            name="profile"
+            type="com.limelight.model.ServerProfile" />
+
+        <!-- Bulk deletion is switched on by the list itself (see ServerList). While it is on,
+             the card's own buttons step aside for `select_check` and a tap marks the card
+             instead of connecting to it. -->
+        <variable
+            name="selectionMode"
+            type="Boolean" />
+
+        <variable
+            name="selected"
+            type="Boolean" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        style="@style/ServerCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@{profile.name}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                app:isVisible="@{profile.name.length() != 0}"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/protocol"
+                app:layout_constraintEnd_toStartOf="@id/protocol"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/protocol"
+                tools:text="Example Server Name" />
+
+            <!--
+                Which protocol this card connects with. Two services on the same PC - or
+                a phone reached over a cable - produce independent cards, so the badge is
+                what tells them apart; the text comes from one Kotlin `when` (see
+                app:protocolBadgeText) rather than a chain of layout ternaries.
+
+                The badge anchors the whole row - it is the one widget here that is
+                always visible - and carries no start margin of its own, so an unnamed
+                server starts it flush with the address below instead of half a margin
+                to the right. The gap after a name comes from the name's own end margin,
+                which disappears together with a hidden name.
+            -->
+            <TextView
+                android:id="@+id/protocol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_protocol_badge"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="1dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:textColor="?attr/colorOnSurface"
+                app:layout_constraintEnd_toStartOf="@id/indicator"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toEndOf="@id/name"
+                app:layout_constraintTop_toTopOf="parent"
+                app:protocolBadgeText="@{profile.protocol}"
+                tools:text="VNC" />
+
+            <!--
+                Rediscovery dot: the badge row's right-hand slot. It used to sit at the
+                vertical center of the card, but the wake button owns that whole column
+                whenever a server can be woken, and a 10dp dot inside a 48dp button is
+                unreadable. Next to the protocol badge it stays out of everyone's way.
+            -->
+            <com.limelight.ui.home.IndicatorView
+                android:id="@+id/indicator"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="@dimen/margin_small"
+                android:alpha="0"
+                android:background="@drawable/indicator"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/protocol"
+                app:layout_constraintEnd_toStartOf="@id/wake_btn"
+                app:layout_constraintStart_toEndOf="@id/protocol"
+                app:layout_constraintTop_toTopOf="@id/protocol"
+                tools:alpha="1"
+                tools:visibility="visible" />
+
+            <!--
+                Manual Wake-on-LAN. Deliberately not part of tapping the card: connecting
+                to a machine that is already on must never send a magic packet as a side
+                effect, so waking is a separate, visible action - hence the gray chip it
+                wears instead of the bare icon the other card buttons use.
+            -->
+            <ImageButton
+                android:id="@+id/wake_btn"
+                style="@style/ImageButton.Wake"
+                android:contentDescription="@string/desc_wake_server_btn"
+                android:src="@drawable/ic_wake_on_lan"
+                app:isVisible="@{profile.canWake &amp;&amp; !safeUnbox(selectionMode)}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:text="@{profile.displayAddress}"
+                app:layout_constraintEnd_toStartOf="@id/ssh_address"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/protocol"
+                tools:text="192.168.1.1 | 47989" />
+
+            <TextView
+                android:id="@+id/ssh_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_small"
+                android:ellipsize="middle"
+                android:singleLine="true"
+                android:text='@{"(" + profile.sshHost + (profile.sshPort == 22 ? "" :  " | " + profile.sshPort) + ")"}'
+                app:isVisible="@{profile.channelType == ServerProfile.CHANNEL_SSH_TUNNEL &amp;&amp; !profile.host.equals(profile.sshHost)}"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toStartOf="@id/hint_icons"
+                app:layout_constraintStart_toEndOf="@id/address"
+                app:layout_constraintTop_toTopOf="@id/address"
+                tools:text="(10.0.5.5 | 23)" />
+
+            <LinearLayout
+                android:id="@+id/hint_icons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/address"
+                app:layout_constraintEnd_toStartOf="@id/wake_btn"
+                app:layout_constraintStart_toEndOf="@id/ssh_address"
+                app:layout_constraintTop_toTopOf="@id/address">
+
+                <ImageView
+                    style="@style/ServerCardHintIcon"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_ssh"
+                    app:isVisible="@{profile.channelType == ServerProfile.CHANNEL_SSH_TUNNEL}" />
+
+                <ImageView
+                    style="@style/ServerCardHintIcon"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_key"
+                    app:isVisible="@{profile.password.length() != 0}" />
+
+                <ImageView
+                    style="@style/ServerCardHintIcon"
+                    android:importantForAccessibility="no"
+                    android:src="@{profile.viewMode == ServerProfile.VIEW_MODE_NO_INPUT ? @drawable/ic_input_off : @drawable/ic_video_off}"
+                    app:isVisible="@{profile.viewMode != ServerProfile.VIEW_MODE_NORMAL}" />
+
+                <ImageView
+                    style="@style/ServerCardHintIcon"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_auto_connect"
+                    app:isVisible="@{profile.fConnectOnAppStart}" />
+
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageButton
+            android:id="@+id/save_btn"
+            style="@style/ImageButton"
+            android:layout_gravity="end|center_vertical"
+            android:contentDescription="@string/desc_save_discovered_server_btn"
+            android:src="@drawable/ic_plus"
+            app:isVisible="@{!profile.saved &amp;&amp; !safeUnbox(selectionMode)}" />
+
+        <!--
+            The mark used by bulk deletion, parked in the column the wake button vacates.
+            An empty ring rather than nothing, so a tap has somewhere obvious to land.
+        -->
+        <ImageView
+            android:id="@+id/select_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:importantForAccessibility="no"
+            android:src="@{safeUnbox(selected) ? @drawable/ic_check_circle : @drawable/ic_circle_outline}"
+            app:isVisible="@{safeUnbox(selectionMode)}"
+            app:tint="?attr/colorOnSurface" />
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>

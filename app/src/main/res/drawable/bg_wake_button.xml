@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Background of the Wake-on-LAN button on a server card.
+
+  Deliberately a plain gray chip: waking a machine is an action the user has to find, not
+  an accent that should compete with the server name. The earlier borderless icon was
+  invisible until touched, which made an irreversible-looking action the hardest one on the
+  card to notice.
+-->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?android:attr/colorControlHighlight">
+
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <corners android:radius="10dp" />
+            <solid android:color="#fff" />
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="10dp" />
+            <solid android:color="?attr/colorSurface" />
+            <stroke
+                android:width="1dp"
+                android:color="@color/colorBorder" />
+        </shape>
+    </item>
+</ripple>

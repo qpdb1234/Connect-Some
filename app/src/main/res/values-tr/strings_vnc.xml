@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Translation of values/strings_vnc.xml.
+  Only the entries that other translatable text refers to by name are provided
+  here; the rest falls back to the English default.
+-->
+<resources>
+
+    <!-- Label of the Scan button on the discovery tab. -->
+    <string name="action_scan">Tara</string>
+
+    <string name="desc_mini_window_btn">Mini pencere</string>
+    <string name="desc_mini_keys">Uzaktan denetim tuşları</string>
+    <string name="desc_mini_fullscreen">Tam ekrana dön</string>
+    <string name="desc_mini_close">Mini pencereyi kapat</string>
+    <string name="desc_mini_back">Geri</string>
+    <string name="desc_mini_home">Ana ekran</string>
+    <string name="desc_mini_overview">Son uygulamalar</string>
+    <string name="desc_mini_keyboard">Klavye</string>
+    <string name="desc_mini_resize">Mini pencereyi yeniden boyutlandır</string>
+    <string name="msg_mini_reconnect">Mini pencere akışı yeniden bağlar</string>
+    <string name="msg_mini_no_permission">Mini pencereyi kullanmak için diğer uygulamaların üzerine çizime izin verin</string>
+
+    <!-- Gesture chip labels -->
+    <string name="gesture_single_tap">Tek dokunma</string>
+    <string name="gesture_double_tap">Çift dokunma</string>
+    <string name="gesture_long_press">Uzun basma</string>
+    <string name="gesture_swipe">Kaydırma</string>
+    <string name="gesture_2finger_tap">2 parmak dokunma</string>
+    <string name="gesture_2finger_swipe">2 parmak kaydırma</string>
+    <string name="gesture_other">Diğer</string>
+
+    <string name="action_restore_default_color">Varsayılan rengi geri yükle</string>
+<string name="title_backup_password_protection">Yedekleme parola koruması</string>
+    <string name="msg_backup_password_toggle_auth">Bu ayarı değiştirmek için kilit ekranı PIN\'ini, desenini, parolasını veya parmak izini girin</string>
+    <string name="desc_vk_close">Sanal tuşları kapat</string>
+</resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    What the LocalSend floating window folds into: a round floating ball carrying the LocalSend
+    glyph, docked near the left screen edge while the card is parked out of sight behind it. Tap the
+    ball to bring the card back; drag it up or down to move where it lives. The outer padding leaves
+    room for the ball's shadow on every side, so unlike the old edge strip the whole circle shows.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:contentDescription="@string/desc_ls_float_expand"
+    android:padding="10dp">
+
+    <FrameLayout
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_ls_float_ball"
+        android:elevation="8dp">
+
+        <ImageView
+            android:id="@+id/ls_float_tab_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/desc_localsend_toggle"
+            android:focusable="false"
+            android:src="@drawable/ls_float_ball_logo" />
+    </FrameLayout>
+
+</FrameLayout>

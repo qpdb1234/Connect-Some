@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Translation of values/strings_vnc.xml.
+  Only the entries that other translatable text refers to by name are provided
+  here; the rest falls back to the English default.
+-->
+<resources>
+
+    <!-- Label of the Scan button on the discovery tab. -->
+    <string name="action_scan">Скенирај</string>
+
+    <string name="desc_mini_window_btn">Мини прозор</string>
+    <string name="desc_mini_keys">Тастери даљинског управљања</string>
+    <string name="desc_mini_fullscreen">Назад у цео екран</string>
+    <string name="desc_mini_close">Затвори мини прозор</string>
+    <string name="desc_mini_back">Назад</string>
+    <string name="desc_mini_home">Почетна</string>
+    <string name="desc_mini_overview">Недавне апликације</string>
+    <string name="desc_mini_keyboard">Тастатура</string>
+    <string name="desc_mini_resize">Промена величине мини прозора</string>
+    <string name="msg_mini_reconnect">Мини прозор поново успоставља ток</string>
+    <string name="msg_mini_no_permission">Дозволите приказ преко других апликација да бисте користили мини прозор</string>
+
+    <!-- Gesture chip labels -->
+    <string name="gesture_single_tap">Један додир</string>
+    <string name="gesture_double_tap">Двоструки додир</string>
+    <string name="gesture_long_press">Дуги притисак</string>
+    <string name="gesture_swipe">Превуци</string>
+    <string name="gesture_2finger_tap">Додир са 2 прста</string>
+    <string name="gesture_2finger_swipe">Превуци са 2 прста</string>
+    <string name="gesture_other">Друго</string>
+
+    <string name="action_restore_default_color">Врати подразумевану боју</string>
+<string name="title_backup_password_protection">Zaštita lozinkom rezervne kopije</string>
+    <string name="msg_backup_password_toggle_auth">Unesite PIN, šablon, lozinku ili otisak prsta zaključanog ekrana da biste promenili ovo podešavanje</string>
+    <string name="desc_vk_close">Затвори виртуелне тастере</string>
+</resources>

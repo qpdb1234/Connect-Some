@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Chinese (Taiwan) strings for the VNC (RFB) protocol. Names come from
+  values/strings_vnc.xml.
+-->
+<resources>
+
+    <!-- 協定名保持英文原名：三個選項排在同一行，只有短名字放得下。 -->
+    <string name="protocol_game_stream">GameStream</string>
+    <string name="protocol_vnc">RFB</string>
+    <string name="protocol_android">ADB</string>
+
+    <!-- 伺服器卡片上的協定徽章：與上面的選項同名，列在這裡只為與預設檔案條目數一致。 -->
+    <string name="protocol_badge_game_stream">GameStream</string>
+    <string name="protocol_badge_vnc">RFB</string>
+    <string name="protocol_badge_android">ADB</string>
+
+    <string name="msg_vnc_unavailable">目前建置未包含 VNC（RFB）原生程式庫，因此無法新增或連線 VNC 伺服器。GameStream / Sunshine 主機不受影響。</string>
+
+    <string name="msg_protocol_switched">切換協定後儲存，該伺服器原有的協定專屬選項將被重設（配對資訊會保留）。</string>
+
+    <string name="title_use_local_cursor">在本機繪製遠端指標</string>
+
+    <!-- 網路喚醒：喚醒與連線是兩個獨立的動作，因此卡片上有單獨的按鈕。 -->
+    <string name="desc_wake_server_btn">喚醒這伺服器</string>
+    <string name="action_wol_fill_broadcast">使用本機網路的廣播位址</string>
+    <string name="msg_wol_sent">已對 %1$s 傳送魔術封包</string>
+    <string name="msg_wol_failed">無法傳送魔術封包：%1$s</string>
+    <string name="msg_wol_no_local_network">本裝置未接入 Wi-Fi 或有線網路，無法推算廣播位址。</string>
+    <string name="msg_wol_target_not_ipv4">請先輸入電腦的 IPv4 位址——廣播位址由此推算得出。</string>
+    <string name="action_wol_scan_mac">掃描並填入 MAC 位址</string>
+    <string name="msg_wol_mac_found">已找到 MAC 位址：%1$s</string>
+    <string name="msg_wol_mac_not_found">沒有來源回報 %1$s 的 MAC 位址，請手動填寫。</string>
+    <string name="msg_invalid_ipv4_address">IPv4 位址無效</string>
+    <string name="msg_invalid_port">請輸入 1 到 65535 之間的連線埠</string>
+
+    <!-- 手動掃描：一輪會跑完整個子網路，所以只由這個按鈕發起。 -->
+    <string name="action_scan">掃描</string>
+    <string name="title_unnamed_device">未命名裝置</string>
+    <string name="label_discovered_mac">MAC %1$s</string>
+    <!-- 從 mDNS TXT 屬性學到的裝置型號，顯示在卡片標題下方。 -->
+    <string name="label_discovered_model">型號 %1$s</string>
+    <!-- 摺疊後的卡片要說明同一協定回應過的所有連線埠，一張卡替掉多張時仍能看出它代表哪些入口。 -->
+    <string name="label_discovered_ports">連線埠 %1$s</string>
+    <string name="msg_discovered_no_service">未在此裝置上找到本應用支援的協定</string>
+
+    <!-- 掃描進度：一輪要跑幾十秒並且邊跑邊填清單，所以在這裡說明到了哪個階段、已發現多少台；子網路遍歷的百分比在旁邊的轉圈上，不在此重複。 -->
+    <string name="msg_discovery_idle">還沒有掃描過。點擊「掃描」尋找這個網路上的裝置。</string>
+    <string name="msg_scan_browsing">正在監聽網路廣播 \u00b7 已發現 %1$d 台</string>
+    <string name="msg_scan_walking">正在遍歷子網路 \u00b7 已發現 %1$d 台</string>
+    <string name="msg_scan_probing">正在檢查遠端控制連線埠 \u00b7 已發現 %1$d 台</string>
+    <string name="msg_scan_naming">正在解析裝置名稱 \u00b7 已發現 %1$d 台</string>
+    <string name="msg_scan_settling">正在等待最後的廣播 \u00b7 已發現 %1$d 台</string>
+    <string name="msg_scan_none">本次掃描沒有在這個網路上發現任何裝置</string>
+    <string name="msg_scan_vpn_hint">偵測到 VPN 正在劫持本次掃描，僅顯示已在本地網路上確認為真實存在的裝置；請在 VPN 中放行本機所在的區域網路，或關閉 VPN 後重新掃描</string>
+    <plurals name="msg_scan_done">
+        <item quantity="other">共發現 %1$d 台裝置，其中 %2$d 台可連線</item>
+    </plurals>
+    <string name="title_copy_mac">複製 MAC 位址</string>
+    <string name="title_copy_ip_address">複製 IP 位址</string>
+    <string name="title_add_as_server">新增為伺服器</string>
+    <string name="title_add_server_with_wol">新增為伺服器並填入 WoL</string>
+
+    <!-- 沒有來源查出 MAC 位址的卡片也要說明這件事：長按選單的兩項不論有無 MAC 都保留，把結論說清楚，而不是悄悄把選項去掉。 -->
+    <string name="label_discovered_mac_unknown">MAC：未找到</string>
+    <string name="msg_mac_not_found">沒有查到此裝置的 MAC 位址</string>
+
+    <!-- 安卓裝置協定：被控裝置需先授權本應用，所以大多是引導文案而非錯誤訊息。 -->
+    <string name="label_android_codec">裝置支援時使用 H.265（HEVC）</string>
+    <string name="label_android_audio">轉發裝置系統聲音</string>
+    <string name="label_android_direct_touch">觸控直接傳給裝置（支援多指）</string>
+    <string name="label_android_keep_awake">鏡像期間保持裝置亮屏</string>
+
+    <string name="action_android_select_usb">選擇 USB 裝置</string>
+    <string name="label_android_usb_none">未選擇 USB 裝置——透過網路連線</string>
+    <string name="msg_android_no_usb_device">未連接 USB 裝置。請插上傳輸線（本機需支援 OTG）後重試。</string>
+    <string name="msg_android_usb_permission">本應用程式尚未取得存取此 USB 裝置的權限。請在系統彈窗中允許，然後重新連線。</string>
+    <string name="msg_android_usb_allow_debugging">請在被控裝置上確認「允許 USB 偵錯？」彈窗，然後重新連線。</string>
+    <string name="msg_android_key_limit">此協定沒有抬起語意：每個按鍵都是一次短按，長按、連續重複與組合鍵按住均不可用。</string>
+    <string name="msg_android_text_via_clipboard">此字元沒有按鍵碼，已放入裝置剪貼簿——請在裝置上長按貼上。</string>
+
+    <string name="title_android_pair">無線偵錯配對</string>
+    <string name="hint_android_pair_code">6 位配對碼</string>
+    <string name="hint_android_pair_port">配對連線埠</string>
+    <string name="hint_android_connect_port">連線埠（在無線偵錯主畫面查看）</string>
+    <string name="msg_android_pairing_unavailable">此建置未包含 ADB 無線配對元件，請使用 USB-OTG 或已授權本機的裝置位址。</string>
+    <string name="msg_android_pair_success">配對成功。請填寫裝置上顯示的連線埠並儲存。</string>
+    <string name="msg_android_pair_failed">配對失敗：%1$s</string>
+
+    <!-- 有線轉無線：要透過傳輸線讓 adbd 在 TCP 上重新監聽，傳輸線連線會中途中斷，所以位址一律先實測可達才填入表單。 -->
+    <string name="action_android_tcpip">以傳輸線開啟無線 ADB</string>
+    <string name="title_android_tcpip">把已連線的裝置切換為無線 ADB</string>
+    <string name="hint_android_tcpip_port">TCP 連線埠（通常為 5555）</string>
+    <string name="msg_android_tcpip_needs_usb">請先選擇 USB 裝置——這一步只能透過傳輸線執行。</string>
+    <string name="msg_android_tcpip_no_ip">讀不到裝置的網路位址。請先讓裝置連上 Wi-Fi 再試。</string>
+    <string name="msg_android_tcpip_failed">透過傳輸線存取裝置失敗：%1$s</string>
+    <string name="msg_android_tcpip_unreachable">重新啟動後，裝置沒有在 %1$s:%2$d 回應 ADB。位址可能已變動，或裝置不接受以 TCP 偵錯。</string>
+    <string name="msg_android_tcpip_success">ADB 已在 %1$s:%2$d 監聽並通過本機驗證。已填入位址欄位，不再使用 USB 裝置。</string>
+
+    <string name="error_android_adb_auth">被控裝置拒絕了 ADB 認證。請在裝置上確認「允許 USB 偵錯？」彈窗。</string>
+    <string name="error_android_server_start">無法在被控裝置上啟動輔助行程。請確認已開啟 USB 偵錯。</string>
+    <string name="error_android_socket_timeout">等待裝置端影像通道逾時。請解鎖裝置，並確認 USB 偵錯授權仍然有效。</string>
+    <string name="error_android_wire_silent">裝置在 ADB 連線已不再回應，無法開啟任何通道。請重新插入資料線，或重新建立無線偵錯工作階段。</string>
+    <string name="error_android_wire_dropped">工作階段建立過程中，被控裝置斷開了這條 ADB 連線。無線偵錯同一時刻只服務一個客戶端：請先退出電腦上的 adb / scrcpy，再確認被控裝置的無線偵錯仍開啟、且本應用仍在允許連線的裝置裡。</string>
+    <string name="error_android_unsupported_opus">此建置無法解碼 Opus 音訊，裝置聲音將改以 AAC 轉發。</string>
+
+    <!-- 工作階段工具列快捷區：標籤要短，抽屜很窄。 -->
+    <string name="title_android_actions">裝置快捷操作</string>
+    <string name="action_android_back">返回</string>
+    <string name="action_android_home">主頁</string>
+    <string name="action_android_recents">多工作</string>
+    <string name="action_android_rotate">旋轉</string>
+    <string name="action_android_power">電源選單</string>
+    <string name="action_android_screen">螢幕亮/息</string>
+    <string name="action_android_night">夜間模式</string>
+    <string name="pref_android_keep_server_on_disconnect">中斷連線後保留裝置端行程</string>
+
+    <!-- 懸浮小球：浮於畫面上方，在工具列抽屜裡設定。 -->
+    <string name="desc_assist_ball_toggle">懸浮小球設定</string>
+    <string name="desc_assist_ball">懸浮小球</string>
+    <string name="label_assist_ball_enable">顯示懸浮小球</string>
+    <string name="label_assist_ball_enable_summary">在畫面上顯示一個懸浮小球，點按可開啟工具欄或輸入法鍵盤。</string>
+    <string name="label_assist_ball_size">大小 %1$d dp</string>
+    <string name="label_assist_ball_color">顏色</string>
+    <string name="title_assist_ball_color">小球顏色</string>
+    <string name="label_assist_ball_opacity">透明度 %1$d%%</string>
+    <string name="label_assist_ball_action">點按小球</string>
+    <string name="action_assist_ball_toolbar">打開工具列</string>
+    <string name="action_assist_ball_keyboard">叫出輸入法</string>
+
+    <!-- 全鍵盤：浮於畫面上方的完整鍵盤，可在工具列抽屜裡設定。 -->
+    <string name="desc_full_keyboard_toggle">全鍵盤設定</string>
+    <string name="desc_full_keyboard">全鍵盤</string>
+    <string name="desc_full_keyboard_drag">拖動可移動全鍵盤</string>
+    <string name="label_full_keyboard_enable">顯示全鍵盤</string>
+    <string name="label_full_keyboard_opacity">透明度 %1$d%%</string>
+    <string name="label_full_keyboard_drag_lock">鎖定拖動</string>
+    <string name="label_full_keyboard_scale">大小 %1$d%%</string>
+
+    <!-- LocalSend：區網內與附近裝置互傳檔案/文字——UDP 組播探索，HTTPS 自簽憑證傳送。接收開關僅在本次工作階段有效。 -->
+    <string name="desc_localsend_toggle">LocalSend</string>
+    <string name="label_localsend_receive">開啟 LocalSend 以收發檔案</string>
+    <string name="label_localsend_off">開啟開關以搜尋附近裝置</string>
+    <string name="label_localsend_searching">正在搜尋附近裝置…</string>
+    <string name="label_localsend_empty">尚未發現裝置。請在另一台裝置上也開啟 LocalSend。</string>
+    <string name="label_localsend_hint">點按裝置即可傳送已新增的檔案。</string>
+    <string name="label_localsend_device_row">%1$s · %2$s</string>
+    <string name="action_localsend_send_text">傳送文字訊息</string>
+    <string name="dialog_localsend_offer">%1$s 想要傳送</string>
+    <string name="dialog_localsend_message">來自 %1$s 的訊息</string>
+    <string name="dialog_localsend_text_hint">輸入訊息</string>
+    <string name="action_accept">接受</string>
+    <string name="action_decline">拒絕</string>
+    <string name="action_localsend_send">傳送</string>
+    <string name="msg_localsend_sending">正在傳送…</string>
+    <string name="msg_localsend_sent">已傳送</string>
+    <string name="msg_localsend_declined">接收方拒絕了本次傳輸</string>
+    <string name="msg_localsend_nothing">接收方未選擇接受任何檔案</string>
+    <string name="msg_localsend_failed">傳送失敗：%1$s</string>
+    <!-- 一部分檔案已傳出，另一部分因來源無法再讀取而被跳過。 -->
+    <string name="msg_localsend_partial">無法讀取，已跳過：%1$s</string>
+    <string name="title_localsend_add_by_ip">依 IP 位址新增裝置</string>
+    <string name="title_localsend_add_by_ip_summary">手動輸入未自我廣播的 LocalSend 裝置位址</string>
+    <string name="hint_localsend_ip">192.168.1.5 或 192.168.1.5:53317</string>
+    <string name="msg_localsend_add_failed">無法連線到 %1$s 上的 LocalSend 裝置：%2$s</string>
+    <string name="msg_localsend_added">已新增 %1$s</string>
+    <string name="action_localsend_favorite">加入收藏夾</string>
+    <string name="action_localsend_unfavorite">自收藏夾移除</string>
+    <string name="title_localsend_favorites">收藏夾</string>
+    <string name="action_clear_favorites">清空</string>
+    <string name="action_restore_defaults">恢復預設</string>
+    <string name="msg_confirm_restore_defaults">要復原此面板的預設設定嗎？此處的目前設定將被重設。</string>
+
+    <!-- 工具頁：一個把每項設定都還原為出廠預設的動作。比上面各面板的「恢復預設」更徹底，所以先二次確認，並說明只改設定、不含已儲存的伺服器。 -->
+    <string name="action_reset_all_settings">重設所有設定</string>
+    <string name="pref_dedupe_servers">清理重複的伺服器</string>
+    <string name="msg_dedupe_servers_confirm">對位址、連接埠和協定都相同的伺服器只保留一張卡片，其餘刪除。您用不同名稱儲存的伺服器仍會各自保留。此操作無法復原。</string>
+    <string name="msg_dedupe_servers_none">未發現重複的伺服器</string>
+    <string name="msg_dedupe_servers_done">已移除 %1$d 個重複的伺服器</string>
+    <string name="action_dedupe">清理</string>
+    <string name="msg_reset_all_settings_confirm">這會將每項設定恢復為預設值：外觀、輸入、工具列、LocalSend 以及其他選項。已儲存的伺服器不會變動，備份密碼保護開關維持原樣。此操作無法復原。</string>
+    <string name="msg_reset_all_settings_done">已將所有設定恢復為預設值</string>
+
+    <!-- 每個設定分類（介面、檢視、輸入、伺服器）底部的一列，只把當前的這一類恢復為出廠預設，比工具頁的「重設所有設定」範圍更小，不影響其他類別。 -->
+    <string name="pref_reset_category_defaults">將本類設定恢復為預設</string>
+    <string name="msg_reset_category_defaults_confirm">要將本類的每項設定恢復為預設值嗎？此處的目前選擇將被重設，其他類別不受影響。此操作無法復原。</string>
+    <string name="msg_reset_category_defaults_done">已將本類設定恢復為預設值</string>
+    <string name="msg_clear_favorites_confirm">要從收藏夾移除全部已固定的裝置嗎？此操作無法復原。</string>
+    <string name="msg_favorites_cleared">已清空收藏夾</string>
+    <string name="title_localsend_discovered">已發現</string>
+    <string name="action_localsend_share_link">產生下載連結</string>
+    <string name="dialog_localsend_link_title">下載連結</string>
+    <string name="action_localsend_copy_link">複製連結</string>
+    <string name="action_localsend_share">分享</string>
+    <string name="action_localsend_stop_shares">停止分享</string>
+    <string name="msg_localsend_link_failed">無法產生連結。請先連線 Wi-Fi 或開啟熱點——下載連結僅對處於同一區域網路內的裝置有效，僅有行動數據不夠。</string>
+
+    <!-- problem-4 補譯：可折疊分享列表、收藏夾排序、下載連結管理與備份項（條3）。 -->
+    <string name="action_localsend_rescan">重新搜尋</string>
+    <string name="action_localsend_rescanning">正在搜尋 · 點按停止</string>
+    <string name="action_localsend_stop">停止</string>
+    <string name="msg_localsend_rescan_progress">正在搜尋… %1$d%% (%2$d/%3$d) · 點按停止</string>
+    <string name="msg_localsend_rescan_empty">未發現裝置。請確認兩台裝置處於同一網路，並已開啟接收。</string>
+    <string name="action_localsend_float">浮視窗</string>
+    <string name="action_localsend_open_full">開啟完整頁面</string>
+    <string name="desc_ls_float_close">關閉 LocalSend 浮視窗</string>
+    <string name="desc_ls_float_drag">拖曳以移動 LocalSend 浮視窗</string>
+    <string name="desc_ls_float_collapse">縮到螢幕邊緣</string>
+    <string name="desc_ls_float_expand">放大或還原浮視窗</string>
+    <string name="desc_ls_float_resize">調整 LocalSend 浮視窗大小</string>
+    <string name="ls_float_action_add_ip">依 IP 新增</string>
+    <string name="ls_float_action_create_link">產生連結</string>
+    <string name="msg_localsend_float_needs_overlay">請允許本應用程式在其他應用程式之上顯示，以使用 LocalSend 浮視窗。</string>
+    <string name="label_localsend_home_enable">可被發現並接收檔案</string>
+    <string name="label_localsend_sending">傳送中</string>
+    <string name="label_localsend_receiving">接收中</string>
+    <string name="msg_localsend_saved">已將 %1$s 儲存至 %2$s</string>
+    <string name="title_localsend_shares">%1$s 下載連結（%2$d）</string>
+    <string name="action_localsend_copy">複製</string>
+    <string name="action_localsend_add_to_share">新增檔案</string>
+    <string name="action_localsend_revoke">取消分享</string>
+    <string name="action_localsend_remove_from_share">移除該檔案</string>
+    <string name="label_localsend_shared_files">檔案(%1$d)</string>
+    <string name="desc_localsend_drag_favorite">拖動以重新排列該收藏</string>
+    <string name="action_localsend_remove_favorite">自收藏夾移除</string>
+
+    <!-- 匯入/匯出與 QR Code（條3）。 -->
+    <string name="title_export_file">匯出至檔案</string>
+    <string name="title_export_qr">顯示 QR Code</string>
+    <string name="title_export_settings">匯出設定</string>
+    <string name="title_import_file">匯入檔案</string>
+    <string name="title_import_qr">掃描 QR Code</string>
+    <string name="title_export_localsend_favorites">匯出 LocalSend 收藏夾</string>
+    <string name="title_import_localsend_favorites">還原 LocalSend 收藏夾</string>
+    <string name="title_export_discovery_cache">匯出已找到的位址與 MAC</string>
+    <string name="title_import_discovery_cache">還原已找到的位址與 MAC</string>
+    <string name="title_export_ssh_trust">匯出已知主機與受信任憑證</string>
+    <string name="title_import_ssh_trust">還原已知主機與受信任憑證</string>
+    <string name="err_import_too_large">匯入檔案過大（上限：1 MiB）。</string>
+    <string name="err_invalid_qr_code">無效的 AVNC QR Code。</string>
+    <string name="err_qr_export_failed">產生 QR Code 失敗：</string>
+    <string name="err_unsupported_qr_uri">不支援或無效的 URI。</string>
+    <string name="msg_confirm_import_uri">從以下 URI 匯入？</string>
+    <string name="action_back">返回</string>
+
+    <!-- 僅繁體缺失的工具列/離開項（條3）。 -->
+    <string name="desc_exit_btn">離開</string>
+    <string name="desc_toolbar_items_toggle">顯示或隱藏這些按鈕</string>
+    <string name="label_toolbar_item_audio">遠端音訊靜音</string>
+    <string name="label_toolbar_item_stats">效能資訊</string>
+
+    <!-- 文字訊息仍是先寫內容再挑裝置，與檔案不同；所以裝置選擇框需要自己的標題，收藏裡未在線的也要標示出來。 -->
+    <string name="label_localsend_order_hint">新增的檔案會留在這裡等待，對方還沒開機也不會遺失。點按裝置即可把這批檔案傳給它，傳完還能繼續傳給其他裝置。長按裝置可將其收藏。</string>
+    <string name="title_localsend_pick_target">傳送到</string>
+    <string name="label_localsend_offline">離線</string>
+    <string name="msg_localsend_no_targets">還沒有可傳送的裝置，請先重新搜尋或依 IP 位址新增裝置。</string>
+
+    <!-- 待傳送列表：檔案先挑好留著，因為對方常常還沒開機，而且同一批檔案往往要傳給多台裝置。 -->
+    <string name="action_localsend_add_files">新增要傳送的檔案</string>
+    <string name="title_localsend_outbox">待傳送</string>
+    <string name="label_localsend_staged_row">%1$s · %2$s</string>
+    <string name="label_localsend_staged_count">已新增 %1$d 個檔案待傳送</string>
+    <string name="action_localsend_remove_all">移除全部檔案</string>
+    <string name="desc_localsend_remove_file">移除該檔案</string>
+    <string name="msg_localsend_nothing_staged">還沒有待傳送的檔案，請先新增檔案。</string>
+
+    <!--
+      The read permission the document picker handed over has gone by the time the file is
+      actually dialed, which an outbox that waits for a device makes possible. Naming the
+      provider's error would be no use here: the only fix is to pick the file again.
+    -->
+    <string name="msg_localsend_uri_expired">已選擇的檔案無法再讀取，請重新新增。</string>
+
+    <string name="desc_mini_window_btn">小視窗</string>
+    <string name="desc_mini_keys">遠端控制鍵</string>
+    <string name="desc_mini_fullscreen">返回全螢幕</string>
+    <string name="desc_mini_close">關閉小視窗</string>
+    <string name="desc_mini_back">返回鍵</string>
+    <string name="desc_mini_home">首頁鍵</string>
+    <string name="desc_mini_overview">最近任務</string>
+    <string name="desc_mini_keyboard">鍵盤</string>
+    <string name="desc_mini_resize">調整小視窗大小</string>
+    <string name="msg_mini_reconnect">小視窗會重新連線畫面</string>
+    <string name="msg_mini_no_permission">請允許在其他應用程式上層顯示，才能使用小視窗</string>
+
+    <string name="desc_mini_none">無</string>
+    <string name="desc_mini_drag_handle">移動小視窗</string>
+    <string name="pref_mini_window">小視窗</string>
+    <string name="pref_mini_top_slot_0">頂欄 - 左</string>
+    <string name="pref_mini_top_slot_1">頂欄 - 中</string>
+    <string name="pref_mini_top_slot_2">頂欄 - 右</string>
+    <string name="pref_mini_double_tap">底欄 - 雙擊</string>
+    <string name="desc_mini_bar_actions">選擇小視窗每個按鈕執行的操作。選「無」可留空該位置。</string>
+
+    <!-- 小視窗畫面下方的手機按鍵列（返回/首頁/最近任務）。只有 ADB 協議能把它們送到受控裝置，所以按協議各給一個開關。 -->
+    <string name="pref_mini_nav_keys">小視窗手機按鍵</string>
+    <string name="pref_mini_nav_keys_adb">手機按鍵 - ADB</string>
+    <string name="pref_mini_nav_keys_gamestream">手機按鍵 - GameStream</string>
+    <string name="pref_mini_nav_keys_vnc">手機按鍵 - RFB</string>
+    <string name="desc_mini_nav_keys_summary">依協議設定是否在畫面下方顯示手機的返回 / 首頁 / 最近任務按鍵。只有經 ADB 直連的裝置能收到這些按鍵，因此 GameStream 與 RFB 預設不顯示。</string>
+
+    <!-- 小視窗的縮放方式。底欄兩圓點與卡片兩下角各自可以選下面兩種拖動結果。 -->
+    <string name="desc_mini_corner_resize">從卡片的角落調整小視窗大小</string>
+    <string name="pref_mini_scale_mode">小視窗縮放</string>
+    <string name="desc_mini_scale_mode_summary">小視窗兩種縮放把手如何將拖動變成新的尺寸。底欄兩端的圓點是可見的標記；卡片真正的左下角與右下角是不可見的拖曳熱區，它們用負外邊距跨越陰影 padding，對得上你看到的角落。等比例縮放依視窗拖動前的形狀同時放大兩個軸，直的視窗拖動後仍然直，畫面在視窗內保持自己的比例；自由縮放兩個軸各自跟隨手指。</string>
+    <string name="pref_mini_dot_scale_mode">底欄圓點</string>
+    <string name="pref_mini_corner_scale_mode">左下角與右下角</string>
+    <string name="pref_mini_scale_aspect">等比例縮放</string>
+    <string name="pref_mini_scale_free">自由縮放</string>
+
+    <!-- 連線進度：介面會顯示成「正在連線：……」，所以每條都要讀起來像一個步驟。 -->
+    <string name="stage_none">準備中</string>
+    <string name="stage_platform_init">初始化平台</string>
+    <string name="stage_name_resolution">解析主機位址</string>
+    <string name="stage_audio_init">初始化音訊串流</string>
+    <string name="stage_rtsp_handshake">RTSP 握手</string>
+    <string name="stage_control_init">初始化控制通道</string>
+    <string name="stage_video_init">初始化影像串流</string>
+    <string name="stage_input_init">初始化輸入通道</string>
+    <string name="stage_control_up">建立控制通道</string>
+    <string name="stage_video_up">建立影像串流</string>
+    <string name="stage_audio_up">建立音訊串流</string>
+    <string name="stage_input_up">建立輸入通道</string>
+    <string name="stage_handshake">與主機握手</string>
+    <string name="stage_launch">啟動應用程式</string>
+    <string name="stage_android_adb">連線裝置 ADB</string>
+    <string name="stage_android_server">準備受控端服務</string>
+    <string name="stage_android_encoder">啟動畫面編碼器</string>
+    <string name="stage_android_socket">建立畫面通道</string>
+
+    <!-- 工作階段結束的原因。前幾條是「哪條通道斷了」，與異常正文一起拼成完整句子。 -->
+    <string name="error_connect_cancelled">連線已取消</string>
+    <string name="error_adb_interrupted">ADB 連線已中斷</string>
+    <string name="error_video_stream_broken">影像串流中斷</string>
+    <string name="error_event_stream_broken">事件串流中斷</string>
+    <string name="error_heartbeat_broken">心跳中斷</string>
+    <string name="error_control_channel_unavailable">控制通道不可用</string>
+    <string name="error_stream_broken_detail">%1$s：%2$s</string>
+    <string name="error_android_clipboard_garbled">受控裝置的剪貼簿資料異常，已中斷連線。</string>
+    <string name="error_android_timeout">與受控裝置的連線已逾時中斷。</string>
+
+    <!-- 偵錯工具（設定 - 工具）裡印在螢幕上的說明。 -->
+    <string name="hint_touch_test">上方選項是日誌標記，不會過濾事件。\n所有觸控事件始終都會被記錄。\n\n1. 點擊上方選項，在日誌中插入標記（如 "GestureStart: 雙擊"）\n2. 在觸控區域執​​行手勢 — 座標即時更新\n3. 下方日誌記錄每一個 MotionEvent 的原始資料\n4. 點擊另一個選項可插入新標記，方便分類整理日誌\n5. 點「複製」可複製全部事件日誌</string>
+    <string name="hint_key_test">1. 點按此處開啟鍵盤（如需要）\n2. 按下要測試的按鍵\n3. 按鍵轉譯結果即時顯示在下方\n4. 點「複製」可複製全部事件日誌</string>
+    <string name="label_pointer_count">手指數=%1$d</string>
+    <string name="label_gesture_now">目前：%1$s · %2$s · %3$s</string>
+
+    <!-- 觸控測試手勢標籤 -->
+    <string name="gesture_single_tap">單次點擊</string>
+    <string name="gesture_double_tap">雙擊</string>
+    <string name="gesture_long_press">長按</string>
+    <string name="gesture_swipe">滑動</string>
+    <string name="gesture_2finger_tap">雙指點擊</string>
+    <string name="gesture_2finger_swipe">雙指滑動</string>
+    <string name="gesture_other">其他</string>
+
+    <string name="error_adb_service_unreachable">無法連線 %1$s:%2$d 的 ADB 服務：%3$s</string>
+    <string name="error_adb_usb_not_found">找不到 USB 裝置 %1$s，請檢查 OTG 連線。</string>
+    <string name="error_adb_push_failed">無法將受控端元件複製到裝置：%1$s</string>
+    <string name="error_adb_channel_occupied">裝置接受了 ADB 連線，卻不再為它開啟任何通道。較舊的裝置同一時刻只服務一個主機連線——請先斷開其他 ADB/遠端控制軟體，再試一次。（%1$s）</string>
+    <string name="error_adb_server_launch">無法在受控裝置上啟動服務行程：%1$s</string>
+    <string name="error_adb_closed">ADB 連線已關閉</string>
+    <string name="error_adb_channel_timeout">開啟 ADB 通道 %1$s 逾時</string>
+    <string name="error_adb_response_timeout">等待裝置回應逾時</string>
+    <string name="error_adb_server_off">受控端服務行程未執行</string>
+    <string name="error_adb_server_silent">受控端服務行程沒有回應</string>
+    <string name="error_adb_connect_failed">ADB 連線失敗</string>
+
+    <string name="error_pair_rejected">配對被拒絕：請確認配對碼仍然有效，然後重新發起配對。</string>
+    <string name="error_pair_needed">該位址需要先完成配對：請在受控裝置的「無線偵錯」裡配對後再連線。</string>
+    <string name="error_pair_handshake">配對握手失敗：配對碼可能已過期或輸入有誤，請重新讀取「無線偵錯」裡的配對碼。</string>
+    <string name="error_pair_unreachable">無法連線 %1$s:%2$d。請確認兩台裝置在同一網路，且使用的是「配對裝置」視窗裡顯示的埠號。</string>
+    <string name="error_pair_failed">配對失敗：%1$s</string>
+    <string name="error_adb_key_format">不支援此 ADB 主機私密金鑰格式</string>
+
+    <string name="error_device_closed">裝置關閉了 ADB 連線</string>
+    <string name="error_device_closed_partial">裝置在一條 ADB 訊息中途關閉了連線（%1$d/%2$d 位元組）</string>
+    <string name="error_usb_open_denied">無法開啟 USB 裝置，請先允許本應用程式存取該裝置。</string>
+    <string name="error_usb_no_adb">此 USB 裝置沒有 ADB 介面，請確認受控裝置已開啟 USB 偵錯。</string>
+    <string name="error_usb_busy">無法獨佔 USB ADB 介面（可能被系統 adbd 助手佔用）。</string>
+    <string name="error_usb_endpoints">USB ADB 端點不完整。</string>
+    <string name="error_usb_wired">有線連線錯誤：%1$s</string>
+
+    <string name="error_vnc_connect_failed">無法連線到 VNC 伺服器，請確認位址、埠號與伺服器在線。</string>
+    <string name="error_vnc_encoding_unsupported">VNC 伺服器中斷了畫面更新，可能它僅支援 Tight 編碼，而目前建置未包含 JPEG 解碼。請在伺服器端啟用 Raw/Hextile/ZRLE/Zlib 編碼。</string>
+    <string name="error_unknown_protocol">未知的協議類型：%1$s</string>
+
+    <string name="error_session_interrupted">由於意外錯誤，工作階段無法啟動：%1$s</string>
+    <string name="error_session_interrupted_unknown">由於意外錯誤，工作階段無法啟動。</string>
+    <string name="title_unknown_certificate">未知的伺服器憑證</string>
+
+    <string name="error_session_start_failed">連線失敗：無法與主機建立工作階段。</string>
+
+    <string name="desc_mini_navbar">導覽按鍵</string>
+    <string name="desc_mini_collapse">縮到螢幕邊緣</string>
+    <string name="desc_mini_expand">展開小視窗</string>
+    <string name="desc_mini_reset">重設大小與位置</string>
+    <string name="desc_mini_rotate">旋轉遠端螢幕</string>
+    <string name="desc_mini_power">電源選單</string>
+    <string name="desc_mini_screen_on">點亮遠端螢幕</string>
+    <string name="desc_mini_screen_off">熄滅遠端螢幕</string>
+
+
+    <string name="action_reset">重設</string>
+    <string name="msg_auto_copy_on_exit">離開時自動複製</string>
+    <string name="msg_debug_loading">載入中...</string>
+    <string name="msg_debug_no_logs">暫無日誌</string>
+    <string name="msg_debug_cleared">已清空</string>
+
+    <string name="desc_virtual_keys">虛擬按鍵</string>
+    <string name="desc_vk_toggle_keyboard">切換鍵盤</string>
+    <string name="desc_vk_exit">退出遠端控制</string>
+    <string name="desc_vk_open_toolbar">開啟右滑選單</string>
+    <string name="desc_vk_close">關閉虛擬按鍵</string>
+
+    <string name="state_created">準備中</string>
+    <string name="state_connecting">連線中</string>
+    <string name="state_connected">已連線</string>
+    <string name="state_disconnected">已中斷連線</string>
+
+    <string name="error_clipboard_copy_failed">無法複製到剪貼區</string>
+    <string name="error_forget_hosts_failed">無法清除已知主機</string>
+    <string name="error_web_browser_missing">未安裝瀏覽器</string>
+
+    <string name="error_ssh_tunnel_unsupported">此伺服器設定為必須透過 SSH 通道連線，但本應用程式不支援 SSH 通道。不經通道直接連線會將密碼走未加密鏈路送出，因此已阻擋本次連線。</string>
+    <string name="msg_ssh_tunnel_unsupported">本應用程式不支援 SSH 通道：該項已改回直接連線。</string>
+    <string name="msg_ssh_key_import_unsupported">本應用程式不支援 SSH 通道，私鑰沒有可使用的地方，因此未儲存。</string>
+
+    <string name="title_external_connection">連線要求</string>
+    <string name="msg_external_connection">另一個應用程式要求透過 %3$s 連線 %1$s 的 %2$d 欄位並開啟一個遠端工作階段。僅當這確實是你自己發起的時才繼續。</string>
+    <string name="title_connect">連線</string>
+    <string name="title_error">錯誤</string>
+
+    <string name="msg_unknown_intent">無效的 intent：缺少伺服器資訊。</string>
+    <string name="msg_no_server_named">沒有名為「%1$s」的已儲存伺服器</string>
+    <string name="msg_server_added_for_uri">已為該連結新增一個伺服器</string>
+    <string name="msg_unknown_channel_type">不支援的連線通道類型：%1$d</string>
+    <string name="msg_unknown_security_type">不支援的安全類型：%1$d</string>
+
+    <string name="error_startup_generic">啟動工作階段時發生錯誤</string>
+    <string name="error_startup_missing_server_info">錯誤：缺少伺服器資訊</string>
+    <string name="error_startup_invalid_server_id">錯誤：此伺服器已不存在</string>
+
+    <string name="title_backup_password_protection">備份密碼保護</string>
+    <string name="msg_backup_password_toggle_auth">輸入裝置鎖定螢幕 PIN、圖案、密碼或指紋以變更此設定</string>
+
+    <string name="err_import_unreadable">無法開啟所選檔案。</string>
+    <string name="err_import_http">無法讀取備份檔案（HTTP %1$d）。</string>
+    <string name="err_export_unwritable">無法寫入備份檔案。</string>
+    <string name="error_export_auth_failed">身分驗證失敗：%1$s</string>
+    <string name="error_no_file_picker">沒有可用於選擇備份檔案的應用程式。</string>
+    <string name="error_import_export_failed">無法完成匯入或匯出。</string>
+
+    <string name="error_adb_too_many_channels">裝置開啟的 ADB 通道數超過單一工作階段可用的範圍，連線已關閉。</string>
+    <string name="error_adb_backlog_too_large">裝置持續發送無人讀取的資料，為避免耗盡記憶體，連線已關閉。</string>
+    <string name="error_adb_response_too_large">輔助程式的應答大小不合理（%1$d 位元組）。</string>
+    <string name="error_android_frame_length_bad">影訊或音訊串流資料已錯亂，工作階段已關閉。</string>
+    <string name="msg_text_too_long_for_keys">這段文字太長，無法以按鍵方式傳送。請改用複製到剪貼簿。</string>
+    <string name="action_restore_default_color">恢復預設顏色</string>
+    <string name="desc_letterbox_color_btn">背景顏色</string>
+    <string name="title_letterbox_color">背景顏色</string>
+    <string name="desc_vk_edit_keys">按鍵設定</string>
+
+    <!-- 「新增按鍵」彈層的分組標題，按鍵盤本身的形狀劃分。 -->
+    <string name="group_vk_left_mod">左修飾鍵</string>
+    <string name="group_vk_right_mod">右修飾鍵</string>
+    <string name="group_vk_common">常用與導覽</string>
+    <string name="group_vk_punctuation">標點與符號</string>
+    <string name="group_vk_letters">字母</string>
+    <string name="group_vk_numbers">數字</string>
+    <string name="group_vk_function">功能鍵</string>
+    <string name="group_vk_numpad">小鍵盤</string>
+    <string name="group_vk_media">媒體與音量</string>
+    <string name="group_vk_actions">操作</string>
+
+    <!-- 右側選單裡的本地指標標記面板。開關與大小沿用設定頁原有的文案，這裡只補面板新增的部分。 -->
+    <string name="pref_cursor_marker_shape">標記形狀</string>
+    <string name="pref_cursor_marker_shape_arrow">箭頭</string>
+    <string name="pref_cursor_marker_shape_dot">點</string>
+    <string name="label_cursor_marker_size">標記大小 %1$d%%</string>
+    <string name="pref_drawer_edge_width">工具列滑動邊緣寬度</string>
+    <string name="pref_drawer_edge_width_summary">沿工具列邊緣多寬的區域內起手的滑動，才算作開啟工具列。區域越寬越容易觸發，越窄越不容易誤觸。</string>
+    <string name="label_drawer_edge_width">觸發寬度 %1$d dp</string>
+    <string name="desc_drawer_edge_toggle">工具列滑動邊緣寬度</string>
+    <string name="pref_cursor_marker_color">標記顏色</string>
+
+    <!-- 抽屜裡的滑鼠靈敏度面板：寫入的是 設定→輸入 中「滑動靈敏度」同一個值。 -->
+    <string name="desc_mouse_speed_toggle">滑鼠靈敏度</string>
+    <string name="label_mouse_speed">靈敏度 %1$d%%</string>
+    <string name="pref_mouse_speed_summary">同樣的手指移動距離下，滑動能把遠端指標帶多遠：調高在大解析度桌面上移動得更遠，調低則更細緻。這一項與 設定→輸入 裡的「滑動靈敏度」是同一個值。它作用於單指與雙指滑動；長按後的滑動保持自己的速度，觸控螢幕手勢樣式下手指就是指標，因此那裡不會有任何變化。</string>
+
+    <!-- 日誌記錄開關（工具頁）：下拉選擇記錄範圍，導出與清除也在同一頁。 -->
+    <string name="pref_logging">開啟日誌記錄</string>
+    <string name="logging_mode_off">關閉</string>
+    <string name="logging_mode_session">只記錄本次啟動應用程式後的日誌</string>
+    <string name="logging_mode_all">記錄所有日誌</string>
+    <string name="title_export_logs">導出日誌</string>
+    <string name="pref_clear_all_logs">清除所有日誌</string>
+    <string name="action_clear_logs">清空</string>
+    <string name="msg_clear_all_logs_confirm">這會將日誌檔案和最近日誌緩衝區裡的內容一併清空，已記錄的日誌無法找回。若日誌記錄處於開啟狀態，清空後會繼續記錄。</string>
+    <string name="msg_logs_exported">日誌已導出</string>
+    <string name="msg_logs_export_failed">無法導出日誌：%1$s</string>
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2024  ConnectSome contributors.
+
+  SPDX-License-Identifier:  GPL-3.0-or-later
+
+  See COPYING.txt for more details.
+-->
+
+<!--
+  Devices this app wants to be opened for: an Android phone in ADB mode, plugged
+  in over OTG. adbd exposes its interface as class 255 (vendor specific),
+  subclass 66 (0x42) and protocol 1, which identifies it without listing every
+  vendor and product id. These attributes carry no android: prefix and are read
+  with an unqualified look-up, so the framework ignores anything namespaced.
+-->
+<resources>
+    <usb-device
+        class="255"
+        protocol="1"
+        subclass="66" />
+</resources>

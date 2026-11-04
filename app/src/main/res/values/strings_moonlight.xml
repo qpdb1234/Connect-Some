@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Strings required by the Moonlight GameStream binding layer (copied Java code)
+  which reference com.limelight.R. Kept separate from AVNC's strings.xml to
+  avoid duplicate resource names.
+
+  These are the English defaults. Chinese lives in values-zh-rCN and
+  values-zh-rTW; keep a resource name in only one of those per config.
+  Multi-line values use the usual newline escape.
+-->
+<resources>
+    <string name="error_usb_prohibited">USB access is prohibited by your device administrator. Check your Knox or MDM settings.</string>
+    <string name="toast_controller_type_changed">Gamepad type may be changed due to motion sensor emulation</string>
+    <string name="perf_overlay_streamdetails">Video stream: %1$s %2$.2f FPS</string>
+    <string name="perf_overlay_decoder">Decoder: %1$s</string>
+    <string name="perf_overlay_incomingfps">Incoming frame rate from network: %1$.2f FPS</string>
+    <string name="perf_overlay_renderingfps">Rendering frame rate: %1$.2f FPS</string>
+    <string name="perf_overlay_netdrops">Frames dropped by your network connection: %1$.2f%%</string>
+    <string name="perf_overlay_netlatency">Average network latency: %1$d ms (variance: %2$d ms)</string>
+    <string name="perf_overlay_hostprocessinglatency">Host processing latency min/max/average: %1$.1f/%2$.1f/%3$.1f ms</string>
+    <string name="perf_overlay_dectime">Average decoding time: %1$.2f ms</string>
+
+    <!-- Moonlight host setup: pairing / app selection / quality -->
+    <!-- App picker shows this entry while the host has not answered yet -->
+    <string name="msg_stream_apps_loading">Loading…</string>
+    <string name="title_pair_host">Pair host</string>
+    <string name="title_select_app">Select app</string>
+    <string name="title_stream_quality">Stream quality</string>
+    <string name="hint_pairing_pin">Pairing PIN</string>
+    <string name="msg_pairing_pin_prompt">Enter the 4 digit PIN shown by the host, then tap Pair.</string>
+    <string name="title_pair_host_pairing">Pairing…</string>
+    <string name="msg_pairing_pin_display">Enter the following PIN in the pairing window of the host (Sunshine web interface / GeForce Experience), and keep this dialog open until pairing finishes.\n\nPIN: %1$s</string>
+    <string name="msg_pairing_success">Paired successfully</string>
+    <string name="msg_pairing_pin_wrong">Pairing failed: wrong PIN</string>
+    <string name="msg_pairing_failed">Pairing failed. Check that the host is online and the PIN is correct.</string>
+    <string name="msg_no_apps_found">No app list received. Check that this host is paired.</string>
+    <string name="title_app_none">Default (desktop / Steam)</string>
+    <string name="msg_selected_app">Selected: %1$s</string>
+    <string name="title_stream_resolution">Resolution</string>
+    <string name="title_stream_fps">Frame rate (FPS)</string>
+    <string name="title_stream_bitrate">Bitrate (kbps)</string>
+    <string name="title_enable_hdr">Enable HDR</string>
+    <string name="title_enable_sops">Adjust automatically for the network (SOPS)</string>
+    <string name="title_play_local_audio">Play audio locally</string>
+    <string name="hint_bitrate_kbps">Bitrate</string>
+    <string name="msg_stream_quality_saved">Quality settings saved</string>
+
+    <!-- ADB device mirroring quality (the helper's maxSize / maxFps / maxVideoBit) -->
+    <string name="title_stream_resolution_long_edge">Resolution (long edge, px)</string>
+    <string name="title_stream_bitrate_mbps">Bitrate (Mbps)</string>
+    <string name="msg_android_quality_hint">These values go straight to the encoder on the controlled phone, whose ADB link is the bottleneck: a smaller picture, a lower frame rate or a lower bitrate means less delay and fewer hitches, at the cost of sharpness.</string>
+
+    <!--
+      RFB / VNC picture quality. The protocol has one quality level and a desktop size
+      which the host is free to refuse; it has no bitrate and no frame rate at all, and
+      the hint says so rather than letting the missing sliders be guessed at.
+    -->
+    <string name="title_rfb_size_host_native">Server\'s own resolution</string>
+    <string name="title_rfb_quality_level_value">Level %1$d (0 = least data, 9 = sharpest)</string>
+    <string name="msg_rfb_quality_hint">The quality level is all VNC has to say about the picture: it reaches the server as a number from 0 to 9 and only affects the encodings which compress lossily, while Raw sends the pixels untouched. The resolution is a request, not a setting - a server without ExtendedDesktopSize keeps its own screen and the session says so when that happens. There is nothing here for bitrate or frame rate: the host sends a new picture whenever its screen changes, and what that costs on the wire follows from the level. Both apply on the next connection.</string>
+    <string name="msg_rfb_size_unsupported">This host did not take the requested desktop size - the picture it sent is %1$d x %2$d.</string>
+    <string name="label_perf_overlay_rfb">%1$.1f FPS \u00b7 %2$.1f ms \u00b7 %3$d\u00d7%4$d</string>
+    <string name="label_perf_overlay_rfb_lag">%1$.1f FPS \u00b7 %2$.1f ms \u00b7 %3$d\u00d7%4$d \u00b7 input %5$d ms</string>
+
+    <!-- GameStream clipboard over a side VNC connection (RfbClipboardBridge) -->
+    <string name="pref_clipboard_gamestream_vnc">GameStream clipboard over VNC</string>
+    <string name="pref_clipboard_gamestream_vnc_summary">GameStream has no clipboard message, so a copy has nowhere to go. This app opens a second connection to a VNC server on the same PC and carries nothing over it but clipboard text - video and input stay on GameStream. With this off, copied text is typed out as keystrokes instead.</string>
+    <string name="hint_clipboard_vnc_port">VNC port (clipboard)</string>
+    <string name="hint_clipboard_vnc_password">VNC password (clipboard)</string>
+    <string name="msg_clipboard_bridge_fallback">No VNC clipboard on this host - the text was typed instead.</string>
+
+    <!--
+      GameStream connection setup, reported through the observer instead of a dialog:
+      these are the reasons a stream never started.
+    -->
+    <string name="error_native_library_missing">The native streaming library libmoonlight-core.so is missing: build the moonlight-common-c submodule and rebuild.</string>
+    <string name="error_native_library_missing_pairing">The native streaming library is missing, so pairing cannot run.</string>
+    <string name="error_connect_failed">Connection failed</string>
+    <string name="error_host_not_paired">This device is not paired with the host yet. Pair it first.</string>
+    <string name="error_host_no_apps">The host has no application to launch. Configure one in Sunshine (or pick one under \"Select app\") and try again.</string>
+    <string name="name_desktop_app">Desktop</string>
+    <string name="msg_pairing_failed_state">Pairing failed: %1$s</string>
+    <string name="msg_pairing_exception">Pairing error: %1$s</string>
+</resources>

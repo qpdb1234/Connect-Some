@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.limelight.viewmodel.VncViewModel.State" />
+
+        <variable
+            name="viewModel"
+            type="com.limelight.viewmodel.VncViewModel" />
+    </data>
+
+    <!--
+    There are three components of this screen:
+
+    1. FrameView :- Renders remote content. This is "behind" all other Views.
+
+    2. Drawers   :- These represent the toolbars and are rendered on top of FrameView.
+                    Currently, we only have one drawer.
+
+    3. Status    :- Topmost View. Shows progress indicator, status msg etc. It is initially
+                    visible but becomes invisible once we are successfully connected to server.
+    -->
+
+    <FrameLayout
+        android:id="@+id/viewer_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <com.limelight.ui.vnc.EdgeWidthDrawerLayout
+            android:id="@+id/drawer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:scrimColor="@{0}">
+
+            <FrameLayout
+                android:id="@+id/frame_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!--FrameView-->
+                <!--
+                    Pixel-buffer (GL) render path, used by VNC. Made the active presenter and
+                    shown by VncActivity.applyPresenter once the profile is known; it stays
+                    hidden for the direct-scan surface protocols, whose decode surface comes
+                    from StreamSurfaceView below instead. A GLSurfaceView is only realized after
+                    initialize() has installed a renderer, so leaving it 'gone' until then is
+                    both safe and what prevents the two paths from ever binding a surface twice.
+                    During Connecting the opaque status_container covers this area, so the
+                    initial 'gone' has no visual cost.
+                -->
+                <com.limelight.ui.vnc.FrameView
+                    android:id="@+id/frame_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:background="@drawable/bg_frame_view" /> <!--Workaround for hole punching issues-->
+
+                <!--
+                    Low-latency "direct scan" surface for the GameStream / Android-device
+                    protocols. The hardware decoder writes straight into it (no GL composite),
+                    which is what shaves the few milliseconds off the GL SurfaceTexture path.
+                    Kept out of the way by default; VncActivity swaps it with [frame_view]
+                    based on the profile's render mode. Declared BEFORE the input view so the
+                    input overlay stays on top. The background is deliberately transparent -
+                    exactly like [frame_view] above: a SurfaceView shows its video by punching a
+                    transparent hole in the window, and an opaque background here re-fills that
+                    hole, which on some OEM (HiSilicon/Kirin) compositors leaves the whole view
+                    black even while the decoder is rendering. The black letterbox comes from
+                    the container behind it, not from this view.
+                -->
+                <com.limelight.ui.vnc.StreamSurfaceView
+                    android:id="@+id/stream_surface_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:visibility="gone" />
+
+                <com.limelight.ui.vnc.input.InputView
+                    android:id="@+id/input_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ViewStub
+                    android:id="@+id/no_video_overlay_stub"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout="@layout/no_video_overlay" />
+
+                <!--
+                    Performance overlay (latency / FPS / dropped frames / decode time).
+                    Rendered on top of the video and shown only while the user has
+                    enabled it in the toolbar and streaming is active. Text is pushed by
+                    the decoder about once per second via VncViewModel.connectionStats.
+                -->
+                <TextView
+                    android:id="@+id/stats_overlay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:layout_margin="@dimen/margin_normal"
+                    android:background="@drawable/bg_stats_overlay"
+                    android:fontFamily="monospace"
+                    android:padding="@dimen/padding_small"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    app:isVisible="@{viewModel.statsOverlayEnabled &amp;&amp; viewModel.state == State.Connected}"
+                    android:text="@{viewModel.connectionStats}" />
+
+                <!--
+                    Floating assist ball. An alternative to the edge swipe for users who
+                    find it awkward: it can be dragged anywhere on the stream and a tap on
+                    it opens the toolbar or raises the keyboard. Visibility, size and alpha
+                    are all driven from ui/vnc/AssistBall.kt, which reacts to the matching
+                    settings in the toolbar drawer. Deliberately a plain white disc with no
+                    icon: what a tap does is chosen in the drawer, and a glyph would be a
+                    decoration the user asked to not have.
+                -->
+                <ImageView
+                    android:id="@+id/assist_ball"
+                    android:layout_width="@dimen/action_btn_size"
+                    android:layout_height="@dimen/action_btn_size"
+                    android:layout_gravity="top|start"
+                    android:background="@drawable/bg_assist_ball"
+                    android:contentDescription="@string/desc_assist_ball"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <!--Virtual keys-->
+                <ViewStub
+                    android:id="@+id/virtual_keys_stub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:layout="@layout/virtual_keys" />
+
+                <!--
+                    Full QWERTY keyboard, a draggable overlay raised from its own panel in
+                    the toolbar drawer (see ui/vnc/FullKeyboard.kt). Top|start gravity even
+                    though it first appears lower down: like the assist ball above, the view
+                    positions itself by raw x/y after inflating, and those are only sane
+                    measured from the corner the gravity names.
+                -->
+                <ViewStub
+                    android:id="@+id/full_keyboard_stub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:layout="@layout/full_keyboard" />
+
+            </FrameLayout>
+
+            <!--A View containing helpful tips will be dynamically inserted here for new users -->
+
+            <!--Drawer-->
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar_drawer"
+                app:viewModel="@{viewModel}" />
+
+        </com.limelight.ui.vnc.EdgeWidthDrawerLayout>
+
+        <!--Status-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/status_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?colorSurface">
+
+            <ProgressBar
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:indeterminate="true"
+                android:padding="@dimen/padding_small"
+                app:isVisible="@{viewModel.state == State.Created || viewModel.state == State.Connecting}"
+                app:layout_constraintBottom_toTopOf="@id/client_state"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_warning"
+                app:isVisible="@{viewModel.state == State.Disconnected}"
+                app:layout_constraintBottom_toTopOf="@id/client_state"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:tint="?attr/colorError" />
+
+            <TextView
+                android:id="@+id/client_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_normal"
+                android:text="@{viewModel.stateLabel(viewModel.state)}"
+                app:isVisible="@{viewModel.state != State.Created}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="State" />
+
+            <!--Live connection progress (current setup stage) shown under the spinner. -->
+            <TextView
+                android:id="@+id/connection_stage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_normal"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                app:isVisible="@{viewModel.state == State.Connecting &amp;&amp; !viewModel.connectionStage.empty}"
+                android:text="@{viewModel.connectionStage}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/client_state"
+                tools:text="正在连接：建立视频流" />
+
+            <TextView
+                android:id="@+id/disconnect_reason"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_normal"
+                android:gravity="center"
+                android:text='@{ "( " + viewModel.disconnectReason + " )"}'
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                app:isVisible="@{viewModel.state == State.Disconnected &amp;&amp; !viewModel.disconnectReason.empty}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/client_state"
+                tools:text="( Connection refused! Server may be down or running on different port )" />
+
+            <ImageButton
+                android:id="@+id/reconnect_btn"
+                style="@style/ImageButton"
+                android:background="@drawable/bg_circular_button"
+                android:contentDescription="@string/desc_retry_connection_btn"
+                android:src="@drawable/ic_refresh"
+                app:isVisible="@{viewModel.state == State.Disconnected}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/disconnect_reason" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/auto_reconnect_progress"
+                style="@style/Widget.MaterialComponents.CircularProgressIndicator"
+                android:layout_width="@dimen/action_btn_size"
+                android:layout_height="@dimen/action_btn_size"
+                app:indicatorColor="?colorSecondary"
+                app:indicatorInset="0dp"
+                app:indicatorSize="@dimen/action_btn_size"
+                app:isVisible="@{viewModel.state == State.Disconnected &amp;&amp; (viewModel.pref.server.autoReconnect || viewModel.profile.enableWol)}"
+                app:layout_constraintStart_toStartOf="@id/reconnect_btn"
+                app:layout_constraintTop_toTopOf="@id/reconnect_btn"
+                app:trackThickness="1dp"
+                tools:progress="50" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+</layout>

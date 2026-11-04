@@ -1,0 +1,162 @@
+/*
+ * Copyright (c) 2022  Gaurav Ujjwal.
+ *
+ * SPDX-License-Identifier:  GPL-3.0-or-later
+ *
+ * See COPYING.txt for more details.
+ */
+
+package com.limelight.util
+
+import com.limelight.util.Log
+import android.app.KeyguardManager
+import android.content.Context
+import androidx.activity.viewModels
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import androidx.biometric.FingerprintDialogFragment
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentFactory
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModel
+
+/**
+ * Wrapper around AndroidX Biometrics library.
+ *
+ * - Allow checking for auth availability
+ * - Provide simplified Kotlin-style callback setup
+ * - Provide consistent handling for activity restarts
+ * - Apply workarounds for library bugs
+ *
+ * Usage:
+ * 1. Call [init] to setup callbacks
+ * 2. Call [launch] to start auth session
+ */
+class DeviceAuthPrompt(private val activity: FragmentActivity) {
+
+    class PromptViewModel : ViewModel() {
+        var isPromptShown = false
+        var promptTitle = ""
+        var promptTag: Any? = null
+    }
+
+    private val viewModel by activity.viewModels<PromptViewModel>()
+    private var onAuthSuccess: ((Any?) -> Unit)? = null
+    private var onAuthFail: ((String) -> Unit)? = null
+
+
+    /**
+     * Setup auth callbacks.
+     * Should be called from onCreate() of the host activity/fragment.
+     * If an auth session is active, it will be updated with given callbacks.
+     */
+    fun init(onSuccess: (Any?) -> Unit, onFail: (String) -> Unit) {
+        onAuthSuccess = onSuccess
+        onAuthFail = onFail
+
+        if (viewModel.isPromptShown)
+            launch(viewModel.promptTitle, viewModel.promptTag)
+    }
+
+    /**
+     * Whether user can be authenticated using Biometric or Device credentials (e.g. PIN, Password)
+     */
+    fun canLaunch(): Boolean {
+        val types = BiometricManager.Authenticators.BIOMETRIC_WEAK or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+        if (BiometricManager.from(activity).canAuthenticate(types) == BiometricManager.BIOMETRIC_SUCCESS)
+            return true
+
+        // Fallback: the combined authenticator check may return false on some devices
+        // even when credentials exist. If the keyguard is secure, we treat auth as available.
+        val km = activity.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager
+        if (km != null && km.isDeviceSecure)
+            return true
+
+        return false
+    }
+
+    /**
+     * Whether authentication prompt has been launched
+     */
+    fun hasLaunched() = viewModel.isPromptShown
+
+    /**
+     * Launch auth prompt.
+     */
+    fun launch(title: String, tag: Any? = null) {
+        check(onAuthSuccess != null)
+        check(onAuthFail != null)
+
+        try {
+            viewModel.promptTag = tag
+
+            val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                    .setTitle(title)
+                    .setAllowedAuthenticators(
+                            BiometricManager.Authenticators.BIOMETRIC_WEAK or
+                                    BiometricManager.Authenticators.DEVICE_CREDENTIAL
+                    )
+                    .build()
+
+            val executor = ContextCompat.getMainExecutor(activity)
+            val prompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    onAuthSuccess?.invoke(viewModel.promptTag)
+                    onAuthFinished()
+                }
+
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    Log.e(javaClass.simpleName, "Authentication error: $errString [$errorCode] ")
+                    onAuthFail?.invoke(errString.toString())
+                    onAuthFinished()
+                }
+            })
+
+            prompt.authenticate(promptInfo)
+            viewModel.isPromptShown = true
+            viewModel.promptTitle = title
+        } catch (e: Exception) {
+            Log.e(javaClass.simpleName, "Error launching auth prompt: ${e.message}", e)
+            onAuthFail?.invoke("LAUNCH_ERROR|Error launching auth prompt")
+            onAuthFinished()
+        }
+    }
+
+    private fun onAuthFinished() {
+        viewModel.isPromptShown = false
+        viewModel.promptTag = null
+    }
+
+
+    companion object {
+        /**
+         * The constructor of [FingerprintDialogFragment] is currently marked private.
+         * When fragment manager tries to re-instantiate it after activity restart,
+         * it will fail and crash the app. So we install a custom [FragmentFactoryWrapper]
+         * which instantiates [FingerprintDialogFragment] via reflection.
+         *
+         * Issue: https://issuetracker.google.com/issues/181805603
+         *
+         * TODO: Remove this after issue is fixed in library.
+         */
+        fun applyFingerprintDialogFix(fm: FragmentManager) {
+            fm.fragmentFactory = FragmentFactoryWrapper(fm.fragmentFactory)
+        }
+
+        class FragmentFactoryWrapper(private val realFactory: FragmentFactory) : FragmentFactory() {
+            private val fpClassName = FingerprintDialogFragment::class.java.name
+
+            override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
+                if (className == fpClassName) {
+                    return FingerprintDialogFragment::class.java.getDeclaredConstructor().let {
+                        it.isAccessible = true
+                        it.newInstance()
+                    }
+                }
+                return realFactory.instantiate(classLoader, className)
+            }
+        }
+    }
+}

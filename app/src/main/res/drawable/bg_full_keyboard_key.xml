@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2026  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<!--
+  A single key on the full keyboard: a flat black keycap with a 2dp gray hairline border and no
+  rounded corners, so the dense grid reads as a run of separate keycaps rather than floating text.
+  The colors are fixed (see colorFullKb* in colors.xml) rather than theme-driven, and the
+  pressed/checked state lightens to a dark gray so a keypress still reads under a white label.
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorFullKbKeyPressed" />
+            <stroke android:width="2dp" android:color="@color/colorFullKbBorder" />
+        </shape>
+    </item>
+    <item android:state_checked="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorFullKbKeyPressed" />
+            <stroke android:width="2dp" android:color="@color/colorFullKbBorder" />
+        </shape>
+    </item>
+    <item>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/colorFullKbKey" />
+                    <stroke android:width="2dp" android:color="@color/colorFullKbBorder" />
+                </shape>
+            </item>
+            <item android:drawable="?attr/selectableItemBackground" />
+        </layer-list>
+    </item>
+</selector>

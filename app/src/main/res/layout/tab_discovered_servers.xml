@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.limelight.viewmodel.HomeViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false">
+
+        <!--
+            Status line over the results: what the scan is doing while it does it, and what
+            the round ended with afterwards. A round takes tens of seconds and fills the
+            list as it goes, so without this the tab reads as frozen exactly when it is
+            working hardest - and an empty tab never says whether that is an answer or an
+            unasked question.
+        -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_normal"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/scan_status"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@{viewModel.discoveryStatus}"
+                    android:textColor="?android:textColorSecondary" />
+            </LinearLayout>
+
+            <!--
+                Scan results, which include machines this app cannot connect to. Not the
+                saved-server list: a router has no protocol badge and nothing to open.
+            -->
+            <com.limelight.ui.home.DiscoveredDeviceList
+                android:id="@+id/servers"
+                style="@style/ServerList"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/desc_discovered_list"
+                app:isVisible="@{!viewModel.discovery.devices.empty}"
+                tools:listitem="@layout/discovered_device_item" />
+        </LinearLayout>
+
+        <!--
+            Scanning is a deliberate action: one round walks the whole subnet with
+            hundreds of probes, so it runs only when this is pressed, and never by
+            itself when the screen opens.
+
+            A labelled button rather than the old refresh icon, because "what does this
+            icon do here" is the wrong question to leave the user with.
+        -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/scan_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="@dimen/margin_normal"
+            android:onClick="@{() -> viewModel.startDiscovery()}"
+            android:text="@string/action_scan"
+            app:isVisible="@{!viewModel.discovery.isRunning}" />
+
+        <!--
+            The ring counts the subnet walk (ning's scan bar did the same): filling to
+            100% tells the user the round is really finishing rather than just spinning.
+            Stages without a countable denominator keep it indeterminate.
+
+            Ring and stop button sit in one row on purpose. Both are 48dp and both were
+            anchored end|bottom with the same margin, which stacked them on the exact same
+            rect - the button is drawn last, so the progress the user is supposed to get
+            from a scan was never actually visible.
+
+            It is a Material indicator rather than a bare ProgressBar because the ring has
+            to be told what to paint with: a plain ProgressBar in this style takes
+            colorPrimary, and on a solid-colour interface that is the color of the page -
+            the ring was there the whole time, in yellow on yellow. Same widget and colors
+            as the auto-reconnect ring on the stream screen.
+
+            The ring is drawn a size larger than the cross it surrounds, and its stroke is
+            4dp rather than a hairline: the cross sits on a partly opaque disc of the button
+            size, and a ring of the same diameter was printed under that disc - 1dp of it,
+            seen through 40% black, which read as a smudge on the disc's edge rather than
+            as progress.
+        -->
+        <FrameLayout
+            android:layout_width="@dimen/scan_ring_size"
+            android:layout_height="@dimen/scan_ring_size"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="@dimen/margin_normal">
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/scan_progress"
+                style="@style/Widget.MaterialComponents.CircularProgressIndicator"
+                android:layout_width="@dimen/scan_ring_size"
+                android:layout_height="@dimen/scan_ring_size"
+                android:contentDescription="@string/desc_discovery_running"
+                android:indeterminate="@{viewModel.discovery.progress &lt; 0}"
+                android:max="100"
+                android:progress="@{Math.max(viewModel.discovery.progress, 0)}"
+                app:indicatorColor="?colorSecondary"
+                app:indicatorInset="0dp"
+                app:indicatorSize="@dimen/scan_ring_size"
+                app:isVisible="@{viewModel.discovery.isRunning}"
+                app:trackThickness="4dp" />
+
+            <!--
+              The stop cross sits centred inside the ring rather than beside it, on a
+              half-opaque circular disc small enough to leave the stroke outside it clear. One
+              compact control instead of a ring and a separate button in a row.
+            -->
+            <ImageButton
+                android:id="@+id/scan_stop_btn"
+                style="@style/ImageButton"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_circle_scrim"
+                android:contentDescription="@string/desc_discovery_stop_btn"
+                android:onClick="@{() -> viewModel.stopDiscovery()}"
+                android:src="@drawable/ic_clear"
+                app:isVisible="@{viewModel.discovery.isRunning}"
+                app:tint="?colorSecondary" />
+        </FrameLayout>
+    </FrameLayout>
+</layout>

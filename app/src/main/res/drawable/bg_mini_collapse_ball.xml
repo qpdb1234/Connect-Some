@@ -1,0 +1,20 @@
+<!--
+    Background of the collapsed mini-window floating ball.  Same disc shape as
+    the assist ball, filled with the mini-window card colour so it reads as the
+    same surface folded down.  A thin border in the bar colour helps it stand out
+    against any wallpaper.
+-->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?colorControlHighlight">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/colorMiniCard" />
+            <stroke
+                android:width="2dp"
+                android:color="@color/colorMiniBar" />
+            <size
+                android:width="48dp"
+                android:height="48dp" />
+        </shape>
+    </item>
+</ripple>

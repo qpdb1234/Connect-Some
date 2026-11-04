@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Translation of values/strings_vnc.xml.
+  Only the entries that other translatable text refers to by name are provided
+  here; the rest falls back to the English default.
+-->
+<resources>
+
+    <!-- Label of the Scan button on the discovery tab. -->
+    <string name="action_scan">Skanuj</string>
+
+    <string name="desc_mini_window_btn">Mini okno</string>
+    <string name="desc_mini_keys">Klawisze sterowania zdalnego</string>
+    <string name="desc_mini_fullscreen">Powrót do pełnego ekranu</string>
+    <string name="desc_mini_close">Zamknij mini okno</string>
+    <string name="desc_mini_back">Wstecz</string>
+    <string name="desc_mini_home">Ekran główny</string>
+    <string name="desc_mini_overview">Ostatnie aplikacje</string>
+    <string name="desc_mini_keyboard">Klawiatura</string>
+    <string name="desc_mini_resize">Zmień rozmiar mini okna</string>
+    <string name="msg_mini_reconnect">Mini okno nawiązuje połączenie ponownie</string>
+    <string name="msg_mini_no_permission">Zezwól na nakładki nad innymi aplikacjami, aby używać mini okna</string>
+
+    <!-- Gesture chip labels -->
+    <string name="gesture_single_tap">Pojedyncze dotknięcie</string>
+    <string name="gesture_double_tap">Podwójne dotknięcie</string>
+    <string name="gesture_long_press">Długie naciśnięcie</string>
+    <string name="gesture_swipe">Przesunięcie</string>
+    <string name="gesture_2finger_tap">Dotknięcie 2 palcami</string>
+    <string name="gesture_2finger_swipe">Przesunięcie 2 palcami</string>
+    <string name="gesture_other">Inne</string>
+
+    <string name="action_restore_default_color">Przywróć domyślny kolor</string>
+<string name="title_backup_password_protection">Ochrona hasłem kopii zapasowej</string>
+    <string name="msg_backup_password_toggle_auth">Wprowadź PIN, wzór, hasło lub odcisk palca ekranu blokady, aby zmienić to ustawienie</string>
+    <string name="desc_vk_close">Zamknij klawisze wirtualne</string>
+</resources>
