@@ -99,13 +99,31 @@ jobs:
           done < "$RUNNER_TEMP/picked"
 
       - name: Check what the APK carries
+        shell: bash
         run: |
+          # Asserted per ABI: a single grep over the whole listing would still
+          # pass if one of the three ABIs quietly disappeared from the build.
           apk=$(find app/build/outputs/apk/debug -name '*.apk' | head -n 1)
-          echo "APK: $apk"
-          unzip -l "$apk" | grep -E 'lib/(armeabi-v7a|arm64-v8a|x86_64)/' \
-            | grep -E 'libmoonlight-core|libnative-vnc'
-          unzip -l "$apk" | grep -E 'res/raw|android_server'
-          unzip -l "$apk" | grep -c 'AndroidManifest.xml'
+          echo "::notice::apk $(basename "$apk") $(stat -c%s "$apk") B, $(unzip -Z1 "$apk" | wc -l) entries"
+          for abi in armeabi-v7a arm64-v8a x86_64; do
+            lib=$(unzip -l "$apk" | awk -v a="lib/$abi/" 'index($4, a) == 1 { n++; s += $1 } END { print n " " s + 0 }')
+            echo "::notice::lib/$abi -> $lib (entries bytes)"
+            set -- $lib
+            if [ "$1" -lt 5 ]; then
+              echo "::error::lib/$abi carries only $1 libraries"
+              exit 1
+            fi
+            for so in libmoonlight-core.so libnative-vnc.so; do
+              if ! unzip -l "$apk" | grep -q "lib/$abi/$so"; then
+                echo "::error::lib/$abi/$so is missing"
+                exit 1
+              fi
+            done
+          done
+          if ! unzip -l "$apk" | grep -q 'res/raw/android_server.jar'; then
+            echo '::error::res/raw/android_server.jar is missing, the ADB helper was not bundled'
+            exit 1
+          fi
 
       - name: Upload the APK
         uses: actions/upload-artifact@v7

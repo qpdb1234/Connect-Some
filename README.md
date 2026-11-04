@@ -76,6 +76,14 @@ server, and most of the discovery pipeline.
    the command line with `ANDROID_HOME` set. `local.properties` is machine-local and is
    not committed.
 
+   Installing the SDK by hand, note that API 37 is published as `android-37.0` - the
+   minor version is part of the package id, so `platforms;android-37` does not exist:
+
+   ```bash
+   sdkmanager --install "platforms;android-37.0" "build-tools;36.0.0" \
+     "cmake;3.22.1" "ndk;28.2.13676358"
+   ```
+
 3. Build:
 
    ```bash
@@ -102,10 +110,11 @@ server, and most of the discovery pipeline.
 `scripts/check-native.ps1` prints which native parts the current tree can build.
 
 `.github/workflows/android.yml` runs `:app:assembleDebug` on every push to `main` and on
-pull requests: it initializes the two submodules, installs the pinned NDK/CMake, builds
-all three ABIs and uploads the debug APK as a workflow artifact. The artifact is a debug
-build signed with the standard Android debug key - it is there to prove the tree builds,
-not a release channel.
+pull requests: it initializes the two submodules, installs the pinned platform, NDK and
+CMake, builds all three ABIs, checks that each ABI's native libraries and the
+`android_server.jar` payload ended up in the APK, and uploads it as a workflow artifact.
+The artifact is a debug build signed with the standard Android debug key - it is there to
+prove the tree builds, not a release channel.
 
 ## How the pieces fit
 
