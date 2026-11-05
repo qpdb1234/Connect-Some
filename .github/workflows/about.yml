@@ -1,0 +1,61 @@
+name: about
+
+# The About block of the repository page - description and topics - is repo
+# metadata, so it cannot live in a normal file. It is kept here instead, as the
+# one place those two strings are written down, and this workflow pushes them
+# with the job's own GITHUB_TOKEN.
+#
+# It only runs when this file changes, so a normal commit costs nothing. That
+# also means the strings stay reviewable: a pull request shows a change to the
+# repository description as a diff.
+#
+# Keep the description in step with README.md. GitHub allows 350 characters and
+# at most 20 topics of 50 characters, lowercase alphanumeric and hyphens.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/about.yml
+  workflow_dispatch:
+
+permissions:
+  administration: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Write the metadata
+        shell: bash
+        run: |
+          cat > "$RUNNER_TEMP/about.json" <<'JSON'
+          {
+            "description": "Android client that drives another machine over three protocols: VNC/RFB, GameStream (Moonlight) and ADB/scrcpy. LAN discovery, Wake-on-LAN, LocalSend file transfer and a floating mini window. GPL-3.0-or-later.",
+            "topics": ["android", "vnc", "rfb", "remote-desktop", "remote-control",
+                       "gamestream", "nvstream", "moonlight", "sunshine",
+                       "adb", "scrcpy", "android-mirroring",
+                       "localsend", "file-transfer",
+                       "wake-on-lan", "mdns", "netbios", "kotlin"]
+          }
+          JSON
+          # jq flattens the array and fails the step if the JSON is malformed.
+          jq -c . "$RUNNER_TEMP/about.json" > "$RUNNER_TEMP/about.min.json"
+          echo "::notice::description $(jq -r '.description | length' "$RUNNER_TEMP/about.min.json") of 350 chars, $(jq -r '.topics | length' "$RUNNER_TEMP/about.min.json") of 20 topics"
+
+      - name: Apply it to the repository
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          # -X PATCH is needed because gh api defaults to GET. A 403 here means
+          # the token was not given the administration scope, which is a setting
+          # of the repository rather than something this file can fix.
+          out=$(gh api -X PATCH "repos/$GITHUB_REPOSITORY" \
+            --input "$RUNNER_TEMP/about.min.json" 2>&1) || {
+              echo "::error::PATCH failed: $(printf '%s' "$out" | tr '\n' ' ' | cut -c1-180 | sed 's/%/%25/g')"
+              exit 1
+            }
+          echo "::notice::description now: $(printf '%s' "$out" | jq -r .description)"
+          topics=$(printf '%s' "$out" | jq -r '.topics | join(", ")')
+          echo "::notice::topics now: $topics"
