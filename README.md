@@ -1,5 +1,9 @@
 # Connect Some
 
+[![build](https://github.com/qpdb1234/Connect_Some/actions/workflows/android.yml/badge.svg)](https://github.com/qpdb1234/Connect_Some/actions/workflows/android.yml)
+[![release](https://img.shields.io/github/v/release/qpdb1234/Connect_Some)](https://github.com/qpdb1234/Connect_Some/releases/latest)
+[![license](https://img.shields.io/badge/license-GPL--3.0--or--later-blue)](COPYING.txt)
+
 An Android client for working with another machine from a phone. One app speaks three
 protocols:
 
@@ -116,6 +120,11 @@ CMake, builds all three ABIs, checks that each ABI's native libraries and the
 The artifact is a debug build signed with the standard Android debug key - it is there to
 prove the tree builds, not a release channel.
 
+`.github/workflows/release.yml` runs on a `v*` tag: it builds that tag with the same
+composite actions in `.github/actions`, and publishes the resulting APK on the tag as a
+GitHub Release. Releases are signed with the standard Android debug key, because no
+release signing key is kept in this repository - see the notes of any release.
+
 ## How the pieces fit
 
 `docs/Architecture.md` covers the layering; the short version is that AVNC's
@@ -195,6 +204,7 @@ through `libadb-android` (used only by `com.limelight.adb.AdbPairingPort`).
 ## Repository layout
 
 ```
+.github/                 workflows, and the composite actions they share
 app/                     the app itself (Kotlin/Java) + JNI glue and CMakeLists
   src/main/cpp/          native build: RFB client, moonlight-core, openssl/opus archives
   src/main/res/values*/  23 locales

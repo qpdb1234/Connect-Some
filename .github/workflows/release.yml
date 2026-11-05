@@ -1,0 +1,124 @@
+name: release
+
+# Publishing a tag builds that tagged commit and attaches one asset: the debug
+# APK, signed with the standard Android debug key, because no release signing
+# key is kept in this repository. The environment and the checks come from the
+# same composite actions as the build workflow, so what ships here is what CI
+# already verified on main.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to (re)publish
+        required: true
+        default: v1.0.0
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Resolve the tag
+        id: tag
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
+        shell: bash
+        run: |
+          t="${INPUT_TAG:-$GITHUB_REF_NAME}"
+          case "$t" in
+            v*) ;;
+            *) echo "::error::'$t' is not a v* tag" && exit 1 ;;
+          esac
+          echo "tag=$t" >> "$GITHUB_OUTPUT"
+          echo "::notice::publishing $t"
+
+      - name: Check out the tag
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ steps.tag.outputs.tag }}
+          submodules: false
+          fetch-depth: 1
+
+      - name: Prepare the build environment
+        uses: ./.github/actions/android-env
+
+      - name: Build the debug APK
+        shell: bash
+        run: |
+          ./gradlew --no-daemon --stacktrace :app:assembleDebug 2>&1 \
+            | tee "$RUNNER_TEMP/build.log"
+
+      - name: Report the build failure
+        if: failure()
+        uses: ./.github/actions/report-build-failure
+        with:
+          log: ${{ runner.temp }}/build.log
+
+      - name: Check what the APK carries
+        id: apk
+        uses: ./.github/actions/check-apk
+        with:
+          apk-dir: app/build/outputs/apk/debug
+
+      - name: Write the release notes
+        env:
+          TAG: ${{ steps.tag.outputs.tag }}
+        shell: bash
+        run: |
+          cat > "$RUNNER_TEMP/notes.md" <<'MD'
+          Connect Some @TAG@ - the first published build.
+
+          One Android client that speaks three protocols to another machine:
+
+          - **RFB (VNC)** against any standard VNC server, with per-server authentication
+            (automatic, none, VNC password, AnonTLS, VeNCrypt, Apple screen sharing) and an
+            UltraVNC repeater in front if one is needed.
+          - **GameStream (NVStream)** against a PC running Sunshine or GeForce Experience:
+            PIN pairing, then the desktop or any single app on that PC.
+          - **ADB (scrcpy)** against another Android device, over wireless debugging or a
+            USB-OTG cable. Nothing has to be installed on that device; a helper is pushed to
+            `/data/local/tmp` and run from there.
+
+          On top of the three clients: LAN discovery (mDNS browse and active probing, subnet
+          walk, neighbour table, NetBIOS, MAC vendors), Wake-on-LAN, LocalSend file transfer
+          with downloadable links, a floating mini window, an assist ball, a pointer marker
+          and a drawer.
+
+          Requires Android 8.0 (API 26) or newer. The APK carries armeabi-v7a, arm64-v8a and
+          x86_64.
+
+          **Signing.** This APK is signed with the standard Android debug key; no release
+          signing key is kept in this repository. It installs and upgrades like any other
+          debug-signed build of `com.connectsome.app`.
+
+          **Source and license.** The full source is in this repository at `@TAG@`.
+          GPL-3.0-or-later - see `LICENSE` / `COPYING.txt`, and
+          `docs/ThirdPartyLicenses.md` for the notices of the projects this app is built by
+          merging (AVNC, Moonlight, Easycontrol_For_Car, libadb-android, libvncserver,
+          libjpeg-turbo, Ning, Duorem).
+          MD
+          sed -i "s/@TAG@/$TAG/g" "$RUNNER_TEMP/notes.md"
+          echo "::notice::notes for $TAG, $(wc -l < "$RUNNER_TEMP/notes.md") lines"
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.tag.outputs.tag }}
+          APK: ${{ steps.apk.outputs.apk }}
+        shell: bash
+        run: |
+          asset="ConnectSome-${TAG}-debug.apk"
+          cp "$APK" "$RUNNER_TEMP/$asset"
+          # Idempotent, so a re-run of workflow_dispatch refreshes instead of failing.
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" --title "Connect Some $TAG" --notes-file "$RUNNER_TEMP/notes.md"
+          else
+            gh release create "$TAG" --title "Connect Some $TAG" --notes-file "$RUNNER_TEMP/notes.md"
+          fi
+          gh release upload "$TAG" "$RUNNER_TEMP/$asset" --clobber
+          echo "::notice::published $TAG with $(basename "$asset") ($(stat -c%s "$RUNNER_TEMP/$asset") B)"

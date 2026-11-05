@@ -1,0 +1,54 @@
+name: android-env
+description: >
+  Fetch the two submodules the native build reads, then install the platform,
+  NDK and CMake this project pins. Shared by the build and release workflows so
+  the pinned package ids only exist in one place - they are easy to get wrong
+  (API 37 is published as android-37.0, not android-37).
+
+runs:
+  using: composite
+  steps:
+    - name: Initialize the submodules the build actually reads
+      shell: bash
+      # moonlight-common-c needs its own enet / nanors; libvncserver's noVNC and
+      # doxygen submodules are not part of an Android build and are left alone.
+      run: |
+        git submodule update --init extern/libvncserver
+        git submodule update --init --recursive app/src/main/cpp/moonlight-core/moonlight-common-c
+        test -f app/src/main/cpp/moonlight-core/moonlight-common-c/src/Limelight.h
+        test -f extern/libvncserver/src/libvncclient/rfbclient.c
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v6
+      with:
+        distribution: temurin
+        java-version: '17'
+
+    - name: Set up the Android SDK
+      uses: android-actions/setup-android@v4
+
+    - name: Report what the runner provides
+      # The job log needs an authenticated download, while annotations are
+      # readable through the REST API, so the facts worth checking are published
+      # as annotations instead of buried in the log.
+      shell: bash
+      run: |
+        echo "::notice::ANDROID_HOME=$ANDROID_HOME"
+        echo "::notice::sdkmanager=$(command -v sdkmanager || echo missing)"
+        echo "::notice::java=$(java -version 2>&1 | head -n 1)"
+
+    - name: Install the NDK, CMake and platform this project pins
+      shell: bash
+      run: |
+        # setup-android puts sdkmanager on PATH; the image also ships one under
+        # cmdline-tools/latest, used when that PATH entry is absent.
+        SDKM=$(command -v sdkmanager || echo "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager")
+        echo "::notice::sdkmanager=$SDKM"
+        # build-tools 36.0.0 is the revision this project has been built with;
+        # AGP downloads whatever else it prefers, since licenses are accepted.
+        yes | "$SDKM" --licenses >/dev/null 2>&1 || true
+        "$SDKM" --install "platforms;android-37.0" "build-tools;36.0.0" \
+          "cmake;3.22.1" "ndk;28.2.13676358" | tail -n 3
+        echo "::notice::platforms $(ls "$ANDROID_HOME/platforms" | tr '\n' ' ')"
+        echo "::notice::ndk $(ls "$ANDROID_HOME/ndk" | tr '\n' ' ')"
+        echo "::notice::cmake $(ls "$ANDROID_HOME/cmake" | tr '\n' ' ')"
