@@ -25,7 +25,7 @@ transfer with downloadable links, a floating mini window, an assist ball and a d
 - **Application id**: `com.connectsome.app` (the code namespace stays `com.limelight`,
   which the `R` class and the `Java_com_limelight_*` JNI symbols depend on)
 - **Min / target SDK**: 26 / 37
-- **License**: GPL-3.0-or-later (`LICENSE`, `COPYING.txt`)
+- **License**: GPL-3.0-or-later (`COPYING.txt`)
 
 ## Where this came from
 
@@ -220,8 +220,7 @@ Connect Some is free software: you can redistribute it and/or modify it under th
 the GNU General Public License as published by the Free Software Foundation, either
 version 3 of the License, or (at your option) any later version. It is distributed in the
 hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See `COPYING.txt` / `LICENSE` for the
-full text.
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See `COPYING.txt` for the full text.
 
 Because parts of it are adapted from GPL, LGPL and GPL-2.0-or-later works, the combined
 work stays under GPL-3.0-or-later; the notices each of those licenses require for a binary

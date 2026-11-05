@@ -97,7 +97,7 @@ jobs:
           debug-signed build of `com.connectsome.app`.
 
           **Source and license.** The full source is in this repository at `@TAG@`.
-          GPL-3.0-or-later - see `LICENSE` / `COPYING.txt`, and
+          GPL-3.0-or-later - see `COPYING.txt`, and
           `docs/ThirdPartyLicenses.md` for the notices of the projects this app is built by
           merging (AVNC, Moonlight, Easycontrol_For_Car, libadb-android, libvncserver,
           libjpeg-turbo, Ning, Duorem).
